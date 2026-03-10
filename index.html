@@ -1051,7 +1051,9 @@ async function sbF(m,p,b){
   // Use the logged-in user's access token if available, else fall back to anon key
   let authHeader=SUPABASE_ANON_KEY;
   try{const sess=JSON.parse(localStorage.getItem("ss_session")||"{}");if(sess.access_token)authHeader=sess.access_token;}catch(e){}
-  const r=await fetch(`${SUPABASE_URL}/rest/v1/${p}`,{method:m,headers:{apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${authHeader}`,"Content-Type":"application/json",Prefer:m==="POST"?"return=representation":""},body:b?JSON.stringify(b):undefined});
+  const isUpsert=m==="POST"&&p.includes("on_conflict");
+  const prefer=isUpsert?"return=representation,resolution=merge-duplicates":m==="POST"?"return=representation":"";
+  const r=await fetch(`${SUPABASE_URL}/rest/v1/${p}`,{method:m,headers:{apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${authHeader}`,"Content-Type":"application/json",...(prefer?{Prefer:prefer}:{})},body:b?JSON.stringify(b):undefined});
   if(!r.ok)throw new Error(await r.text());
   return r.status===204?null:r.json();
 }
