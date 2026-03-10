@@ -304,8 +304,8 @@ td.day-cell:hover{background:var(--accent-light) !important;}
   inset:4px;border-radius:6px;
 }
 .day-off-label{
-  background:rgba(239,68,68,0.08);color:#dc2626;
-  border:1.5px solid rgba(239,68,68,0.2);
+  background:rgba(0,0,0,0.06);color:rgba(0,0,0,0.4);
+  border:1.5px solid rgba(0,0,0,0.12);
   inset:4px;border-radius:6px;
   font-size:10px;font-weight:700;letter-spacing:.04em;
 }
@@ -782,7 +782,7 @@ td.day-cell:hover{background:var(--accent-light) !important;}
   .mnav-btn.active .mni{transform:scale(1.15);}
 
   /* Main content clears bottom nav */
-  #app{padding:10px 10px 86px;}
+  #app{padding:10px 8px 86px;}
 
   /* Cards */
   .card{border-radius:12px;margin-bottom:10px;}
@@ -804,13 +804,21 @@ td.day-cell:hover{background:var(--accent-light) !important;}
   .ctrl-btn{padding:4px 10px;font-size:10px;white-space:nowrap;}
 
   /* Grid — scrollable, tighter */
-  .sched-grid thead th.name-col{width:100px;min-width:100px;padding:7px 8px;}
-  td.name-col{padding:7px 8px;}
-  .emp-name{font-size:12px;}
+  .grid-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .sched-grid{width:max-content;min-width:100%;}
+  .sched-grid thead th.name-col{width:90px;min-width:90px;padding:7px 6px;}
+  td.name-col{padding:6px 6px;white-space:nowrap;}
+  .emp-name{font-size:11px;}
   .emp-hrs{font-size:9px;}
-  .avatar{width:28px;height:28px;font-size:11px;}
-  td.day-cell{height:50px;min-width:76px;}
+  .avatar{width:26px;height:26px;font-size:10px;}
+  td.day-cell{height:48px;min-width:72px;max-width:72px;padding:3px 2px;}
   .drag-handle{display:none;}
+  .th-day-wrap{padding:6px 4px 3px;}
+  .th-day{font-size:10px;}
+  .th-date{font-size:9px;}
+  .time-tick{font-size:8px;}
+  .shift-bar{padding:0 4px;font-size:9px;}
+  .shift-times{display:none;}
 
   /* Save bar */
   .save-bar{padding:10px 12px;}
@@ -821,17 +829,24 @@ td.day-cell:hover{background:var(--accent-light) !important;}
   .modal{
     width:100%;max-width:100%;border-radius:20px 20px 0 0;
     padding:20px 16px max(28px,env(safe-area-inset-bottom));
-    max-height:88vh;
+    max-height:90vh;
     animation:mSlideUp .25s var(--ease-out);
   }
   @keyframes mSlideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+
+  /* Modal internals on mobile */
+  .shift-form{grid-template-columns:1fr 1fr;gap:8px;}
+  .task-grid{grid-template-columns:1fr 1fr;gap:5px;}
+  .task-opt{padding:8px 8px;font-size:11px;}
+  .sf-select{padding:9px 10px;font-size:13px;}
 
   /* Analytics/History/Team */
   .awrap,.hwrap,.twrap{padding:14px 12px;}
   .shdr{flex-direction:column;align-items:flex-start;gap:10px;}
   .stitle{font-size:16px;}
-  .period-selector{gap:4px;}
-  .period-btn{padding:5px 10px;font-size:11px;}
+  .period-selector{gap:4px;overflow-x:auto;flex-wrap:nowrap;padding-bottom:10px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .period-selector::-webkit-scrollbar{display:none;}
+  .period-btn{padding:5px 10px;font-size:11px;white-space:nowrap;flex-shrink:0;}
   .week-stat-card{padding:11px 12px;}
   .acard{padding:12px 14px;}
 
@@ -843,10 +858,6 @@ td.day-cell:hover{background:var(--accent-light) !important;}
   .addbox{padding:12px;}
   .tcard{padding:11px 12px;}
 
-  /* Task/shift modal grids */
-  .task-grid{grid-template-columns:1fr 1fr;}
-  .shift-form{grid-template-columns:1fr 1fr;}
-
   /* Login card */
   .login-card{padding:28px 20px 24px;}
   .login-logo-ring-wrap{width:78px;height:78px;}
@@ -854,10 +865,10 @@ td.day-cell:hover{background:var(--accent-light) !important;}
 }
 
 @media(max-width:380px){
-  td.day-cell{min-width:62px;height:46px;}
-  .sched-grid thead th.name-col{width:82px;min-width:82px;}
-  td.name-col{padding:5px 6px;}
-  .avatar{width:24px;height:24px;font-size:10px;}
+  td.day-cell{min-width:58px;max-width:58px;height:44px;}
+  .sched-grid thead th.name-col{width:76px;min-width:76px;}
+  td.name-col{padding:4px 4px;}
+  .avatar{width:22px;height:22px;font-size:9px;}
   .task-grid{grid-template-columns:1fr;}
 }
 </style>
@@ -1036,7 +1047,14 @@ function wkey(off){return getWS(off).toISOString().split("T")[0];}
 function fmtW(d){const e=new Date(d);e.setDate(e.getDate()+6);const o={month:"short",day:"numeric"};return`${d.toLocaleDateString("en-US",o)} – ${e.toLocaleDateString("en-US",{...o,year:"numeric"})}`;}
 function wlbl(o){return o===0?"This Week":o===1?"Next Week":o===-1?"Last Week":`Week ${o>0?"+":""}${o}`;}
 
-async function sbF(m,p,b){const r=await fetch(`${SUPABASE_URL}/rest/v1/${p}`,{method:m,headers:{apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${SUPABASE_ANON_KEY}`,"Content-Type":"application/json",Prefer:m==="POST"?"return=representation":""},body:b?JSON.stringify(b):undefined});if(!r.ok)throw new Error(await r.text());return r.status===204?null:r.json();}
+async function sbF(m,p,b){
+  // Use the logged-in user's access token if available, else fall back to anon key
+  let authHeader=SUPABASE_ANON_KEY;
+  try{const sess=JSON.parse(localStorage.getItem("ss_session")||"{}");if(sess.access_token)authHeader=sess.access_token;}catch(e){}
+  const r=await fetch(`${SUPABASE_URL}/rest/v1/${p}`,{method:m,headers:{apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${authHeader}`,"Content-Type":"application/json",Prefer:m==="POST"?"return=representation":""},body:b?JSON.stringify(b):undefined});
+  if(!r.ok)throw new Error(await r.text());
+  return r.status===204?null:r.json();
+}
 function lsG(k){try{return JSON.parse(localStorage.getItem(k))}catch{return null}}
 function lsS(k,v){localStorage.setItem(k,JSON.stringify(v))}
 async function loadEmps(){if(USE_SUPABASE)return sbF("GET","employees?select=*&order=name");return lsG("ss_emps")||[];}
@@ -1060,7 +1078,7 @@ function openModal(html,width){
 
 // ── SHIFT MODAL ──
 let _selTask=null;
-let _editShiftIdx=null; // null = adding new, number = editing existing
+let _editShiftIdx=null;
 function openShiftModal(empId,day){
   const emp=S.employees.find(e=>e.id===empId);
   if(!S.schedule[empId])S.schedule[empId]=defSched();
@@ -1075,25 +1093,62 @@ function renderShiftModal(empId,day,emp,dayData){
   const shifts=dayData.shifts||[];
   const status=dayData.status||"off";
 
-  // Build existing shifts list
+  // Status banners for sick / dayoff
+  let statusBanner="";
+  if(status==="sick"){
+    statusBanner=`<div style="background:rgba(249,115,22,0.08);border:1.5px solid rgba(249,115,22,0.3);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-weight:700;font-size:13px;color:#c2410c">🤒 Called In Sick</span>
+      <button onclick="clearDayStatus('${empId}','${day}')" style="background:rgba(239,68,68,0.1);color:#dc2626;border:1px solid rgba(239,68,68,0.2);border-radius:6px;padding:5px 11px;font-size:11px;font-weight:600;cursor:pointer;">Remove</button>
+    </div>`;
+  } else if(status==="dayoff"){
+    statusBanner=`<div style="background:rgba(0,0,0,0.05);border:1.5px solid rgba(0,0,0,0.14);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-weight:700;font-size:13px;color:rgba(0,0,0,0.45)">📅 Day Off</span>
+      <button onclick="clearDayStatus('${empId}','${day}')" style="background:rgba(239,68,68,0.1);color:#dc2626;border:1px solid rgba(239,68,68,0.2);border-radius:6px;padding:5px 11px;font-size:11px;font-weight:600;cursor:pointer;">Remove</button>
+    </div>`;
+  }
+
+  // Build existing shifts list — with edit support
   let shiftListHtml="";
   if(shifts.length>0){
-    shiftListHtml=`<div class="sect-label" style="margin-top:14px">Scheduled Tasks</div>`;
+    shiftListHtml=`<div class="sect-label" style="margin-top:4px;margin-bottom:6px">Scheduled Tasks</div>`;
     shifts.forEach((sh,i)=>{
       const t=tm[sh.task];
-      shiftListHtml+=`<div class="existing-shift" style="background:${t?.bg||"#f5f5f5"};border:1.5px solid ${t?.dot||"#ccc"}40;border-radius:8px;padding:8px 12px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;">
-        <div style="display:flex;align-items:center;gap:8px">
-          <span style="width:8px;height:8px;border-radius:50%;background:${t?.dot||"#ccc"};display:inline-block;flex-shrink:0"></span>
-          <span style="font-weight:700;font-size:12px;color:${t?.text||"#333"}">${esc(t?.label||sh.task)}</span>
-          <span style="font-size:11px;color:${t?.text||"#333"};opacity:.7">${fmtRange(sh.start,sh.end)}</span>
-        </div>
-        <button onclick="removeShiftEntry('${empId}','${day}',${i})" style="background:rgba(239,68,68,0.1);color:#dc2626;border:1px solid rgba(239,68,68,0.2);border-radius:5px;padding:3px 8px;font-size:11px;font-weight:600;cursor:pointer">✕</button>
-      </div>`;
+      if(_editShiftIdx===i){
+        // Editing this entry inline
+        shiftListHtml+=`<div style="background:${t?.bg||"#f5f5f5"};border:2px solid ${t?.dot||"#ccc"};border-radius:8px;padding:10px 12px;margin-bottom:6px;">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+            <span style="width:8px;height:8px;border-radius:50%;background:${t?.dot||"#ccc"};display:inline-block;flex-shrink:0"></span>
+            <span style="font-weight:700;font-size:12px;color:${t?.text||"#333"}">${esc(t?.label||sh.task)}</span>
+            <span style="font-size:10px;color:${t?.text||"#333"};opacity:.6;margin-left:auto">editing</span>
+          </div>
+          <div class="shift-form" style="margin-bottom:8px;">
+            <div><div class="sf-label">Start</div><select class="sf-select" id="edit_s${i}">${buildTimeOpts(sh.start||defStart)}</select></div>
+            <div><div class="sf-label">End</div><select class="sf-select" id="edit_e${i}">${buildTimeOpts(sh.end||defEnd)}</select></div>
+          </div>
+          <div style="display:flex;gap:6px;justify-content:flex-end;">
+            <button onclick="cancelEditShift()" style="background:transparent;border:1px solid rgba(0,0,0,0.15);border-radius:5px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;color:var(--fg-muted)">Cancel</button>
+            <button onclick="saveEditShift('${empId}','${day}',${i})" style="background:var(--accent);color:white;border:none;border-radius:5px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;">Save</button>
+          </div>
+        </div>`;
+      } else {
+        shiftListHtml+=`<div style="background:${t?.bg||"#f5f5f5"};border:1.5px solid ${t?.dot||"#ccc"}40;border-radius:8px;padding:8px 10px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;gap:6px;">
+          <div style="display:flex;align-items:center;gap:7px;min-width:0;">
+            <span style="width:8px;height:8px;border-radius:50%;background:${t?.dot||"#ccc"};display:inline-block;flex-shrink:0"></span>
+            <span style="font-weight:700;font-size:12px;color:${t?.text||"#333"};white-space:nowrap">${esc(t?.label||sh.task)}</span>
+            <span style="font-size:11px;color:${t?.text||"#333"};opacity:.7;white-space:nowrap">${fmtRange(sh.start,sh.end)}</span>
+          </div>
+          <div style="display:flex;gap:4px;flex-shrink:0;">
+            <button onclick="startEditShift('${empId}','${day}',${i})" style="background:rgba(26,122,60,0.1);color:var(--accent);border:1px solid rgba(26,122,60,0.2);border-radius:5px;padding:3px 8px;font-size:11px;font-weight:600;cursor:pointer">✎</button>
+            <button onclick="removeShiftEntry('${empId}','${day}',${i})" style="background:rgba(239,68,68,0.1);color:#dc2626;border:1px solid rgba(239,68,68,0.2);border-radius:5px;padding:3px 8px;font-size:11px;font-weight:600;cursor:pointer">✕</button>
+          </div>
+        </div>`;
+      }
     });
   }
 
   let h=`<div class="modal-title">${esc(emp?.name||"")} — ${day}</div>
-  <div class="modal-sub">Add multiple tasks for this day, or mark as Day Off / Called In Sick.</div>
+  <div class="modal-sub">Manage tasks for this day, or mark as Day Off / Sick.</div>
+  ${statusBanner}
   ${shiftListHtml}
   <div class="modal-divider"></div>
   <div class="sect-label">Add Task</div>
@@ -1123,6 +1178,37 @@ function renderShiftModal(empId,day,emp,dayData){
     <button class="modal-done" onclick="closeSaveShift('${empId}','${day}')">Done</button>
   </div>`;
   openModal(h,"460px");
+}
+
+function startEditShift(empId,day,idx){
+  _editShiftIdx=idx;
+  const emp=S.employees.find(e=>e.id===empId);
+  const dayData=S.schedule[empId][day];
+  renderShiftModal(empId,day,emp,dayData);
+}
+function cancelEditShift(){
+  _editShiftIdx=null;
+  // re-open with current empId/day — stored in modal title, but easier to just re-render by re-reading state
+  // We need empId/day; pass them through a closure variable
+  _pendingEditRerender&&_pendingEditRerender();
+}
+// We store a rerender callback
+let _pendingEditRerender=null;
+
+function saveEditShift(empId,day,idx){
+  const s=document.getElementById(`edit_s${idx}`)?.value;
+  const e=document.getElementById(`edit_e${idx}`)?.value;
+  if(s&&e){
+    const[sh,sm]=s.split(":").map(Number),[eh,em]=e.split(":").map(Number);
+    if((eh+em/60)<=(sh+sm/60)){toast("End time must be after start","error");return;}
+  }
+  S.schedule[empId][day].shifts[idx].start=s;
+  S.schedule[empId][day].shifts[idx].end=e;
+  _editShiftIdx=null;
+  const emp=S.employees.find(e=>e.id===empId);
+  renderShiftModal(empId,day,emp,S.schedule[empId][day]);
+  refreshGrid();updBadge(empId);
+  toast("Time updated");
 }
 
 function pickTask(id){
@@ -1163,7 +1249,7 @@ function removeShiftEntry(empId,day,idx){
 
 function markDayOff(empId,day){
   if(!S.schedule[empId])S.schedule[empId]=defSched();
-  S.schedule[empId][day]={status:"off",shifts:[]};
+  S.schedule[empId][day]={status:"dayoff",shifts:[]};
   closeModal();refreshGrid();updBadge(empId);
 }
 
@@ -1171,6 +1257,14 @@ function markDaySick(empId,day){
   if(!S.schedule[empId])S.schedule[empId]=defSched();
   S.schedule[empId][day]={status:"sick",shifts:[]};
   closeModal();refreshGrid();updBadge(empId);
+}
+
+function clearDayStatus(empId,day){
+  if(!S.schedule[empId])S.schedule[empId]=defSched();
+  S.schedule[empId][day]={status:"off",shifts:[]};
+  const emp=S.employees.find(e=>e.id===empId);
+  renderShiftModal(empId,day,emp,S.schedule[empId][day]);
+  refreshGrid();updBadge(empId);
 }
 
 function closeSaveShift(empId,day){
@@ -1335,6 +1429,8 @@ function buildGrid(){
 
       if(status==="off"){
         cellContent=``;
+      } else if(status==="dayoff"){
+        cellContent=`<div class="status-label day-off-label">📅 Day Off</div>`;
       } else if(status==="sick"){
         cellContent=`<div class="status-label sick-label">🤒 Sick</div>`;
       } else if(shifts.length>0){
@@ -1368,8 +1464,8 @@ function buildGrid(){
 
       const cellStyle=isWknd?'background:#fafaf8;':'';
       const sickStyle=status==="sick"?'background:rgba(249,115,22,0.06);':'';
-      const offStyle=status==="off"?'':'';
-      h+=`<td class="day-cell" style="${cellStyle}${sickStyle}" onclick="openShiftModal('${emp.id}','${d}')">${cellContent}</td>`;
+      const dayOffStyle=status==="dayoff"?'background:rgba(0,0,0,0.04);':'';
+      h+=`<td class="day-cell" style="${cellStyle}${sickStyle}${dayOffStyle}" onclick="openShiftModal('${emp.id}','${d}')">${cellContent}</td>`;
     });
     h+=`</tr>`;
   });
@@ -1447,7 +1543,7 @@ function getWeekStats(weekKey){
       const day=sched?.[d];
       if(!day)return;
       if(day.status==="sick")daysSick++;
-      else if(day.status==="off")daysOff++;
+      else if(day.status==="dayoff")daysOff++;  // only explicit day-off, not default "off"
       else if(day.status==="work"&&day.shifts?.length>0){daysWorked++;day.shifts.forEach(sh=>{if(sh.task)tally[sh.task]=(tally[sh.task]||0)+1;});}
     });
   });
@@ -1496,7 +1592,7 @@ function buildAnalytics(){
         const day=sched?.[d];
         if(!day)return;
         if(day.status==="sick")daysSick++;
-        else if(day.status==="off")daysOff++;
+        else if(day.status==="dayoff")daysOff++;  // only explicit day-off
         else if(day.status==="work"&&day.shifts)day.shifts.forEach(sh=>{if(sh.task)tally[sh.task]=(tally[sh.task]||0)+1;});
       });
     });
@@ -1518,9 +1614,9 @@ function buildAnalytics(){
       <div style="font-size:24px;font-weight:800;color:#c2410c">${totSick}</div>
       <div style="font-size:11px;color:#c2410c;font-weight:600;margin-top:3px">Sick Days</div>
     </div>
-    <div style="background:#fee2e2;border:1.5px solid rgba(239,68,68,0.2);border-radius:var(--radius-sm);padding:14px 16px;text-align:center">
-      <div style="font-size:24px;font-weight:800;color:#dc2626">${totOff}</div>
-      <div style="font-size:11px;color:#dc2626;font-weight:600;margin-top:3px">Days Off</div>
+    <div style="background:rgba(0,0,0,0.04);border:1.5px solid rgba(0,0,0,0.1);border-radius:var(--radius-sm);padding:14px 16px;text-align:center">
+      <div style="font-size:24px;font-weight:800;color:rgba(0,0,0,0.45)">${totOff}</div>
+      <div style="font-size:11px;color:rgba(0,0,0,0.4);font-weight:600;margin-top:3px">Days Off</div>
     </div>
   </div>`;
 
@@ -1544,7 +1640,7 @@ function buildAnalytics(){
     <div class="chips">`;
     tasks.filter(t=>t.id!=="off"&&t.id!=="sick"&&emp.tally[t.id]>0).forEach(t=>{h+=`<span class="chip" style="background:${t.bg};color:${t.text}">${esc(t.label)}: ${emp.tally[t.id]}d</span>`;});
     if(emp.daysSick>0)h+=`<span class="chip" style="background:#fff7ed;color:#c2410c;border:1px solid rgba(249,115,22,0.25)">🤒 Sick: ${emp.daysSick}d</span>`;
-    if(emp.daysOff>0)h+=`<span class="chip" style="background:#fee2e2;color:#dc2626;border:1px solid rgba(239,68,68,0.2)">📅 Off: ${emp.daysOff}d</span>`;
+    if(emp.daysOff>0)h+=`<span class="chip" style="background:rgba(0,0,0,0.06);color:rgba(0,0,0,0.5);border:1px solid rgba(0,0,0,0.15)">📅 Off: ${emp.daysOff}d</span>`;
     h+=`</div></div>`;
   });
 
@@ -1565,7 +1661,7 @@ function buildAnalytics(){
           </div>
           <div style="display:flex;gap:8px;align-items:center">
             ${st.daysSick>0?`<span style="background:#fff7ed;color:#c2410c;border:1px solid rgba(249,115,22,0.25);padding:3px 9px;border-radius:10px;font-size:11px;font-weight:700">🤒 ${st.daysSick} sick</span>`:""}
-            ${st.daysOff>0?`<span style="background:#fee2e2;color:#dc2626;border:1px solid rgba(239,68,68,0.2);padding:3px 9px;border-radius:10px;font-size:11px;font-weight:700">📅 ${st.daysOff} off</span>`:""}
+            ${st.daysOff>0?`<span style="background:rgba(0,0,0,0.06);color:rgba(0,0,0,0.5);border:1px solid rgba(0,0,0,0.15);padding:3px 9px;border-radius:10px;font-size:11px;font-weight:700">📅 ${st.daysOff} off</span>`:""}
             <span style="font-weight:800;font-size:16px;color:${st.totalH>0?"var(--accent)":"var(--fg-subtle)"}">${st.totalH}h</span>
           </div>
         </div>`;
@@ -1583,14 +1679,14 @@ function buildAnalytics(){
           const sched=migrateSched(s.schedule_data);
           const hrs=countH(sched);
           const sick=DAYS.filter(d=>sched[d]?.status==="sick").length;
-          const off=DAYS.filter(d=>sched[d]?.status==="off").length;
+          const off=DAYS.filter(d=>sched[d]?.status==="dayoff").length;
           const[abg,afg]=ac(emp.name);
           h+=`<div style="display:flex;align-items:center;gap:6px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:5px 10px">
             <div style="width:20px;height:20px;border-radius:50%;background:${abg};color:${afg};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;flex-shrink:0">${emp.name[0].toUpperCase()}</div>
             <span style="font-size:11px;font-weight:600;color:var(--fg)">${esc(emp.name)}</span>
             <span style="font-size:11px;font-weight:700;color:var(--accent)">${hrs}h</span>
             ${sick>0?`<span style="font-size:10px;color:#c2410c">🤒${sick}</span>`:""}
-            ${off>0?`<span style="font-size:10px;color:#dc2626">📅${off}</span>`:""}
+            ${off>0?`<span style="font-size:10px;color:rgba(0,0,0,0.4)">📅${off}</span>`:""}
           </div>`;
         });
         h+=`</div>`;
@@ -1626,6 +1722,7 @@ function buildHistory(){
       const status=day?.status||"off";
       let chipStyle="";
       if(status==="sick"){chipStyle=`background:#fff7ed;color:#c2410c;border:1px solid rgba(249,115,22,0.3)`;}
+      else if(status==="dayoff"){chipStyle=`background:rgba(0,0,0,0.06);color:rgba(0,0,0,0.45);border:1px solid rgba(0,0,0,0.15)`;}
       else if(status==="work"&&day.shifts?.length>0){
         const t=tm[day.shifts[0].task];
         chipStyle=`background:${t?t.bg:"var(--surface-sm)"};color:${t?t.text:"var(--fg-subtle)"};border:1px solid ${t?t.dot+"30":"var(--border)"}`;
