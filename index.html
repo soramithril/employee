@@ -727,15 +727,138 @@ td.day-cell:hover{background:var(--accent-light) !important;}
 }
 .logout-btn:hover{background:rgba(239,68,68,0.14);border-color:rgba(239,68,68,0.35);}
 
-@media(max-width:600px){
-  #header{padding:0 16px;height:62px;}
-  .logo-img-wrap{width:42px;height:42px;}
-  .logo-text{font-size:14px;}
-  nav .tab-btn{padding:6px 10px;font-size:12px;}
-  #app{padding:12px 14px 24px;}
-  td.name-col{min-width:100px;width:100px;}
-  .login-card{padding:32px 24px 28px;}
-  .login-logo-ring-wrap{width:80px;height:80px;}
+/* ─── DRAG HANDLE ─────────────────────────────────────────────────────────────── */
+.drag-handle{
+  cursor:grab;color:rgba(0,0,0,0.18);font-size:15px;padding:0 4px 0 0;
+  user-select:none;flex-shrink:0;transition:color .15s;line-height:1;
+  display:flex;align-items:center;
+}
+.drag-handle:hover{color:var(--accent);}
+.drag-handle:active{cursor:grabbing;}
+.emp-row{transition:opacity .15s;}
+.emp-row.drag-over-above td{box-shadow:inset 0 3px 0 var(--accent) !important;}
+.emp-row.drag-over-below td{box-shadow:inset 0 -3px 0 var(--accent) !important;}
+.emp-row.is-dragging{opacity:.35;}
+.tcard{transition:opacity .15s,box-shadow .15s;}
+.tcard.is-dragging{opacity:.35;}
+.tcard.drag-over-above{box-shadow:0 -3px 0 var(--accent),var(--shadow-card);}
+.tcard.drag-over-below{box-shadow:0 3px 0 var(--accent),var(--shadow-card);}
+
+/* ─── BOTTOM MOBILE NAV ───────────────────────────────────────────────────────── */
+#mobile-nav{display:none;}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────────────────────── */
+@media(max-width:767px){
+  /* Header becomes compact 2-column */
+  #header{
+    height:54px;padding:0 12px;
+    display:grid;grid-template-columns:auto 1fr auto;gap:8px;
+  }
+  #header nav{display:none;}
+  .logo-words{display:none;}
+  .logo-img-wrap{width:38px;height:38px;}
+  .emp-badge{display:none;}
+  #user-badge{display:none !important;}
+  .logout-btn{padding:5px 10px;font-size:11px;}
+
+  /* Sticky bottom nav bar */
+  #mobile-nav{
+    display:flex;
+    position:fixed;bottom:0;left:0;right:0;z-index:500;
+    background:rgba(248,250,248,0.97);
+    backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+    border-top:1px solid var(--border);
+    box-shadow:0 -2px 20px rgba(0,0,0,0.08);
+    padding:6px 0 max(6px,env(safe-area-inset-bottom));
+  }
+  .mnav-btn{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+    background:none;border:none;padding:4px 2px;
+    color:var(--fg-subtle);font-size:9px;font-weight:700;letter-spacing:.05em;
+    text-transform:uppercase;transition:color .18s;
+  }
+  .mnav-btn .mni{font-size:22px;line-height:1;transition:transform .2s var(--ease-out);}
+  .mnav-btn.active{color:var(--accent);}
+  .mnav-btn.active .mni{transform:scale(1.15);}
+
+  /* Main content clears bottom nav */
+  #app{padding:10px 10px 86px;}
+
+  /* Cards */
+  .card{border-radius:12px;margin-bottom:10px;}
+
+  /* Week nav */
+  .week-nav{padding:10px 12px;gap:6px;}
+  .week-label strong{font-size:13px;}
+  .week-label span{display:none;}
+  .nav-btn{padding:6px 11px;font-size:11px;}
+
+  /* Controls bar — scrollable horizontal strip */
+  .ctrl-bar{
+    overflow-x:auto;flex-wrap:nowrap;padding:7px 10px;gap:5px;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;
+  }
+  .ctrl-bar::-webkit-scrollbar{display:none;}
+  .ctrl-label{font-size:9px;white-space:nowrap;}
+  .day-toggle{padding:4px 9px;font-size:10px;white-space:nowrap;}
+  .ctrl-btn{padding:4px 10px;font-size:10px;white-space:nowrap;}
+
+  /* Grid — scrollable, tighter */
+  .sched-grid thead th.name-col{width:100px;min-width:100px;padding:7px 8px;}
+  td.name-col{padding:7px 8px;}
+  .emp-name{font-size:12px;}
+  .emp-hrs{font-size:9px;}
+  .avatar{width:28px;height:28px;font-size:11px;}
+  td.day-cell{height:50px;min-width:76px;}
+  .drag-handle{display:none;}
+
+  /* Save bar */
+  .save-bar{padding:10px 12px;}
+  .save-btn{width:100%;padding:11px;}
+
+  /* Modals slide up from bottom */
+  .moverlay{align-items:flex-end;padding:0;}
+  .modal{
+    width:100%;max-width:100%;border-radius:20px 20px 0 0;
+    padding:20px 16px max(28px,env(safe-area-inset-bottom));
+    max-height:88vh;
+    animation:mSlideUp .25s var(--ease-out);
+  }
+  @keyframes mSlideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+
+  /* Analytics/History/Team */
+  .awrap,.hwrap,.twrap{padding:14px 12px;}
+  .shdr{flex-direction:column;align-items:flex-start;gap:10px;}
+  .stitle{font-size:16px;}
+  .period-selector{gap:4px;}
+  .period-btn{padding:5px 10px;font-size:11px;}
+  .week-stat-card{padding:11px 12px;}
+  .acard{padding:12px 14px;}
+
+  /* History */
+  .dchips{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .dchip{flex-shrink:0;}
+
+  /* Team */
+  .addbox{padding:12px;}
+  .tcard{padding:11px 12px;}
+
+  /* Task/shift modal grids */
+  .task-grid{grid-template-columns:1fr 1fr;}
+  .shift-form{grid-template-columns:1fr 1fr;}
+
+  /* Login card */
+  .login-card{padding:28px 20px 24px;}
+  .login-logo-ring-wrap{width:78px;height:78px;}
+  .login-brand{font-size:18px;}
+}
+
+@media(max-width:380px){
+  td.day-cell{min-width:62px;height:46px;}
+  .sched-grid thead th.name-col{width:82px;min-width:82px;}
+  td.name-col{padding:5px 6px;}
+  .avatar{width:24px;height:24px;font-size:10px;}
+  .task-grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -811,6 +934,14 @@ td.day-cell:hover{background:var(--accent-light) !important;}
 
 <div id="toast"></div>
 <div id="app"><div id="loading"><div class="spinner"></div><span class="loading-text">Loading schedule…</span></div></div>
+
+<!-- Mobile bottom nav -->
+<nav id="mobile-nav">
+  <button class="mnav-btn active" id="mnav-schedule" onclick="switchTab('schedule')"><span class="mni">📅</span>Schedule</button>
+  <button class="mnav-btn" id="mnav-history" onclick="switchTab('history')"><span class="mni">📋</span>History</button>
+  <button class="mnav-btn" id="mnav-analytics" onclick="switchTab('analytics')"><span class="mni">📊</span>Analytics</button>
+  <button class="mnav-btn" id="mnav-team" onclick="switchTab('team')"><span class="mni">👥</span>Team</button>
+</nav>
 
 <script>
 const SUPABASE_URL="https://ghfxpftkdvlaygueyhqh.supabase.co",SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoZnhwZnRrZHZsYXlndWV5aHFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwOTM0MjEsImV4cCI6MjA4ODY2OTQyMX0.arx7rS1hfiyixrxprwY05eWvtgRdDmml66KXKxjhspI",USE_SUPABASE=!!(SUPABASE_URL&&SUPABASE_ANON_KEY);
@@ -1109,12 +1240,19 @@ function tmAdd(){const n=document.getElementById("nname"),c=document.getElementB
 // ── RENDER ──
 function render(){
   const app=document.getElementById("app");
-  document.querySelectorAll(".tab-btn").forEach(b=>{const m={schedule:"Schedule",history:"History",analytics:"Analytics",team:"Team"};b.classList.toggle("active",b.textContent.trim()===m[S.tab]);});
+  const labelMap={schedule:"Schedule",history:"History",analytics:"Analytics",team:"Team"};
+  // Sync desktop nav
+  document.querySelectorAll(".tab-btn").forEach(b=>{b.classList.toggle("active",b.textContent.trim()===labelMap[S.tab]);});
+  // Sync mobile nav
+  ["schedule","history","analytics","team"].forEach(t=>{
+    const el=document.getElementById("mnav-"+t);
+    if(el)el.classList.toggle("active",S.tab===t);
+  });
   document.getElementById("empCount").textContent=`${S.employees.length} employee${S.employees.length!==1?"s":""}`;
   if(S.tab==="schedule")app.innerHTML=buildSched();
   else if(S.tab==="history")app.innerHTML=buildHistory();
   else if(S.tab==="analytics")app.innerHTML=buildAnalytics();
-  else app.innerHTML=buildTeam();
+  else{app.innerHTML=buildTeam();initTeamDrag();}
 }
 
 // ── SCHEDULE ──
@@ -1149,7 +1287,10 @@ function buildSched(){
     h+=`<div class="grid-wrap" id="gw">${buildGrid()}</div>`;
     h+=`<div class="save-bar"><button class="save-btn" id="sbtn" onclick="doSave()">${S.saving?"Saving…":"Save Schedule"}</button></div>`;
   }
-  return h+`</div>`;
+  const result=h+`</div>`;
+  // After HTML is set, init grid drag
+  setTimeout(initGridDrag,0);
+  return result;
 }
 
 // ── GRID ──
@@ -1173,13 +1314,14 @@ function buildGrid(){
   });
   h+=`</tr></thead><tbody>`;
 
-  S.employees.forEach(emp=>{
+  S.employees.forEach((emp,empIdx)=>{
     const sc=S.schedule[emp.id]||defSched();
     const hrs=countH(sc);
     const[abg,afg]=ac(emp.name);
-    h+=`<tr class="emp-row">
+    h+=`<tr class="emp-row" draggable="true" data-empid="${emp.id}" data-empidx="${empIdx}">
       <td class="name-col">
         <div class="emp-cell-inner">
+          <span class="drag-handle" title="Drag to reorder">⠿</span>
           <div class="avatar" style="background:${abg};color:${afg}">${emp.name[0].toUpperCase()}</div>
           <div><div class="emp-name">${esc(emp.name)}</div><div class="emp-hrs" id="hbadge_${emp.id}">${hrs}h</div></div>
         </div>
@@ -1499,19 +1641,129 @@ function buildHistory(){
 
 // Team
 function buildTeam(){
-  let h=`<div class="card"><div class="twrap"><div class="stitle" style="margin-bottom:5px">Team</div><div class="ssub" style="margin-bottom:22px">Manage your employees</div>
+  let h=`<div class="card"><div class="twrap"><div class="stitle" style="margin-bottom:5px">Team</div><div class="ssub" style="margin-bottom:22px">Manage your employees · drag ⠿ to reorder</div>
   <div class="addbox"><div class="sect-label" style="margin-bottom:11px">Add Employee</div>
   <div style="display:flex;gap:9px"><input class="addinput" id="nEmp" placeholder="Full name…" onkeydown="if(event.key==='Enter')addEmp()"><button class="addbtn" onclick="addEmp()">Add</button></div></div>`;
   if(!S.employees.length)h+=`<div class="empty" style="height:100px">No employees yet.</div>`;
-  else S.employees.forEach(emp=>{const tot=S.allSchedules.filter(s=>s.employee_id===emp.id).reduce((n,s)=>n+countH(s.schedule_data),0);const[abg,afg]=ac(emp.name);h+=`<div class="tcard"><div style="display:flex;align-items:center;gap:11px"><div class="avatar" style="background:${abg};color:${afg};width:38px;height:38px;font-size:14px">${emp.name[0].toUpperCase()}</div><div><div style="font-weight:600;font-size:14px;color:var(--fg)">${esc(emp.name)}</div><div style="font-size:12px;color:var(--fg-muted)">${tot}h total scheduled</div></div></div><button class="rmbtn" onclick="removeEmp('${emp.id}','${esc(emp.name)}')">Remove</button></div>`;});
+  else{
+    h+=`<div id="team-list">`;
+    S.employees.forEach((emp,i)=>{
+      const tot=S.allSchedules.filter(s=>s.employee_id===emp.id).reduce((n,s)=>n+countH(s.schedule_data),0);
+      const[abg,afg]=ac(emp.name);
+      h+=`<div class="tcard" draggable="true" data-empid="${emp.id}" data-empidx="${i}">
+        <span style="cursor:grab;color:rgba(0,0,0,0.18);font-size:18px;padding:0 10px 0 0;user-select:none;flex-shrink:0;display:flex;align-items:center;" title="Drag to reorder">⠿</span>
+        <div style="display:flex;align-items:center;gap:11px;flex:1;min-width:0">
+          <div class="avatar" style="background:${abg};color:${afg};width:38px;height:38px;font-size:14px;flex-shrink:0">${emp.name[0].toUpperCase()}</div>
+          <div style="min-width:0"><div style="font-weight:600;font-size:14px;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(emp.name)}</div><div style="font-size:12px;color:var(--fg-muted)">${tot}h total scheduled</div></div>
+        </div>
+        <button class="rmbtn" onclick="removeEmp('${emp.id}','${esc(emp.name)}')">Remove</button>
+      </div>`;
+    });
+    h+=`</div>`;
+  }
   h+=`<div class="sbbox ${USE_SUPABASE?"conn":"local"}" style="margin-top:26px">`;
   if(USE_SUPABASE)h+=`<div style="font-weight:600;font-size:13px;color:var(--accent);margin-bottom:5px">✓ Connected to Supabase</div><div style="font-size:12px;color:var(--fg-muted)">Schedules are syncing to the cloud.</div>`;
-  else h+=`<div style="font-weight:600;font-size:13px;color:#a16207;margin-bottom:5px">⚡ Local Storage Mode</div><div style="font-size:12px;color:var(--fg-muted)">Data saves in your browser. Add <code style="color:var(--accent);font-size:11px">SUPABASE_URL</code> and <code style="color:var(--accent);font-size:11px">SUPABASE_ANON_KEY</code> at the top of the file for cloud backup.</div>`;
+  else h+=`<div style="font-weight:600;font-size:13px;color:#a16207;margin-bottom:5px">⚡ Local Storage Mode</div><div style="font-size:12px;color:var(--fg-muted)">Data saves in your browser.</div>`;
   h+=`</div></div></div>`;return h;
 }
 
 async function addEmp(){const inp=document.getElementById("nEmp"),name=(inp?.value||"").trim();if(!name){toast("Enter a name","error");return;}if(S.employees.find(e=>e.name.toLowerCase()===name.toLowerCase())){toast("Already exists","error");return;}try{const emp=await saveEmp(name);S.employees.push(emp);S.schedule[emp.id]=defSched();if(inp)inp.value="";toast(`${name} added`);render();}catch(e){toast(e.message,"error");}}
 async function removeEmp(id,name){if(!confirm(`Remove ${name}?`))return;try{await delEmp(id);S.employees=S.employees.filter(e=>e.id!==id);delete S.schedule[id];S.allSchedules=S.allSchedules.filter(s=>s.employee_id!==id);toast(`${name} removed`);render();}catch(e){toast(e.message,"error");}}
+
+// ── DRAG & DROP — shared helpers ──
+function saveEmpOrder(){localStorage.setItem("ss_emp_order",JSON.stringify(S.employees.map(e=>e.id)));}
+function applyStoredOrder(){
+  const stored=localStorage.getItem("ss_emp_order");
+  if(!stored)return;
+  try{
+    const ids=JSON.parse(stored);
+    S.employees.sort((a,b)=>{const ai=ids.indexOf(a.id),bi=ids.indexOf(b.id);if(ai<0)return 1;if(bi<0)return-1;return ai-bi;});
+  }catch(e){}
+}
+
+// ── DRAG — Schedule Grid rows ──
+function initGridDrag(){
+  const rows=document.querySelectorAll(".emp-row[data-empid]");
+  let dragId=null;
+  rows.forEach(row=>{
+    row.addEventListener("dragstart",e=>{
+      dragId=row.dataset.empid;
+      row.classList.add("is-dragging");
+      e.dataTransfer.effectAllowed="move";
+    });
+    row.addEventListener("dragend",()=>{
+      dragId=null;
+      rows.forEach(r=>r.classList.remove("is-dragging","drag-over-above","drag-over-below"));
+    });
+    row.addEventListener("dragover",e=>{
+      if(!dragId||dragId===row.dataset.empid)return;
+      e.preventDefault();
+      rows.forEach(r=>r.classList.remove("drag-over-above","drag-over-below"));
+      const rect=row.getBoundingClientRect();
+      const mid=rect.top+rect.height/2;
+      row.classList.add(e.clientY<mid?"drag-over-above":"drag-over-below");
+    });
+    row.addEventListener("dragleave",()=>{
+      row.classList.remove("drag-over-above","drag-over-below");
+    });
+    row.addEventListener("drop",e=>{
+      e.preventDefault();
+      if(!dragId||dragId===row.dataset.empid)return;
+      const rect=row.getBoundingClientRect();
+      const mid=rect.top+rect.height/2;
+      const insertBefore=e.clientY<mid;
+      const fromIdx=S.employees.findIndex(em=>em.id===dragId);
+      let toIdx=S.employees.findIndex(em=>em.id===row.dataset.empid);
+      if(fromIdx<0||toIdx<0)return;
+      const [moved]=S.employees.splice(fromIdx,1);
+      toIdx=S.employees.findIndex(em=>em.id===row.dataset.empid);
+      S.employees.splice(insertBefore?toIdx:toIdx+1,0,moved);
+      saveEmpOrder();
+      render();
+    });
+  });
+}
+
+// ── DRAG — Team list cards ──
+function initTeamDrag(){
+  const cards=document.querySelectorAll("#team-list .tcard[data-empid]");
+  let dragId=null;
+  cards.forEach(card=>{
+    card.addEventListener("dragstart",e=>{
+      dragId=card.dataset.empid;
+      card.classList.add("is-dragging");
+      e.dataTransfer.effectAllowed="move";
+    });
+    card.addEventListener("dragend",()=>{
+      dragId=null;
+      cards.forEach(c=>c.classList.remove("is-dragging","drag-over-above","drag-over-below"));
+    });
+    card.addEventListener("dragover",e=>{
+      if(!dragId||dragId===card.dataset.empid)return;
+      e.preventDefault();
+      cards.forEach(c=>c.classList.remove("drag-over-above","drag-over-below"));
+      const rect=card.getBoundingClientRect();
+      card.classList.add(e.clientY<rect.top+rect.height/2?"drag-over-above":"drag-over-below");
+    });
+    card.addEventListener("dragleave",()=>{
+      card.classList.remove("drag-over-above","drag-over-below");
+    });
+    card.addEventListener("drop",e=>{
+      e.preventDefault();
+      if(!dragId||dragId===card.dataset.empid)return;
+      const rect=card.getBoundingClientRect();
+      const insertBefore=e.clientY<rect.top+rect.height/2;
+      const fromIdx=S.employees.findIndex(em=>em.id===dragId);
+      let toIdx=S.employees.findIndex(em=>em.id===card.dataset.empid);
+      if(fromIdx<0||toIdx<0)return;
+      const[moved]=S.employees.splice(fromIdx,1);
+      toIdx=S.employees.findIndex(em=>em.id===card.dataset.empid);
+      S.employees.splice(insertBefore?toIdx:toIdx+1,0,moved);
+      saveEmpOrder();
+      render();
+    });
+  });
+}
 
 // ── AUTH (Supabase) ──
 let _currentUser=null;
@@ -1643,7 +1895,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   } else {
     setTimeout(()=>{document.getElementById("li-user")?.focus();},800);
   }
-  try{const[emps,scheds]=await Promise.all([loadEmps(),loadScheds()]);S.employees=emps||[];S.allSchedules=scheds||[];const w=wkey(S.weekOffset);S.employees.forEach(e=>{const f=(scheds||[]).find(s=>s.employee_id===e.id&&s.week_start===w);S.schedule[e.id]=f?migrateSched(JSON.parse(JSON.stringify(f.schedule_data))):defSched();});}catch(e){toast("Load failed: "+e.message,"error");}
+  try{const[emps,scheds]=await Promise.all([loadEmps(),loadScheds()]);S.employees=emps||[];S.allSchedules=scheds||[];applyStoredOrder();const w=wkey(S.weekOffset);S.employees.forEach(e=>{const f=(scheds||[]).find(s=>s.employee_id===e.id&&s.week_start===w);S.schedule[e.id]=f?migrateSched(JSON.parse(JSON.stringify(f.schedule_data))):defSched();});}catch(e){toast("Load failed: "+e.message,"error");}
   render();
 })();
 
