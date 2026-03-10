@@ -763,8 +763,8 @@ td.day-cell:hover{background:var(--accent-light) !important;}
     </div>
     <div class="login-form">
       <div class="login-field">
-        <label class="login-label">Username</label>
-        <input class="login-input" id="li-user" type="text" placeholder="Enter username" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('li-pass').focus()">
+        <label class="login-label">Email</label>
+        <input class="login-input" id="li-user" type="email" placeholder="Enter your email" autocomplete="email" onkeydown="if(event.key==='Enter')document.getElementById('li-pass').focus()">
       </div>
       <div class="login-field">
         <label class="login-label">Password</label>
@@ -803,14 +803,17 @@ td.day-cell:hover{background:var(--accent-light) !important;}
     <button class="tab-btn" onclick="switchTab('team')">Team</button>
   </nav>
   <span class="emp-badge" id="empCount">0 employees</span>
-  <button class="logout-btn" onclick="doLogout()">Sign Out</button>
+  <div style="display:flex;align-items:center;gap:8px">
+    <span id="user-badge" style="display:none;font-size:12px;font-weight:600;color:var(--fg-muted);background:var(--surface);border:1px solid var(--border-h);border-radius:20px;padding:5px 12px;"></span>
+    <button class="logout-btn" onclick="doLogout()">Sign Out</button>
+  </div>
 </div>
 
 <div id="toast"></div>
 <div id="app"><div id="loading"><div class="spinner"></div><span class="loading-text">Loading schedule…</span></div></div>
 
 <script>
-const SUPABASE_URL="",SUPABASE_ANON_KEY="",USE_SUPABASE=!!(SUPABASE_URL&&SUPABASE_ANON_KEY);
+const SUPABASE_URL="https://ghfxpftkdvlaygueyhqh.supabase.co",SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoZnhwZnRrZHZsYXlndWV5aHFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwOTM0MjEsImV4cCI6MjA4ODY2OTQyMX0.arx7rS1hfiyixrxprwY05eWvtgRdDmml66KXKxjhspI",USE_SUPABASE=!!(SUPABASE_URL&&SUPABASE_ANON_KEY);
 const DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 const WEEKDAYS=["Monday","Tuesday","Wednesday","Thursday","Friday"];
 const WEEKEND=["Saturday","Sunday"];
@@ -1510,62 +1513,136 @@ function buildTeam(){
 async function addEmp(){const inp=document.getElementById("nEmp"),name=(inp?.value||"").trim();if(!name){toast("Enter a name","error");return;}if(S.employees.find(e=>e.name.toLowerCase()===name.toLowerCase())){toast("Already exists","error");return;}try{const emp=await saveEmp(name);S.employees.push(emp);S.schedule[emp.id]=defSched();if(inp)inp.value="";toast(`${name} added`);render();}catch(e){toast(e.message,"error");}}
 async function removeEmp(id,name){if(!confirm(`Remove ${name}?`))return;try{await delEmp(id);S.employees=S.employees.filter(e=>e.id!==id);delete S.schedule[id];S.allSchedules=S.allSchedules.filter(s=>s.employee_id!==id);toast(`${name} removed`);render();}catch(e){toast(e.message,"error");}}
 
-// ── AUTH ──
-// Credentials — change these as needed
-const USERS={
-  "admin":"jwgroup2025",
-  "manager":"schedule123",
-  "jeff":"whiteteam1"
-};
+// ── AUTH (Supabase) ──
+let _currentUser=null;
 
-function checkAuth(){
-  return sessionStorage.getItem("ss_auth")==="1";
+async function sbAuth(endpoint,body){
+  const r=await fetch(`${SUPABASE_URL}/auth/v1/${endpoint}`,{
+    method:"POST",
+    headers:{"Content-Type":"application/json","apikey":SUPABASE_ANON_KEY},
+    body:JSON.stringify(body)
+  });
+  return r.json();
 }
-function doLogin(){
-  const u=(document.getElementById("li-user")?.value||"").trim().toLowerCase();
-  const p=(document.getElementById("li-pass")?.value||"");
+
+async function checkAuth(){
+  // Try to restore session from localStorage
+  const stored=localStorage.getItem("ss_session");
+  if(!stored)return false;
+  try{
+    const session=JSON.parse(stored);
+    // Check if token is still valid by hitting /auth/v1/user
+    const r=await fetch(`${SUPABASE_URL}/auth/v1/user`,{
+      headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":`Bearer ${session.access_token}`}
+    });
+    if(r.ok){
+      const u=await r.json();
+      _currentUser=u;
+      updateUserBadge(u);
+      return true;
+    }
+    // Try refresh
+    if(session.refresh_token){
+      const ref=await sbAuth("token?grant_type=refresh_token",{refresh_token:session.refresh_token});
+      if(ref.access_token){
+        localStorage.setItem("ss_session",JSON.stringify(ref));
+        _currentUser=ref.user;
+        updateUserBadge(ref.user);
+        return true;
+      }
+    }
+  }catch(e){}
+  localStorage.removeItem("ss_session");
+  return false;
+}
+
+function updateUserBadge(user){
+  const el=document.getElementById("user-badge");
+  if(el&&user?.email){
+    const name=user.user_metadata?.name||user.email.split("@")[0];
+    el.textContent=name;
+    el.style.display="inline-flex";
+  }
+}
+
+async function doLogin(){
+  const email=(document.getElementById("li-user")?.value||"").trim();
+  const password=(document.getElementById("li-pass")?.value||"");
   const err=document.getElementById("li-err");
   const btn=document.getElementById("li-btn");
   err.classList.remove("show");
-  if(USERS[u]&&USERS[u]===p){
-    sessionStorage.setItem("ss_auth","1");
-    btn.textContent="Welcome!";btn.disabled=true;
-    const ls=document.getElementById("login-screen");
-    setTimeout(()=>{
-      ls.classList.add("hiding");
-      setTimeout(()=>{ls.style.display="none";},600);
-    },400);
-  } else {
+
+  if(!email||!password){
+    err.textContent="Please enter your email and password.";
+    err.classList.add("show");return;
+  }
+
+  btn.textContent="Signing in…";btn.disabled=true;
+
+  try{
+    const data=await sbAuth("token?grant_type=password",{email,password});
+    if(data.access_token){
+      localStorage.setItem("ss_session",JSON.stringify(data));
+      _currentUser=data.user;
+      updateUserBadge(data.user);
+      btn.textContent="Welcome!";
+      const ls=document.getElementById("login-screen");
+      setTimeout(()=>{
+        ls.classList.add("hiding");
+        setTimeout(()=>{ls.style.display="none";},600);
+      },400);
+    } else {
+      const msg=data.error_description||data.msg||"Incorrect email or password.";
+      err.textContent=msg;
+      err.classList.add("show");
+      document.getElementById("li-pass").value="";
+      document.getElementById("li-pass").focus();
+      btn.textContent="Sign In";btn.disabled=false;
+      const card=document.querySelector(".login-card");
+      card.style.animation="none";card.offsetHeight;
+      card.style.animation="shake .35s ease";
+    }
+  }catch(e){
+    err.textContent="Connection error. Please try again.";
     err.classList.add("show");
-    document.getElementById("li-pass").value="";
-    document.getElementById("li-pass").focus();
-    // Shake the card
-    const card=document.querySelector(".login-card");
-    card.style.animation="none";card.offsetHeight;
-    card.style.animation="shake .35s ease";
+    btn.textContent="Sign In";btn.disabled=false;
   }
 }
-function doLogout(){
-  sessionStorage.removeItem("ss_auth");
+
+async function doLogout(){
+  try{
+    const stored=localStorage.getItem("ss_session");
+    if(stored){
+      const session=JSON.parse(stored);
+      await fetch(`${SUPABASE_URL}/auth/v1/logout`,{
+        method:"POST",
+        headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":`Bearer ${session.access_token}`}
+      });
+    }
+  }catch(e){}
+  localStorage.removeItem("ss_session");
   location.reload();
 }
 
-// Shake animation injected
+// Shake animation
 const shakeStyle=document.createElement("style");
 shakeStyle.textContent=`@keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}40%{transform:translateX(8px);}60%{transform:translateX(-5px);}80%{transform:translateX(5px);}}`;
 document.head.appendChild(shakeStyle);
 
-// On load — check session
-(function(){
-  if(checkAuth()){
+// Update login input placeholder to say Email
+document.addEventListener("DOMContentLoaded",()=>{
+  const u=document.getElementById("li-user");
+  if(u){u.type="email";u.placeholder="Enter your email";}
+});
+
+// On load — check session then boot app
+(async()=>{
+  const authed=await checkAuth();
+  if(authed){
     document.getElementById("login-screen").style.display="none";
   } else {
-    // Focus username after a short delay for animation
     setTimeout(()=>{document.getElementById("li-user")?.focus();},800);
   }
-})();
-
-(async()=>{
   try{const[emps,scheds]=await Promise.all([loadEmps(),loadScheds()]);S.employees=emps||[];S.allSchedules=scheds||[];const w=wkey(S.weekOffset);S.employees.forEach(e=>{const f=(scheds||[]).find(s=>s.employee_id===e.id&&s.week_start===w);S.schedule[e.id]=f?migrateSched(JSON.parse(JSON.stringify(f.schedule_data))):defSched();});}catch(e){toast("Load failed: "+e.message,"error");}
   render();
 })();
