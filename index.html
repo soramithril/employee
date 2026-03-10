@@ -2367,9 +2367,11 @@ async function doLogin(){
       updateUserBadge(data.user);
       btn.textContent="Welcome!";
       const ls=document.getElementById("login-screen");
-      setTimeout(()=>{
+      setTimeout(async()=>{
         ls.classList.add("hiding");
         setTimeout(()=>{ls.style.display="none";},600);
+        // Load all data now that we have a valid session
+        await bootApp();
       },400);
     } else {
       const msg=data.error_description||data.msg||"Incorrect email or password.";
@@ -2416,13 +2418,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 });
 
 // On load — check session then boot app
-(async()=>{
-  const authed=await checkAuth();
-  if(authed){
-    document.getElementById("login-screen").style.display="none";
-  } else {
-    setTimeout(()=>{document.getElementById("li-user")?.focus();},800);
-  }
+async function bootApp(){
   try{
     await loadSettings();
     const[emps,scheds]=await Promise.all([loadEmps(),loadScheds()]);
@@ -2431,6 +2427,18 @@ document.addEventListener("DOMContentLoaded",()=>{
     S.employees.forEach(e=>{const f=(scheds||[]).find(s=>s.employee_id===e.id&&s.week_start===w);S.schedule[e.id]=f?migrateSched(JSON.parse(JSON.stringify(f.schedule_data))):defSched();});
   }catch(e){toast("Load failed: "+e.message,"error");}
   render();
+}
+
+(async()=>{
+  const authed=await checkAuth();
+  if(authed){
+    document.getElementById("login-screen").style.display="none";
+    await bootApp();
+  } else {
+    // Still render the shell (shows login screen on top)
+    render();
+    setTimeout(()=>{document.getElementById("li-user")?.focus();},800);
+  }
 })();
 
 
