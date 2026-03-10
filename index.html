@@ -170,7 +170,6 @@ nav{display:flex;gap:2px;}
 @keyframes toastOut{from{opacity:1;transform:translateX(0) scale(1)}to{opacity:0;transform:translateX(14px) scale(.97)}}
 
 /* ─── LAYOUT ─────────────────────────────────────────────────────────────────── */
-#app{position:relative;z-index:1;padding:22px 28px 36px;}
 
 /* ─── CARD ───────────────────────────────────────────────────────────────────── */
 .card{
@@ -178,9 +177,13 @@ nav{display:flex;gap:2px;}
   border-radius:var(--radius);
   border:1px solid var(--border);
   box-shadow:var(--shadow-card);
-  overflow:hidden;
+  overflow:visible;
   margin-bottom:20px;
-  transition:box-shadow .3s var(--ease-out);
+  transition:box-shadow .3s var(--ease-out), transform .3s var(--ease-out);
+}
+.card:hover{
+  box-shadow:0 0 0 1px rgba(0,0,0,0.07),0 8px 32px rgba(0,0,0,0.09),0 0 60px rgba(26,122,60,0.06);
+  transform:translateY(-1px);
 }
 
 /* ─── WEEK NAV ───────────────────────────────────────────────────────────────── */
@@ -615,26 +618,22 @@ td.day-cell:hover{background:var(--accent-light) !important;}
 @keyframes sickPulse{0%,100%{opacity:0;}50%{opacity:1;}}
 
 /* ─── TOOLTIP ────────────────────────────────────────────────────────────────── */
-[data-tip]{position:relative;}
-[data-tip]:hover::before{
-  content:attr(data-tip);
-  position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
-  background:rgba(15,23,42,0.92);color:#f8fafc;
+#tooltip-el{
+  position:fixed;z-index:99998;
+  background:rgba(15,23,42,0.93);color:#f8fafc;
   font-size:11px;font-weight:500;line-height:1.4;
-  padding:5px 10px;border-radius:7px;white-space:nowrap;
-  backdrop-filter:blur(8px);
-  pointer-events:none;z-index:200;
-  animation:tipIn .15s var(--ease-out);
-  box-shadow:0 4px 16px rgba(0,0,0,0.2);
+  padding:6px 11px;border-radius:8px;
+  white-space:nowrap;pointer-events:none;
+  backdrop-filter:blur(10px);
+  box-shadow:0 4px 20px rgba(0,0,0,0.25);
+  transition:opacity .12s,transform .12s;
+  opacity:0;transform:translateY(4px);
 }
-[data-tip]:hover::after{
-  content:'';
-  position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);
-  border:5px solid transparent;border-top-color:rgba(15,23,42,0.92);
-  pointer-events:none;z-index:200;
-  animation:tipIn .15s var(--ease-out);
+#tooltip-el.visible{opacity:1;transform:translateY(0);}
+#tooltip-el::after{
+  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:5px solid transparent;border-top-color:rgba(15,23,42,0.93);
 }
-@keyframes tipIn{from{opacity:0;transform:translateX(-50%) translateY(4px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
 .chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;}
 .chip{font-size:10px;font-weight:600;padding:3px 8px;border-radius:10px;}
 .legbox{margin-top:22px;padding:16px;background:var(--bg-deep);border-radius:var(--radius-sm);border:1.5px solid var(--border);}
@@ -731,6 +730,102 @@ td.day-cell:hover{background:var(--accent-light) !important;}
 .h-emp-chip:hover:not(.on){background:var(--surface);color:var(--fg);}
 
 @keyframes notePulse{0%,100%{box-shadow:0 0 0 2px white,0 0 6px rgba(245,158,11,0.3);}50%{box-shadow:0 0 0 2px white,0 0 10px rgba(245,158,11,0.7);}}
+
+/* ─── TAB TRANSITION ─────────────────────────────────────────────────────────── */
+#app{position:relative;z-index:1;padding:22px 28px 36px;}
+#app.tab-out{animation:tabOut .15s ease-in both;}
+#app.tab-in{animation:tabIn .25s var(--ease-out) both;}
+@keyframes tabOut{to{opacity:0;transform:translateY(6px);}}
+@keyframes tabIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ─── SKELETON LOADER ────────────────────────────────────────────────────────── */
+.skeleton{
+  background:linear-gradient(90deg,#f0f4f0 25%,#e4ede4 50%,#f0f4f0 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.6s ease-in-out infinite;
+  border-radius:6px;
+}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.skel-wrap{padding:22px 28px;}
+.skel-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:10px 0;border-bottom:1px solid var(--border);}
+.skel-avatar{width:34px;height:34px;border-radius:50%;flex-shrink:0;}
+.skel-name{height:12px;border-radius:4px;flex:1;max-width:120px;}
+.skel-bar{height:22px;border-radius:6px;}
+.skel-hdr{height:14px;border-radius:4px;margin-bottom:20px;max-width:200px;}
+
+/* ─── TODAY HIGHLIGHT ────────────────────────────────────────────────────────── */
+.th-day-wrap.is-today{
+  background:linear-gradient(180deg,rgba(26,122,60,0.08) 0%,transparent 100%);
+  border-radius:6px 6px 0 0;
+}
+.th-day.is-today{color:var(--accent) !important;}
+.th-date.is-today{
+  color:var(--accent);font-weight:700;
+}
+.today-dot{
+  width:5px;height:5px;border-radius:50%;background:var(--accent);
+  margin:2px auto 0;
+}
+td.day-cell.is-today{
+  background:rgba(26,122,60,0.03) !important;
+}
+td.day-cell.is-today::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  opacity:.4;
+}
+th.day-col.is-today{background:rgba(26,122,60,0.04) !important;}
+
+/* ─── FLOATING ACTION BUTTON ─────────────────────────────────────────────────── */
+#fab{
+  position:fixed;bottom:96px;right:20px;z-index:500;
+  display:none;
+  width:52px;height:52px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent-b),var(--accent));
+  color:white;border:none;font-size:22px;
+  box-shadow:0 4px 20px rgba(26,122,60,0.45),0 1px 0 rgba(255,255,255,0.2) inset;
+  cursor:pointer;
+  transition:transform .2s var(--ease-out),box-shadow .2s;
+  align-items:center;justify-content:center;
+}
+#fab:hover{transform:scale(1.1) translateY(-2px);box-shadow:0 8px 28px rgba(26,122,60,0.55);}
+#fab:active{transform:scale(.95);}
+#fab.fab-show{display:flex;animation:fabIn .3s var(--ease-out);}
+@keyframes fabIn{from{opacity:0;transform:scale(.6) translateY(20px);}to{opacity:1;transform:scale(1) translateY(0);}}
+
+/* ─── SAVE SHIMMER ───────────────────────────────────────────────────────────── */
+.save-bar{
+  padding:8px 22px;border-top:1px solid var(--border);
+  background:linear-gradient(135deg,#f5faf6,#eef5f0);
+  display:flex;align-items:center;justify-content:space-between;
+  min-height:36px;position:relative;overflow:hidden;
+}
+.save-bar.saving::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent 0%,rgba(26,122,60,0.08) 50%,transparent 100%);
+  background-size:200% 100%;
+  animation:saveShimmer .9s ease-in-out infinite;
+}
+@keyframes saveShimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+#save-status{font-size:11px;font-weight:600;letter-spacing:.02em;transition:color .3s,opacity .3s;}
+#save-status.saved{color:var(--accent);}
+#save-status.saving-txt{color:var(--fg-muted);}
+#save-status.error-txt{color:#be123c;}
+
+/* ─── SCROLL TO TOP ──────────────────────────────────────────────────────────── */
+#scroll-top{
+  position:fixed;bottom:96px;right:80px;z-index:500;
+  display:none;
+  width:38px;height:38px;border-radius:50%;
+  background:white;color:var(--fg-muted);
+  border:1.5px solid var(--border-h);
+  font-size:14px;cursor:pointer;
+  box-shadow:0 2px 12px rgba(0,0,0,0.1);
+  align-items:center;justify-content:center;
+  transition:transform .2s,box-shadow .2s,color .2s;
+}
+#scroll-top.stt-show{display:flex;animation:fabIn .25s var(--ease-out);}
+#scroll-top:hover{transform:translateY(-2px);color:var(--accent);box-shadow:0 4px 16px rgba(26,122,60,0.2);}
 
 .wk-group{margin-bottom:10px;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--border);transition:box-shadow .2s;}
 .wk-group:hover{box-shadow:0 2px 12px rgba(26,122,60,0.07);}
@@ -1267,6 +1362,9 @@ td.day-cell:hover{background:var(--accent-light) !important;}
 </div>
 
 <div id="toast"></div>
+<div id="tooltip-el"></div>
+<button id="fab" onclick="openMultiAssign()" title="Assign Multiple">👥</button>
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
 <div id="app"><div id="loading"><div class="spinner"></div><span class="loading-text">Loading schedule…</span></div></div>
 
 <!-- Mobile bottom nav -->
@@ -1873,6 +1971,7 @@ function render(){
   else if(S.tab==="history")app.innerHTML=buildHistory();
   else if(S.tab==="analytics"){app.innerHTML=buildAnalytics();requestAnimationFrame(()=>animateCounters());}
   else{app.innerHTML=buildTeam();initTeamDrag();}
+  updateFAB();
 }
 
 // ── SCHEDULE ──
@@ -1903,10 +2002,17 @@ function buildSched(){
     <button class="ctrl-btn" onclick="openWHSettings()">⏰ ${fmtHour(WH.start,0)}–${fmtHour(WH.end,0)}</button>
   </div>`;
   if(!S.employees.length){
-    h+=`<div class="empty"><div style="font-size:40px;opacity:.3">👥</div><span>Add employees in the Team tab to get started</span></div>`;
+    h+=`<div class="empty" style="padding:52px 24px;display:flex;flex-direction:column;align-items:center;gap:16px">
+      <div style="width:72px;height:72px;border-radius:50%;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:32px;">👥</div>
+      <div style="text-align:center">
+        <div style="font-size:16px;font-weight:700;color:var(--fg);margin-bottom:6px">No employees yet</div>
+        <div style="font-size:13px;color:var(--fg-muted);max-width:260px;line-height:1.5">Head to the <strong>Team</strong> tab to add your staff, then come back to start scheduling.</div>
+      </div>
+      <button class="modal-done" style="padding:10px 24px" onclick="switchTab('team')">Go to Team →</button>
+    </div>`;
   } else {
     h+=`<div class="grid-wrap" id="gw">${buildGrid()}</div>`;
-    h+=`<div style="padding:8px 22px;border-top:1px solid var(--border);background:linear-gradient(135deg,#f5faf6,#eef5f0);display:flex;align-items:center;justify-content:flex-end;min-height:36px"><span id="save-status" style="font-size:11px;font-weight:600;letter-spacing:.02em;transition:color .2s"></span></div>`;
+    h+=`<div class="save-bar" id="save-bar"><span id="save-status"></span><span style="font-size:10px;color:var(--fg-subtle)">Auto-saves as you edit</span></div>`;
   }
   const result=h+`</div>`;
   // After HTML is set, init grid drag
@@ -1918,6 +2024,8 @@ function buildSched(){
 function buildGrid(){
   const ws=getWS(S.weekOffset),tm=TM();
   const daySpan=WH.end-WH.start;
+  const todayName=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][new Date().getDay()];
+  const isCurrentWeek=S.weekOffset===0;
 
   let ticksHtml="";
   for(let hr=WH.start;hr<=WH.end;hr+=2){
@@ -1928,8 +2036,13 @@ function buildGrid(){
   S.activeDays.forEach(d=>{
     const dt=new Date(ws);dt.setDate(dt.getDate()+DAYS.indexOf(d));
     const isWknd=WEEKEND.includes(d);
-    h+=`<th class="day-col"${isWknd?' style="background:#fafaf8;"':''}>
-      <div class="th-day-wrap"><div class="th-day"${isWknd?' style="color:#888;"':''}>${d.slice(0,3).toUpperCase()}</div><div class="th-date">${dt.toLocaleDateString("en-US",{month:"short",day:"numeric"})}</div></div>
+    const isToday=isCurrentWeek&&d===todayName;
+    h+=`<th class="day-col${isToday?" is-today":""}"${isWknd&&!isToday?' style="background:#fafaf8;"':''}>
+      <div class="th-day-wrap${isToday?" is-today":""}">
+        <div class="th-day${isToday?" is-today":""}"${isWknd&&!isToday?' style="color:#888;"':''}>${d.slice(0,3).toUpperCase()}</div>
+        <div class="th-date${isToday?" is-today":""}">${dt.toLocaleDateString("en-US",{month:"short",day:"numeric"})}</div>
+        ${isToday?`<div class="today-dot"></div>`:""}
+      </div>
       <div class="time-ruler">${ticksHtml}</div>
     </th>`;
   });
@@ -2007,8 +2120,9 @@ function buildGrid(){
       const cellStyle=isWknd?'background:#fafaf8;':'';
       const sickStyle=status==="sick"?'background:rgba(249,115,22,0.06);':'';
       const dayOffStyle=status==="dayoff"?'background:rgba(0,0,0,0.04);':'';
+      const isTodayCell=isCurrentWeek&&d===todayName;
       const noteIndicator=dayData.note?`<span title="${esc(dayData.note)}" data-tip="${esc(dayData.note)}" style="position:absolute;top:4px;right:4px;width:7px;height:7px;border-radius:50%;background:#f59e0b;box-shadow:0 0 0 2px white,0 0 6px rgba(245,158,11,0.5);z-index:2;pointer-events:none;animation:notePulse 2s ease-in-out infinite"></span>`:'';
-      h+=`<td class="day-cell" style="${cellStyle}${sickStyle}${dayOffStyle}" onclick="openShiftModal('${emp.id}','${d}')">${cellContent}${noteIndicator}</td>`;
+      h+=`<td class="day-cell${isTodayCell?" is-today":""}" style="${cellStyle}${sickStyle}${dayOffStyle}" onclick="openShiftModal('${emp.id}','${d}')">${cellContent}${noteIndicator}</td>`;
     });
     h+=`</tr>`;
   });
@@ -2047,13 +2161,7 @@ async function _doAutoSave(empId){
     showSaveStatus("saved");
   }catch(e){showSaveStatus("error");toast("Auto-save failed: "+e.message,"error");}
 }
-function showSaveStatus(state){
-  const el=document.getElementById("save-status");
-  if(!el)return;
-  if(state==="saving"){el.textContent="● Saving…";el.style.color="var(--fg-subtle)";}
-  else if(state==="saved"){el.textContent="✓ Saved";el.style.color="var(--accent)";setTimeout(()=>{el.textContent="";},2500);}
-  else if(state==="error"){el.textContent="✕ Save failed";el.style.color="#dc2626";}
-}
+function showSaveStatus(state){setSaveStatus(state);}
 
 // Analytics
 function getPeriodWeeks(period){
@@ -2671,7 +2779,121 @@ document.addEventListener("DOMContentLoaded",()=>{
   if(u){u.type="email";u.placeholder="Enter your email";}
 });
 
-// ── ANIMATED NUMBER COUNTERS ──
+// ── TOOLTIP ENGINE (fixed position, escapes overflow:hidden) ──
+(()=>{
+  const tip=document.getElementById("tooltip-el");
+  let hideT;
+  document.addEventListener("mouseover",e=>{
+    const el=e.target.closest("[data-tip]");
+    if(!el)return;
+    clearTimeout(hideT);
+    const text=el.getAttribute("data-tip");
+    if(!text)return;
+    tip.textContent=text;
+    tip.classList.remove("visible");
+    // position above element
+    const r=el.getBoundingClientRect();
+    const tw=Math.min(tip.offsetWidth||200,window.innerWidth-16);
+    let left=r.left+r.width/2-tw/2;
+    left=Math.max(8,Math.min(left,window.innerWidth-tw-8));
+    let top=r.top-tip.offsetHeight-10;
+    if(top<8)top=r.bottom+10;
+    tip.style.left=left+"px";
+    tip.style.top=top+"px";
+    requestAnimationFrame(()=>{
+      // recalc after paint
+      const th=tip.offsetHeight,tww=tip.offsetWidth;
+      let l2=r.left+r.width/2-tww/2;
+      l2=Math.max(8,Math.min(l2,window.innerWidth-tww-8));
+      let t2=r.top-th-10+window.scrollY;
+      if(r.top-th-10<8)t2=r.bottom+10+window.scrollY;
+      else t2=r.top-th-10+window.scrollY;
+      tip.style.left=l2+"px";
+      tip.style.top=t2+"px";
+      tip.classList.add("visible");
+    });
+  });
+  document.addEventListener("mouseout",e=>{
+    if(!e.target.closest("[data-tip]"))return;
+    hideT=setTimeout(()=>tip.classList.remove("visible"),80);
+  });
+  document.addEventListener("scroll",()=>tip.classList.remove("visible"),{passive:true});
+})();
+
+// ── TAB TRANSITIONS ──
+function switchTab(t){
+  const app=document.getElementById("app");
+  if(S.tab===t){render();return;}
+  app.classList.add("tab-out");
+  setTimeout(()=>{
+    S.tab=t;
+    render();
+    app.classList.remove("tab-out");
+    app.classList.add("tab-in");
+    setTimeout(()=>app.classList.remove("tab-in"),300);
+  },150);
+}
+
+// ── SKELETON LOADER ──
+function showSkeleton(){
+  const app=document.getElementById("app");
+  if(!app)return;
+  const rows=Array.from({length:5},(_,i)=>`
+    <div class="skel-row">
+      <div class="skeleton skel-avatar"></div>
+      <div class="skeleton skel-name" style="width:${70+i*15}px"></div>
+      <div style="flex:1;display:flex;gap:8px;padding-left:12px">
+        ${Array.from({length:5},()=>`<div class="skeleton skel-bar" style="flex:1"></div>`).join("")}
+      </div>
+    </div>`).join("");
+  app.innerHTML=`<div class="card"><div class="skel-wrap">
+    <div class="skeleton skel-hdr" style="width:180px;height:16px;margin-bottom:22px"></div>
+    ${rows}
+  </div></div>`;
+}
+
+// ── FAB VISIBILITY (mobile only, schedule tab) ──
+function updateFAB(){
+  const fab=document.getElementById("fab");
+  const stt=document.getElementById("scroll-top");
+  if(!fab)return;
+  const isMobile=window.innerWidth<=600;
+  if(isMobile&&S.tab==="schedule"&&S.employees.length>0){
+    fab.classList.add("fab-show");
+  } else {
+    fab.classList.remove("fab-show");
+    fab.style.display="none";
+  }
+  // Scroll to top — show when scrolled >300px on history tab
+  if(stt){
+    if(window.scrollY>300&&S.tab==="history"){
+      stt.classList.add("stt-show");
+    } else {
+      stt.classList.remove("stt-show");
+      stt.style.display="none";
+    }
+  }
+}
+window.addEventListener("scroll",updateFAB,{passive:true});
+window.addEventListener("resize",updateFAB);
+
+// ── SAVE STATUS SHIMMER ──
+function setSaveStatus(state,msg){
+  const bar=document.getElementById("save-bar");
+  const el=document.getElementById("save-status");
+  if(!el)return;
+  if(state==="saving"){
+    bar?.classList.add("saving");
+    el.className="saving-txt";el.textContent="⟳ Saving…";
+  } else if(state==="saved"){
+    bar?.classList.remove("saving");
+    el.className="saved";el.textContent="✓ Saved";
+    setTimeout(()=>{if(el)el.textContent="";},2500);
+  } else if(state==="error"){
+    bar?.classList.remove("saving");
+    el.className="error-txt";el.textContent="✕ "+(msg||"Save failed");
+  }
+}
 function animateCounters(){
   document.querySelectorAll(".stat-num[data-count]").forEach(el=>{
     const target=parseFloat(el.dataset.count)||0;
@@ -2706,6 +2928,7 @@ function playSplitReveal(cb){
 
 // On load — check session then boot app
 async function bootApp(){
+  showSkeleton();
   try{
     await loadSettings();
     const[emps,scheds]=await Promise.all([loadEmps(),loadScheds()]);
