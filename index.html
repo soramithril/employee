@@ -1506,7 +1506,7 @@ function renderMultiAssign(){
   <div style="display:flex;justify-content:space-between;align-items:center">
     <button class="modal-cancel" onclick="closeModal()">Cancel</button>
     <button class="modal-done" onclick="applyMultiAssign()" ${readyToAssign?"":'disabled style="opacity:.45;cursor:not-allowed"'}>
-      Assign${selCount>0&&_ma.days.length>0?` to ${selCount} × ${_ma.days.length} day${_ma.days.length!==1?"s":""}":""}
+      Assign${(selCount>0&&_ma.days.length>0)?" to "+selCount+" \xD7 "+_ma.days.length+" day"+(_ma.days.length!==1?"s":""):""}
     </button>
   </div>`;
 
@@ -2360,7 +2360,15 @@ async function doLogin(){
   btn.textContent="Signing in…";btn.disabled=true;
 
   try{
-    const data=await sbAuth("token?grant_type=password",{email,password});
+    const url=`${SUPABASE_URL}/auth/v1/token?grant_type=password`;
+    console.log("Attempting login to:",url);
+    const res=await fetch(url,{
+      method:"POST",
+      headers:{"Content-Type":"application/json","apikey":SUPABASE_ANON_KEY},
+      body:JSON.stringify({email,password})
+    });
+    const data=await res.json();
+    console.log("Login response status:",res.status,"data:",data);
     if(data.access_token){
       localStorage.setItem("ss_session",JSON.stringify(data));
       _currentUser=data.user;
@@ -2370,11 +2378,11 @@ async function doLogin(){
       setTimeout(async()=>{
         ls.classList.add("hiding");
         setTimeout(()=>{ls.style.display="none";},600);
-        // Load all data now that we have a valid session
         await bootApp();
       },400);
     } else {
-      const msg=data.error_description||data.msg||"Incorrect email or password.";
+      const msg=data.error_description||data.message||data.msg||data.error||"Incorrect email or password.";
+      console.error("Login failed:",data);
       err.textContent=msg;
       err.classList.add("show");
       document.getElementById("li-pass").value="";
@@ -2385,7 +2393,8 @@ async function doLogin(){
       card.style.animation="shake .35s ease";
     }
   }catch(e){
-    err.textContent="Connection error. Please try again.";
+    console.error("Login fetch error:",e);
+    err.textContent="Connection error: "+e.message;
     err.classList.add("show");
     btn.textContent="Sign In";btn.disabled=false;
   }
