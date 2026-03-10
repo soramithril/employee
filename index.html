@@ -529,6 +529,79 @@ td.day-cell:hover{background:var(--accent-light) !important;}
 .chip{font-size:10px;font-weight:600;padding:3px 8px;border-radius:10px;}
 .legbox{margin-top:22px;padding:16px;background:var(--bg-deep);border-radius:var(--radius-sm);border:1.5px solid var(--border);}
 
+/* ─── HISTORY GROUPED ────────────────────────────────────────────────────────── */
+.h-period-bar{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.h-filter-bar{display:flex;align-items:center;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.h-filter-label{font-size:10px;font-weight:700;color:var(--fg-subtle);letter-spacing:.09em;text-transform:uppercase;}
+.h-emp-chip{
+  background:white;color:var(--fg-muted);border:1px solid var(--border-h);
+  border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;
+  transition:all .18s;
+}
+.h-emp-chip.on{background:var(--accent-light);color:var(--accent);border-color:var(--border-acc);}
+.h-emp-chip:hover:not(.on){background:var(--surface);color:var(--fg);}
+
+.wk-group{margin-bottom:10px;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--border);transition:box-shadow .2s;}
+.wk-group:hover{box-shadow:0 2px 12px rgba(26,122,60,0.07);}
+.wk-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:11px 16px;cursor:pointer;user-select:none;
+  background:linear-gradient(135deg,#f0f6f2,#e9f2ec);
+  border-left:3px solid var(--accent);
+  transition:background .15s;
+}
+.wk-hdr:hover{background:linear-gradient(135deg,#e6f1ea,#dfeee4);}
+.wk-hdr.is-current{border-left-color:var(--accent-b);}
+.wk-hdr-left{display:flex;align-items:center;gap:10px;}
+.wk-badge{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:3px 8px;border-radius:20px;}
+.wk-badge.curr{background:var(--accent);color:white;}
+.wk-badge.past{background:rgba(0,0,0,0.07);color:var(--fg-muted);}
+.wk-date-str{font-size:13px;font-weight:700;color:var(--fg);letter-spacing:-.02em;}
+.wk-date-str span{font-size:11px;font-weight:500;color:var(--fg-muted);margin-left:7px;}
+.wk-hdr-right{display:flex;align-items:center;gap:16px;}
+.wk-stat{text-align:right;}
+.wk-stat-v{font-size:13px;font-weight:700;color:var(--fg);}
+.wk-stat-l{font-size:9px;color:var(--fg-muted);font-weight:500;text-transform:uppercase;letter-spacing:.06em;}
+.wk-chevron{font-size:11px;color:var(--fg-muted);transition:transform .25s var(--ease-out);width:16px;text-align:center;}
+.wk-group.open .wk-chevron{transform:rotate(180deg);}
+
+.wk-body{display:none;background:white;border-top:1px solid var(--border);}
+.wk-group.open .wk-body{display:block;}
+
+.wk-emp-row{
+  display:flex;align-items:center;
+  border-bottom:1px solid var(--border);
+  transition:background .12s;
+}
+.wk-emp-row:last-of-type{border-bottom:none;}
+.wk-emp-row:hover{background:rgba(26,122,60,0.015);}
+.wk-name-col{
+  width:150px;min-width:150px;display:flex;align-items:center;gap:8px;
+  padding:9px 12px;border-right:2px solid var(--border-acc);
+  background:rgba(26,122,60,0.012);flex-shrink:0;
+}
+.wk-name-col .emp-name{font-size:12px;font-weight:600;color:var(--fg);}
+.wk-name-col .emp-hrs{font-size:10px;color:var(--fg-muted);}
+.wk-days-col{flex:1;display:flex;align-items:center;gap:4px;padding:7px 8px;overflow-x:auto;}
+.wk-total-col{min-width:52px;text-align:right;padding:9px 12px;border-left:1px solid var(--border);flex-shrink:0;}
+.wk-total-v{font-size:13px;font-weight:700;color:var(--accent);}
+.wk-total-l{font-size:9px;color:var(--fg-muted);font-weight:500;}
+
+.dc2{
+  flex-shrink:0;border-radius:6px;padding:4px 7px;
+  font-size:10px;font-weight:700;
+  display:flex;flex-direction:column;align-items:center;gap:1px;
+  min-width:44px;border:1.5px solid transparent;
+}
+.dc2 .dc-d{font-size:9px;font-weight:700;letter-spacing:.05em;opacity:.6;}
+.dc2 .dc-t{font-size:10px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52px;}
+.dc2 .dc-r{font-size:9px;opacity:.6;font-weight:500;}
+.dc2 .dc-n{font-size:9px;color:rgba(0,0,0,0.4);font-style:italic;max-width:52px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.chip-sick{background:#fff7ed;color:#c2410c;border-color:rgba(249,115,22,0.3) !important;}
+
+.wk-legend{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:8px 12px;border-top:1px solid var(--border);background:#fafcfa;}
+.wk-legend-lbl{font-size:9px;font-weight:700;color:var(--fg-subtle);letter-spacing:.09em;text-transform:uppercase;}
+
 .hcard{
   background:var(--bg-deep);border:1.5px solid var(--border);
   border-radius:var(--radius-sm);padding:14px 18px;margin-bottom:8px;
@@ -593,6 +666,46 @@ td.day-cell:hover{background:var(--accent-light) !important;}
 
 .modal-divider{height:1px;background:var(--border);margin:16px 0;}
 .sect-label{font-size:10px;font-weight:700;color:var(--fg-muted);letter-spacing:.09em;text-transform:uppercase;margin-bottom:9px;}
+.day-note-wrap{margin-top:14px;}
+.day-note{
+  width:100%;background:var(--bg-deep);color:var(--fg);
+  border:1.5px solid var(--border-h);border-radius:var(--radius-sm);
+  padding:9px 12px;font-size:12px;font-family:inherit;
+  resize:none;outline:none;line-height:1.5;
+  transition:border-color .2s,box-shadow .2s;
+}
+.day-note:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow2);}
+.day-note::placeholder{color:rgba(0,0,0,0.28);}
+
+/* ─── MULTI-ASSIGN ───────────────────────────────────────────────────────────── */
+.ma-emp-list{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;max-height:220px;overflow-y:auto;}
+.ma-emp-row{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 11px;border-radius:var(--radius-xs);
+  border:1.5px solid var(--border-h);background:var(--bg-deep);
+  cursor:pointer;transition:all .15s;user-select:none;
+}
+.ma-emp-row:hover{border-color:var(--border-acc);background:var(--accent-light);}
+.ma-emp-row.checked{border-color:var(--accent);background:var(--accent-light);}
+.ma-emp-row input[type=checkbox]{accent-color:var(--accent);width:15px;height:15px;flex-shrink:0;cursor:pointer;}
+.ma-emp-name{font-size:13px;font-weight:600;color:var(--fg);flex:1;}
+.ma-everyone-btn{
+  width:100%;background:var(--surface);color:var(--fg-muted);
+  border:1.5px dashed var(--border-h);border-radius:var(--radius-xs);
+  padding:8px;font-size:12px;font-weight:700;cursor:pointer;
+  margin-bottom:8px;transition:all .18s;
+}
+.ma-everyone-btn.all-on{background:var(--accent);color:white;border-style:solid;border-color:var(--accent);}
+.ma-everyone-btn:hover:not(.all-on){background:var(--accent-light);color:var(--accent);border-color:var(--border-acc);}
+.ma-day-list{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;}
+.ma-day-btn{
+  background:var(--bg-deep);color:var(--fg-muted);
+  border:1.5px solid var(--border-h);border-radius:var(--radius-xs);
+  padding:5px 11px;font-size:11px;font-weight:600;cursor:pointer;
+  transition:all .15s;
+}
+.ma-day-btn.on{background:var(--accent);color:white;border-color:var(--accent);}
+.ma-day-btn:hover:not(.on){background:var(--accent-light);color:var(--accent);border-color:var(--border-acc);}
 
 /* ─── LOGIN PAGE ─────────────────────────────────────────────────────────────── */
 #login-screen{
@@ -1068,7 +1181,7 @@ function countH(s){
 }
 
 // Default: weekdays only
-let S={tab:"schedule",weekOffset:0,employees:[],allSchedules:[],schedule:{},activeDays:[...WEEKDAYS],saving:false,aPeriod:"4w",hFilter:"all"};
+let S={tab:"schedule",weekOffset:0,employees:[],allSchedules:[],schedule:{},activeDays:[...WEEKDAYS],saving:false,aPeriod:"4w",hFilter:"all",hPeriod:"4w",hOpen:{}};
 
 function getWS(off=0){const n=new Date(),d=n.getDay(),r=new Date(n);r.setDate(n.getDate()-d+(d===0?-6:1)+off*7);r.setHours(0,0,0,0);return r;}
 function wkey(off){return getWS(off).toISOString().split("T")[0];}
@@ -1199,13 +1312,17 @@ function renderShiftModal(empId,day,emp,dayData){
   h+=`</div>
   <button class="add-shift-entry-btn" onclick="addShiftEntry('${empId}','${day}')">+ Add Task to Schedule</button>
   <div class="modal-divider"></div>
+  <div class="day-note-wrap">
+    <div class="sect-label">📝 Notes <span style="font-weight:400;opacity:.6;text-transform:none;letter-spacing:0">(optional)</span></div>
+    <textarea class="day-note" id="day_note" rows="2" placeholder="e.g. Leaving early at 2pm, covering for Sarah, key with manager…" oninput="saveDayNote('${empId}','${day}',this.value)">${esc(dayData.note||"")}</textarea>
+  </div>
+  <div class="modal-divider"></div>
   <div style="display:flex;gap:8px;margin-bottom:14px">
     <button class="clear-btn" style="flex:1;margin-bottom:0" onclick="markDayOff('${empId}','${day}')">📅 Mark as Day Off</button>
     <button class="sick-btn" onclick="markDaySick('${empId}','${day}')">🤒 Called In Sick</button>
   </div>
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <button class="modal-cancel" onclick="closeModal()">Cancel</button>
-    <button class="modal-done" onclick="closeSaveShift('${empId}','${day}')">Done</button>
+  <div style="display:flex;justify-content:flex-end">
+    <button class="modal-done" onclick="closeSaveShift('${empId}','${day}')">Close</button>
   </div>`;
   openModal(h,"460px");
 }
@@ -1238,6 +1355,7 @@ function saveEditShift(empId,day,idx){
   const emp=S.employees.find(e=>e.id===empId);
   renderShiftModal(empId,day,emp,S.schedule[empId][day]);
   refreshGrid();updBadge(empId);
+  autoSave(empId);
   toast("Time updated");
 }
 
@@ -1264,7 +1382,7 @@ function addShiftEntry(empId,day){
   _selTask=null;
   const emp=S.employees.find(e=>e.id===empId);
   renderShiftModal(empId,day,emp,dayData);
-  refreshGrid();updBadge(empId);
+  refreshGrid();updBadge(empId);autoSave(empId);
 }
 
 function removeShiftEntry(empId,day,idx){
@@ -1274,19 +1392,19 @@ function removeShiftEntry(empId,day,idx){
   if(dayData.shifts.length===0)dayData.status="off";
   const emp=S.employees.find(e=>e.id===empId);
   renderShiftModal(empId,day,emp,dayData);
-  refreshGrid();updBadge(empId);
+  refreshGrid();updBadge(empId);autoSave(empId);
 }
 
 function markDayOff(empId,day){
   if(!S.schedule[empId])S.schedule[empId]=defSched();
   S.schedule[empId][day]={status:"dayoff",shifts:[]};
-  closeModal();refreshGrid();updBadge(empId);
+  closeModal();refreshGrid();updBadge(empId);autoSave(empId);
 }
 
 function markDaySick(empId,day){
   if(!S.schedule[empId])S.schedule[empId]=defSched();
   S.schedule[empId][day]={status:"sick",shifts:[]};
-  closeModal();refreshGrid();updBadge(empId);
+  closeModal();refreshGrid();updBadge(empId);autoSave(empId);
 }
 
 function clearDayStatus(empId,day){
@@ -1294,11 +1412,159 @@ function clearDayStatus(empId,day){
   S.schedule[empId][day]={status:"off",shifts:[]};
   const emp=S.employees.find(e=>e.id===empId);
   renderShiftModal(empId,day,emp,S.schedule[empId][day]);
-  refreshGrid();updBadge(empId);
+  refreshGrid();updBadge(empId);autoSave(empId);
 }
 
 function closeSaveShift(empId,day){
   closeModal();refreshGrid();updBadge(empId);
+}
+function saveDayNote(empId,day,val){
+  if(!S.schedule[empId])S.schedule[empId]=defSched();
+  S.schedule[empId][day].note=val.trim();
+  autoSave(empId);
+}
+
+// ── MULTI-ASSIGN ──
+let _ma={task:null,days:[],empIds:[]};
+
+function openMultiAssign(){
+  _ma={task:null,days:[],empIds:[]};
+  renderMultiAssign();
+}
+
+function renderMultiAssign(){
+  const tm=TM();
+  const defStart=`${WH.start}:00`,defEnd=`${WH.end}:00`;
+
+  // Task grid
+  let taskHtml='<div class="task-grid">';
+  tasks.filter(t=>t.id!=="off"&&t.id!=="sick").forEach(t=>{
+    const sel=_ma.task===t.id;
+    taskHtml+=`<button class="task-opt${sel?" sel":""}" id="matopt_${t.id}"
+      style="background:${t.bg};color:${t.text};border-color:${sel?t.dot:"transparent"}"
+      onclick="maPick('${t.id}')">
+      <span style="width:7px;height:7px;border-radius:50%;background:${t.dot};flex-shrink:0;display:inline-block"></span>
+      ${esc(t.label)}
+    </button>`;
+  });
+  taskHtml+='</div>';
+
+  // Day picker
+  let dayHtml='<div class="ma-day-list">';
+  S.activeDays.forEach(d=>{
+    const on=_ma.days.includes(d);
+    dayHtml+=`<button class="ma-day-btn${on?" on":""}" onclick="maToggleDay('${d}')">${d.slice(0,3)}</button>`;
+  });
+  // Add "All Days" shortcut
+  const allDaysOn=S.activeDays.every(d=>_ma.days.includes(d));
+  dayHtml+=`<button class="ma-day-btn${allDaysOn?" on":""}" onclick="maToggleAllDays()" style="font-style:italic">All</button>`;
+  dayHtml+='</div>';
+
+  // Employee list
+  const allOn=S.employees.length>0&&S.employees.every(e=>_ma.empIds.includes(e.id));
+  let empHtml=`<button class="ma-everyone-btn${allOn?" all-on":""}" onclick="maToggleEveryone()">
+    ${allOn?"✓ Everyone selected":"👥 Select Everyone"}
+  </button>
+  <div class="ma-emp-list">`;
+  S.employees.forEach(e=>{
+    const checked=_ma.empIds.includes(e.id);
+    const[abg,afg]=ac(e.name);
+    empHtml+=`<label class="ma-emp-row${checked?" checked":""}" onclick="maToggleEmp('${e.id}')">
+      <input type="checkbox" ${checked?"checked":""} onclick="event.preventDefault()">
+      <div class="avatar" style="background:${abg};color:${afg};width:26px;height:26px;font-size:11px;flex-shrink:0">${e.name[0].toUpperCase()}</div>
+      <span class="ma-emp-name">${esc(e.name)}</span>
+    </label>`;
+  });
+  empHtml+='</div>';
+
+  const selCount=_ma.empIds.length;
+  const readyToAssign=_ma.task&&_ma.days.length>0&&selCount>0;
+
+  const h=`
+  <div class="modal-title">👥 Assign to Multiple</div>
+  <div class="modal-sub">Pick a task, time, days, and employees — all get the same shift added.</div>
+
+  <div class="sect-label">Task</div>
+  ${taskHtml}
+
+  <div class="modal-divider"></div>
+  <div class="sect-label">Time</div>
+  <div class="shift-form">
+    <div><div class="sf-label">Start</div><select class="sf-select" id="ma_start">${buildTimeOpts(defStart)}</select></div>
+    <div><div class="sf-label">End</div><select class="sf-select" id="ma_end">${buildTimeOpts(defEnd)}</select></div>
+  </div>
+
+  <div class="modal-divider"></div>
+  <div class="sect-label">Days</div>
+  ${dayHtml}
+
+  <div class="modal-divider"></div>
+  <div class="sect-label">Employees <span style="font-weight:500;opacity:.6;text-transform:none;letter-spacing:0">${selCount>0?`(${selCount} selected)`:""}</span></div>
+  ${S.employees.length?empHtml:'<div style="font-size:12px;color:var(--fg-muted);padding:8px 0">No employees yet — add them in the Team tab.</div>'}
+
+  <div class="modal-divider"></div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+    <button class="modal-done" onclick="applyMultiAssign()" ${readyToAssign?"":'disabled style="opacity:.45;cursor:not-allowed"'}>
+      Assign${selCount>0&&_ma.days.length>0?` to ${selCount} × ${_ma.days.length} day${_ma.days.length!==1?"s":""}":""}
+    </button>
+  </div>`;
+
+  openModal(h,"480px");
+}
+
+function maPick(id){
+  _ma.task=id;
+  renderMultiAssign();
+}
+function maToggleDay(d){
+  const i=_ma.days.indexOf(d);
+  if(i>=0)_ma.days.splice(i,1);else _ma.days.push(d);
+  renderMultiAssign();
+}
+function maToggleAllDays(){
+  const allOn=S.activeDays.every(d=>_ma.days.includes(d));
+  _ma.days=allOn?[]:[...S.activeDays];
+  renderMultiAssign();
+}
+function maToggleEmp(id){
+  const i=_ma.empIds.indexOf(id);
+  if(i>=0)_ma.empIds.splice(i,1);else _ma.empIds.push(id);
+  renderMultiAssign();
+}
+function maToggleEveryone(){
+  const allOn=S.employees.every(e=>_ma.empIds.includes(e.id));
+  _ma.empIds=allOn?[]:S.employees.map(e=>e.id);
+  renderMultiAssign();
+}
+
+function applyMultiAssign(){
+  const s=document.getElementById("ma_start")?.value;
+  const e=document.getElementById("ma_end")?.value;
+  if(!_ma.task){toast("Select a task first","error");return;}
+  if(!_ma.days.length){toast("Select at least one day","error");return;}
+  if(!_ma.empIds.length){toast("Select at least one employee","error");return;}
+  if(s&&e){
+    const[sh,sm]=s.split(":").map(Number),[eh,em]=e.split(":").map(Number);
+    if((eh+em/60)<=(sh+sm/60)){toast("End time must be after start","error");return;}
+  }
+  let count=0;
+  _ma.empIds.forEach(empId=>{
+    if(!S.schedule[empId])S.schedule[empId]=defSched();
+    _ma.days.forEach(day=>{
+      const dayData=S.schedule[empId][day];
+      dayData.status="work";
+      dayData.shifts=[...(dayData.shifts||[]),{task:_ma.task,start:s,end:e}];
+      count++;
+    });
+    autoSave(empId);
+    updBadge(empId);
+  });
+  closeModal();
+  refreshGrid();
+  const tLabel=TM()[_ma.task]?.label||_ma.task;
+  toast(`✓ "${tLabel}" assigned to ${_ma.empIds.length} employee${_ma.empIds.length!==1?"s":""} across ${_ma.days.length} day${_ma.days.length!==1?"s":""}`);
+  _ma={task:null,days:[],empIds:[]};
 }
 function updBadge(empId){const el=document.getElementById(`hbadge_${empId}`);if(el){const h=countH(S.schedule[empId]||{});el.textContent=`${h}h`;}}
 function refreshGrid(){const gw=document.getElementById("gw");if(gw)gw.innerHTML=buildGrid();}
@@ -1403,13 +1669,14 @@ function buildSched(){
 
   h+=`<div class="ctrl-sep"></div>
     <button class="ctrl-btn" onclick="openTaskMgr()">⚙ Tasks</button>
+    <button class="ctrl-btn" onclick="openMultiAssign()" style="background:var(--accent-light);color:var(--accent);border-color:var(--border-acc)">👥 Assign Multiple</button>
     <button class="ctrl-btn" onclick="openWHSettings()">⏰ ${fmtHour(WH.start,0)}–${fmtHour(WH.end,0)}</button>
   </div>`;
   if(!S.employees.length){
     h+=`<div class="empty"><div style="font-size:40px;opacity:.3">👥</div><span>Add employees in the Team tab to get started</span></div>`;
   } else {
     h+=`<div class="grid-wrap" id="gw">${buildGrid()}</div>`;
-    h+=`<div class="save-bar"><button class="save-btn" id="sbtn" onclick="doSave()">${S.saving?"Saving…":"Save Schedule"}</button></div>`;
+    h+=`<div style="padding:8px 22px;border-top:1px solid var(--border);background:linear-gradient(135deg,#f5faf6,#eef5f0);display:flex;align-items:center;justify-content:flex-end;min-height:36px"><span id="save-status" style="font-size:11px;font-weight:600;letter-spacing:.02em;transition:color .2s"></span></div>`;
   }
   const result=h+`</div>`;
   // After HTML is set, init grid drag
@@ -1495,7 +1762,8 @@ function buildGrid(){
       const cellStyle=isWknd?'background:#fafaf8;':'';
       const sickStyle=status==="sick"?'background:rgba(249,115,22,0.06);':'';
       const dayOffStyle=status==="dayoff"?'background:rgba(0,0,0,0.04);':'';
-      h+=`<td class="day-cell" style="${cellStyle}${sickStyle}${dayOffStyle}" onclick="openShiftModal('${emp.id}','${d}')">${cellContent}</td>`;
+      const noteIndicator=dayData.note?`<span title="${esc(dayData.note)}" style="position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;background:#f59e0b;box-shadow:0 0 0 1.5px white;z-index:2;pointer-events:none"></span>`:'';
+      h+=`<td class="day-cell" style="${cellStyle}${sickStyle}${dayOffStyle}" onclick="openShiftModal('${emp.id}','${d}')">${cellContent}${noteIndicator}</td>`;
     });
     h+=`</tr>`;
   });
@@ -1515,16 +1783,31 @@ function toggleDay(d){
 }
 function loadWeekSched(){const w=wkey(S.weekOffset);S.employees.forEach(e=>{const f=S.allSchedules.find(s=>s.employee_id===e.id&&s.week_start===w);S.schedule[e.id]=f?migrateSched(JSON.parse(JSON.stringify(f.schedule_data))):defSched();});}
 
-async function doSave(){
-  if(S.saving)return;S.saving=true;const btn=document.getElementById("sbtn");if(btn){btn.disabled=true;btn.textContent="Saving…";}
+// ── AUTO-SAVE (debounced) ──
+let _autoSaveTimer=null;
+function autoSave(empId){
+  // Show subtle saving indicator
+  showSaveStatus("saving");
+  clearTimeout(_autoSaveTimer);
+  _autoSaveTimer=setTimeout(()=>_doAutoSave(empId),800);
+}
+async function _doAutoSave(empId){
   try{
     const ws=getWS(S.weekOffset);
-    await Promise.all(S.employees.map(e=>upsertSched(e.id,ws,S.schedule[e.id]||defSched())));
+    // Save just the changed employee if provided, else all
+    const toSave=empId?S.employees.filter(e=>e.id===empId):S.employees;
+    await Promise.all(toSave.map(e=>upsertSched(e.id,ws,S.schedule[e.id]||defSched())));
     const w=ws.toISOString().split("T")[0];
-    S.employees.forEach(e=>{const i=S.allSchedules.findIndex(s=>s.employee_id===e.id&&s.week_start===w);const en={id:`${e.id}_${w}`,employee_id:e.id,week_start:w,schedule_data:JSON.parse(JSON.stringify(S.schedule[e.id]||defSched()))};if(i>=0)S.allSchedules[i]=en;else S.allSchedules.push(en);});
-    toast("Schedule saved ✓");
-  }catch(e){toast("Save failed: "+e.message,"error");}
-  S.saving=false;if(btn){btn.disabled=false;btn.textContent="Save Schedule";}
+    toSave.forEach(e=>{const i=S.allSchedules.findIndex(s=>s.employee_id===e.id&&s.week_start===w);const en={id:`${e.id}_${w}`,employee_id:e.id,week_start:w,schedule_data:JSON.parse(JSON.stringify(S.schedule[e.id]||defSched()))};if(i>=0)S.allSchedules[i]=en;else S.allSchedules.push(en);});
+    showSaveStatus("saved");
+  }catch(e){showSaveStatus("error");toast("Auto-save failed: "+e.message,"error");}
+}
+function showSaveStatus(state){
+  const el=document.getElementById("save-status");
+  if(!el)return;
+  if(state==="saving"){el.textContent="● Saving…";el.style.color="var(--fg-subtle)";}
+  else if(state==="saved"){el.textContent="✓ Saved";el.style.color="var(--accent)";setTimeout(()=>{el.textContent="";},2500);}
+  else if(state==="error"){el.textContent="✕ Save failed";el.style.color="#dc2626";}
 }
 
 // Analytics
@@ -1731,38 +2014,156 @@ function buildAnalytics(){
 }
 
 // History
+const H_PERIODS=[
+  {id:"this_week",label:"This Week"},
+  {id:"last_week",label:"Last Week"},
+  {id:"2w",label:"2 Weeks"},
+  {id:"4w",label:"4 Weeks"},
+  {id:"this_month",label:"This Month"},
+  {id:"last_month",label:"Last Month"},
+  {id:"3m",label:"3 Months"},
+  {id:"6m",label:"6 Months"},
+  {id:"year",label:"1 Year"},
+  {id:"all",label:"All Time"},
+];
+function getHistoryWeekKeys(period){
+  const thisMonday=getWS(0);
+  const keys=[];
+  const addK=(off)=>{const k=getWS(off).toISOString().split("T")[0];if(!keys.includes(k))keys.push(k);};
+  if(period==="this_week"){addK(0);}
+  else if(period==="last_week"){addK(-1);}
+  else if(period==="2w"){addK(0);addK(-1);}
+  else if(period==="4w"){for(let i=0;i<4;i++)addK(-i);}
+  else if(period==="this_month"){const m=thisMonday.getMonth(),y=thisMonday.getFullYear();for(let i=0;i<6;i++){const d=getWS(-i);if(d.getFullYear()===y&&d.getMonth()===m)addK(-i);}}
+  else if(period==="last_month"){const ref=new Date(thisMonday);ref.setDate(1);ref.setMonth(ref.getMonth()-1);const lm=ref.getMonth(),ly=ref.getFullYear();for(let i=1;i<9;i++){const d=getWS(-i);if(d.getFullYear()===ly&&d.getMonth()===lm)addK(-i);}}
+  else if(period==="3m"){for(let i=0;i<13;i++)addK(-i);}
+  else if(period==="6m"){for(let i=0;i<26;i++)addK(-i);}
+  else if(period==="year"){for(let i=0;i<52;i++)addK(-i);}
+  else if(period==="all"){[...new Set(S.allSchedules.map(s=>s.week_start))].sort((a,b)=>b.localeCompare(a)).forEach(k=>keys.push(k));}
+  return keys;
+}
+function toggleHistoryWeek(wk){
+  S.hOpen[wk]=!S.hOpen[wk];
+  // just toggle DOM, no full re-render
+  const grp=document.getElementById("wkg_"+wk);
+  if(grp)grp.classList.toggle("open",!!S.hOpen[wk]);
+}
 function buildHistory(){
-  const f=S.hFilter,tm=TM();
-  const sorted=[...S.allSchedules].sort((a,b)=>new Date(b.week_start)-new Date(a.week_start));
-  const filtered=f==="all"?sorted:sorted.filter(s=>s.employee_id===f);
-  let h=`<div class="card"><div class="hwrap"><div class="shdr"><div><div class="stitle">Schedule History</div><div class="ssub">All saved weekly schedules</div></div>
-  <select onchange="S.hFilter=this.value;render()" style="background:white;color:var(--fg);border:1.5px solid var(--border-h);border-radius:var(--radius-xs);padding:7px 12px;font-family:inherit;font-size:13px;font-weight:500;outline:none;cursor:pointer">
-    <option value="all"${f==="all"?" selected":""}>All Employees</option>`;
-  S.employees.forEach(e=>{h+=`<option value="${e.id}"${f===e.id?" selected":""}>${esc(e.name)}</option>`;});
-  h+=`</select></div>`;
-  if(!filtered.length)h+=`<div class="empty">No history found.</div>`;
-  else filtered.forEach(s=>{
-    const emp=S.employees.find(e=>e.id===s.employee_id),hrs=countH(migrateSched(s.schedule_data));
-    const ws=new Date(s.week_start+"T12:00:00"),we=new Date(ws);we.setDate(we.getDate()+6);
-    const[abg,afg]=ac(emp?.name||"?");
-    h+=`<div class="hcard"><div class="htop"><div style="display:flex;align-items:center;gap:10px"><div class="avatar" style="background:${abg};color:${afg}">${(emp?.name||"?")[0].toUpperCase()}</div><div><div style="font-weight:600;font-size:14px;color:var(--fg)">${esc(emp?.name||"Unknown")}</div><div style="font-size:11px;color:var(--fg-muted)">${ws.toLocaleDateString("en-US",{month:"short",day:"numeric"})} – ${we.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}</div></div></div><span style="background:${hrs>0?"#dcfce7":"var(--surface)"};color:${hrs>0?"#15803d":"var(--fg-muted)"};font-weight:700;font-size:12px;padding:4px 12px;border-radius:20px;border:1px solid ${hrs>0?"rgba(34,197,94,0.2)":"var(--border)"}">${hrs}h</span></div><div class="dchips">`;
-    DAYS.forEach(d=>{
+  const tm=TM();
+  const period=S.hPeriod||"4w";
+  const empFilter=S.hFilter||"all";
+  const weekKeys=getHistoryWeekKeys(period);
+  // Only weeks that have at least one saved schedule in that period
+  const activeKeys=weekKeys.filter(k=>S.allSchedules.some(s=>s.week_start===k));
+
+  let h=`<div class="card"><div class="hwrap">
+  <div class="shdr"><div><div class="stitle">Schedule History</div><div class="ssub">Grouped by week — click any week to expand</div></div></div>
+  <div class="h-period-bar">`;
+  H_PERIODS.forEach(p=>{h+=`<button class="period-btn${period===p.id?" on":""}" onclick="S.hPeriod='${p.id}';render()">${p.label}</button>`;});
+  h+=`</div>
+  <div class="h-filter-bar">
+    <span class="h-filter-label">Employee</span>
+    <button class="h-emp-chip${empFilter==="all"?" on":""}" onclick="S.hFilter='all';render()">All</button>`;
+  S.employees.forEach(e=>{h+=`<button class="h-emp-chip${empFilter===e.id?" on":""}" onclick="S.hFilter='${e.id}';render()">${esc(e.name.split(" ")[0])}</button>`;});
+  h+=`</div>`;
+
+  if(!activeKeys.length){h+=`<div class="empty">No history for this period.</div></div></div>`;return h;}
+
+  activeKeys.forEach(wk=>{
+    const ws=new Date(wk+"T12:00:00"),we=new Date(ws);we.setDate(we.getDate()+6);
+    const thisWk=wkey(0);
+    const isCurrent=wk===thisWk;
+    // label
+    const wkOff=Math.round((new Date(thisWk+"T12:00:00")-ws)/(7*86400000));
+    const wkLabel=isCurrent?"This Week":wkOff===1?"Last Week":wkOff===2?"2 Weeks Ago":wkOff===3?"3 Weeks Ago":`${ws.toLocaleDateString("en-US",{month:"short",day:"numeric"})}`;
+
+    // Employees to show
+    const empsToShow=empFilter==="all"?S.employees:S.employees.filter(e=>e.id===empFilter);
+    const rows=empsToShow.filter(e=>S.allSchedules.some(s=>s.employee_id===e.id&&s.week_start===wk));
+    if(!rows.length)return;
+
+    // Stats
+    let totalH=0,sickCount=0;
+    rows.forEach(e=>{
+      const s=S.allSchedules.find(sc=>sc.employee_id===e.id&&sc.week_start===wk);
+      if(!s)return;
       const sched=migrateSched(s.schedule_data);
-      const day=sched?.[d];
-      const status=day?.status||"off";
-      let chipStyle="";
-      if(status==="sick"){chipStyle=`background:#fff7ed;color:#c2410c;border:1px solid rgba(249,115,22,0.3)`;}
-      else if(status==="dayoff"){chipStyle=`background:rgba(0,0,0,0.06);color:rgba(0,0,0,0.45);border:1px solid rgba(0,0,0,0.15)`;}
-      else if(status==="work"&&day.shifts?.length>0){
-        const t=tm[day.shifts[0].task];
-        chipStyle=`background:${t?t.bg:"var(--surface-sm)"};color:${t?t.text:"var(--fg-subtle)"};border:1px solid ${t?t.dot+"30":"var(--border)"}`;
-      } else {
-        chipStyle=`background:var(--surface-sm);color:var(--fg-subtle);border:1px solid var(--border)`;
-      }
-      h+=`<div class="dchip" style="${chipStyle}">${d.slice(0,3)}</div>`;
+      totalH+=countH(sched);
+      DAYS.forEach(d=>{if(sched[d]?.status==="sick")sickCount++;});
     });
+    totalH=Math.round(totalH*10)/10;
+
+    // Auto-open current week on first render
+    if(isCurrent&&S.hOpen[wk]===undefined)S.hOpen[wk]=true;
+    const isOpen=!!S.hOpen[wk];
+
+    h+=`<div class="wk-group${isOpen?" open":""}" id="wkg_${wk}">
+      <div class="wk-hdr${isCurrent?" is-current":""}" onclick="toggleHistoryWeek('${wk}')">
+        <div class="wk-hdr-left">
+          <span class="wk-badge ${isCurrent?"curr":"past"}">${wkLabel}</span>
+          <span class="wk-date-str">${ws.toLocaleDateString("en-US",{month:"short",day:"numeric"})} – ${we.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}<span>${rows.length} employee${rows.length!==1?"s":""} · ${totalH}h</span></span>
+        </div>
+        <div class="wk-hdr-right">
+          <div class="wk-stat"><div class="wk-stat-v">${totalH}h</div><div class="wk-stat-l">scheduled</div></div>
+          ${sickCount>0?`<div class="wk-stat"><div class="wk-stat-v" style="color:#c2410c">${sickCount}</div><div class="wk-stat-l">sick day${sickCount!==1?"s":""}</div></div>`:`<div class="wk-stat"><div class="wk-stat-v" style="color:var(--fg-muted)">—</div><div class="wk-stat-l">sick days</div></div>`}
+          <div class="wk-chevron">▼</div>
+        </div>
+      </div>
+      <div class="wk-body">`;
+
+    // Collect tasks used this week for legend
+    const usedTaskIds=new Set();
+
+    rows.forEach(emp=>{
+      const s=S.allSchedules.find(sc=>sc.employee_id===emp.id&&sc.week_start===wk);
+      if(!s)return;
+      const sched=migrateSched(s.schedule_data);
+      const empH=countH(sched);
+      const[abg,afg]=ac(emp.name);
+      h+=`<div class="wk-emp-row">
+        <div class="wk-name-col">
+          <div class="avatar" style="background:${abg};color:${afg};width:28px;height:28px;font-size:11px;flex-shrink:0">${emp.name[0].toUpperCase()}</div>
+          <div><div class="emp-name">${esc(emp.name)}</div><div class="emp-hrs">${empH}h</div></div>
+        </div>
+        <div class="wk-days-col">`;
+      DAYS.forEach(d=>{
+        const day=sched[d]||{status:"off",shifts:[]};
+        const status=day.status||"off";
+        const note=day.note||"";
+        if(status==="sick"){
+          h+=`<div class="dc2 chip-sick" title="${d}${note?" · "+esc(note):""}"><span class="dc-d">${d.slice(0,3).toUpperCase()}</span><span class="dc-t">🤒 Sick</span>${note?`<span class="dc-n">${esc(note)}</span>`:""}</div>`;
+        } else if(status==="dayoff"){
+          h+=`<div class="dc2" style="background:rgba(0,0,0,0.04);color:rgba(0,0,0,0.35);border-color:rgba(0,0,0,0.1)" title="${d}${note?" · "+esc(note):""}"><span class="dc-d">${d.slice(0,3).toUpperCase()}</span><span class="dc-t">📅 Off</span>${note?`<span class="dc-n">${esc(note)}</span>`:""}</div>`;
+        } else if(status==="work"&&day.shifts?.length>0){
+          const firstTask=day.shifts[0].task;
+          const t=tm[firstTask];
+          if(t)usedTaskIds.add(firstTask);
+          const multiLabel=day.shifts.length>1?`+${day.shifts.length-1}`:"";
+          h+=`<div class="dc2" style="background:${t?t.bg:"var(--surface-sm)"};color:${t?t.text:"var(--fg-subtle)"};border-color:${t?t.dot+"40":"var(--border)"}" title="${d}: ${day.shifts.map(sh=>(tm[sh.task]?.label||sh.task)+(sh.start?` ${fmtRange(sh.start,sh.end)}`:"")+( day.note?" · "+day.note:"")).join(", ")}">
+            <span class="dc-d">${d.slice(0,3).toUpperCase()}</span>
+            <span class="dc-t">${esc(t?.label||firstTask)}${multiLabel?`<span style="font-size:8px;opacity:.7"> ${multiLabel}</span>`:""}</span>
+            ${day.shifts[0].start?`<span class="dc-r">${fmtRange(day.shifts[0].start,day.shifts[0].end)}</span>`:""}
+            ${note?`<span class="dc-n">${esc(note)}</span>`:""}
+          </div>`;
+        } else {
+          h+=`<div class="dc2" style="background:transparent;color:rgba(0,0,0,0.18);border-color:transparent"><span class="dc-d">${d.slice(0,3).toUpperCase()}</span><span class="dc-t">—</span></div>`;
+        }
+      });
+      h+=`</div>
+        <div class="wk-total-col"><div class="wk-total-v">${empH}h</div><div class="wk-total-l">total</div></div>
+      </div>`;
+    });
+
+    // Legend
+    const legendTasks=tasks.filter(t=>usedTaskIds.has(t.id));
+    if(legendTasks.length){
+      h+=`<div class="wk-legend"><span class="wk-legend-lbl">Tasks</span>`;
+      legendTasks.forEach(t=>{h+=`<div style="display:flex;align-items:center;gap:5px;background:${t.bg};color:${t.text};padding:3px 8px;border-radius:20px;font-size:10px;font-weight:600;border:1px solid ${t.dot}30"><span style="width:5px;height:5px;border-radius:50%;background:${t.dot};display:inline-block"></span>${esc(t.label)}</div>`;});
+      h+=`</div>`;
+    }
     h+=`</div></div>`;
   });
+
   h+=`</div></div>`;return h;
 }
 
