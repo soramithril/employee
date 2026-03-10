@@ -529,7 +529,86 @@ td.day-cell:hover{background:var(--accent-light) !important;}
 .chip{font-size:10px;font-weight:600;padding:3px 8px;border-radius:10px;}
 .legbox{margin-top:22px;padding:16px;background:var(--bg-deep);border-radius:var(--radius-sm);border:1.5px solid var(--border);}
 
-/* ─── HISTORY GROUPED ────────────────────────────────────────────────────────── */
+/* ─── SPLIT REVEAL OVERLAY ───────────────────────────────────────────────────── */
+#split-overlay{
+  position:fixed;inset:0;z-index:99999;
+  pointer-events:all;
+  overflow:hidden;
+}
+#split-overlay.done{display:none;}
+
+.split-top{
+  position:absolute;
+  top:0;left:0;right:0;bottom:0;
+  background:#ffffff;
+  clip-path:polygon(0 0, 100% 0, 100% 42%, 58% 100%, 0 100%);
+  transform:translateX(0) translateY(0);
+  transition:transform .9s cubic-bezier(0.76,0,0.24,1);
+}
+.split-bot{
+  position:absolute;
+  top:0;left:0;right:0;bottom:0;
+  background:#1a7a3c;
+  clip-path:polygon(100% 0, 100% 100%, 0 100%, 42% 0);
+  transform:translateX(0) translateY(0);
+  transition:transform .9s cubic-bezier(0.76,0,0.24,1);
+}
+#split-overlay.reveal .split-top{transform:translate(-110%,-110%);}
+#split-overlay.reveal .split-bot{transform:translate(110%,110%);}
+
+.split-logo{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  z-index:10;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  opacity:1;
+  transition:opacity .3s ease;
+}
+#split-overlay.reveal .split-logo{opacity:0;}
+
+.split-logo-ring{
+  position:relative;
+  width:86px;height:86px;
+  animation:splitLogoPop .5s cubic-bezier(0.16,1,0.3,1) .1s both;
+}
+@keyframes splitLogoPop{
+  from{opacity:0;transform:scale(.5);}
+  to{opacity:1;transform:scale(1);}
+}
+.split-logo-ring::before{
+  content:'';
+  position:absolute;inset:-4px;border-radius:50%;
+  background:conic-gradient(from 0deg,#22c55e,#16a34a,#4ade80,#15803d,#22c55e);
+  animation:spin-ring 3s linear infinite;
+}
+.split-logo-ring-bg{
+  position:absolute;inset:3px;border-radius:50%;
+  background:white;z-index:1;
+}
+.split-logo-img{
+  position:absolute;inset:5px;border-radius:50%;
+  overflow:hidden;z-index:2;
+}
+.split-logo-img img{width:100%;height:100%;object-fit:cover;}
+.split-logo-text{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  animation:splitTextIn .5s cubic-bezier(0.16,1,0.3,1) .25s both;
+}
+@keyframes splitTextIn{
+  from{opacity:0;transform:translateY(10px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.split-logo-name{
+  font-size:17px;font-weight:800;letter-spacing:-.03em;
+  /* half on white, half on green — use a neutral readable color */
+  color:#1a7a3c;
+  text-shadow:0 1px 0 rgba(255,255,255,0.8),0 -1px 0 rgba(0,0,0,0.08);
+}
+.split-logo-sub{
+  font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(26,122,60,0.55);
+}
 .h-period-bar{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--border);}
 .h-filter-bar{display:flex;align-items:center;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
 .h-filter-label{font-size:10px;font-weight:700;color:var(--fg-subtle);letter-spacing:.09em;text-transform:uppercase;}
@@ -987,6 +1066,25 @@ td.day-cell:hover{background:var(--accent-light) !important;}
 </style>
 </head>
 <body>
+
+<!-- ─── SPLIT REVEAL OVERLAY ──────────────────────────────────────────────────── -->
+<div id="split-overlay">
+  <div class="split-top"></div>
+  <div class="split-bot"></div>
+  <div class="split-logo">
+    <div class="split-logo-ring">
+      <div class="split-logo-ring-bg"></div>
+      <div class="split-logo-img">
+        <img src="https://chambermaster.blob.core.windows.net/images/customers/2454/representatives/44776186/400x400/JEFF+WHITE+GROUP+-+GREEN+TREE+CIRCLE+JPEG_141157.jpg" alt="JW"
+          onerror="this.style.display='none';this.parentElement.style.background='#1a7a3c'">
+      </div>
+    </div>
+    <div class="split-logo-text">
+      <div class="split-logo-name">Jeff White Group</div>
+      <div class="split-logo-sub">Staff Scheduler</div>
+    </div>
+  </div>
+</div>
 
 <!-- ─── LOGIN SCREEN ─────────────────────────────────────────────────────────── -->
 <div id="login-screen">
@@ -2378,7 +2476,7 @@ async function doLogin(){
       setTimeout(async()=>{
         ls.classList.add("hiding");
         setTimeout(()=>{ls.style.display="none";},600);
-        await bootApp();
+        playSplitReveal(()=>bootApp());
       },400);
     } else {
       const msg=data.error_description||data.message||data.msg||data.error||"Incorrect email or password.";
@@ -2426,6 +2524,22 @@ document.addEventListener("DOMContentLoaded",()=>{
   if(u){u.type="email";u.placeholder="Enter your email";}
 });
 
+// ── SPLIT REVEAL ANIMATION ──
+function playSplitReveal(cb){
+  const ov=document.getElementById("split-overlay");
+  if(!ov){cb&&cb();return;}
+  ov.classList.remove("reveal","done");
+  ov.style.display="";
+  // Hold logo visible briefly, then split apart
+  setTimeout(()=>{
+    ov.classList.add("reveal");
+    setTimeout(()=>{
+      ov.classList.add("done");
+      cb&&cb();
+    },950);
+  },650);
+}
+
 // On load — check session then boot app
 async function bootApp(){
   try{
@@ -2442,11 +2556,12 @@ async function bootApp(){
   const authed=await checkAuth();
   if(authed){
     document.getElementById("login-screen").style.display="none";
-    await bootApp();
+    playSplitReveal(()=>bootApp());
   } else {
-    // Still render the shell (shows login screen on top)
-    render();
-    setTimeout(()=>{document.getElementById("li-user")?.focus();},800);
+    playSplitReveal(()=>{
+      render();
+      setTimeout(()=>document.getElementById("li-user")?.focus(),100);
+    });
   }
 })();
 
