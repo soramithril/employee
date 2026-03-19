@@ -2023,7 +2023,7 @@ function applyMultiAssign(){
     const[sh,sm]=s.split(":").map(Number),[eh,em]=e.split(":").map(Number);
     if((eh+em/60)<=(sh+sm/60)){toast("End time must be after start","error");return;}
   }
-  let count=0;
+  const capturedOffset=S.weekOffset;
   _ma.empIds.forEach(empId=>{
     if(!S.schedule[empId])S.schedule[empId]=defSched();
     _ma.days.forEach(day=>{
@@ -2031,11 +2031,13 @@ function applyMultiAssign(){
       const dayData=S.schedule[empId][day];
       dayData.status="work";
       dayData.shifts=[...(dayData.shifts||[]),{task:_ma.task,start:s,end:e}];
-      count++;
     });
-    autoSave(empId);
     updBadge(empId);
   });
+  // Save all affected employees in one go — calling autoSave per-employee in a loop
+  // cancels each previous timer, so only the last one would ever fire.
+  clearTimeout(_autoSaveTimer);
+  _autoSaveTimer=setTimeout(()=>_doAutoSave(null,capturedOffset),800);
   closeModal();
   refreshGrid();
   const tLabel=TM()[_ma.task]?.label||_ma.task;
