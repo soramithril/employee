@@ -307,7 +307,7 @@ td.name-col{
 td.day-cell{
   padding:5px 4px;vertical-align:middle;
   border-right:1px solid var(--border);
-  min-width:0;position:relative;cursor:pointer;height:60px;
+  min-width:0;position:relative;cursor:pointer;height:72px;
   transition:background .15s;
 }
 td.day-cell:hover{background:var(--accent-light) !important;}
@@ -2246,28 +2246,18 @@ function buildGrid(){
       } else if(status==="sick"){
         cellContent=`<div class="status-label sick-label">🤒 Sick</div>`;
       } else if(shifts.length>0){
-        // Multiple shift bars stacked
+        // Multiple shift bars stacked — always full width so label is never clipped
         const totalSlots=shifts.length;
-        const barH=Math.max(14, Math.floor(30/totalSlots)-2);
+        const barH=Math.max(28, Math.floor(46/totalSlots)-2);
         cellContent=`<div class="multi-shift-wrap">`;
         shifts.forEach((sh,i)=>{
           const t=tm[sh.task]||{bg:"#dcfce7",text:"#15803d",dot:"#22c55e",label:sh.task};
-          if(sh.start&&sh.end){
-            const[shr,smn]=sh.start.split(":").map(Number),[ehr,emn]=sh.end.split(":").map(Number);
-            const startMin=(shr+smn/60-WH.start)*60,endMin=(ehr+emn/60-WH.start)*60,totalMin=daySpan*60;
-            const lp=Math.max(0,(startMin/totalMin)*100).toFixed(2);
-            const wp=Math.max(3,((endMin-startMin)/totalMin)*100).toFixed(2);
-            cellContent+=`<div class="shift-bar" style="left:${lp}%;width:${wp}%;background:${t.bg};color:${t.text};border:1.5px solid ${t.dot}40;top:${4+(i*(barH+2))}px;bottom:auto;height:${barH}px"
-              onclick="event.stopPropagation();openShiftModal('${emp.id}','${d}')">
-              <span class="shift-label">${esc(t.label)}</span>
-              <span class="shift-times">${fmtRange(sh.start,sh.end)}</span>
-            </div>`;
-          } else {
-            cellContent+=`<div class="shift-bar" style="left:2%;width:96%;background:${t.bg};color:${t.text};border:1.5px solid ${t.dot}40;top:${4+(i*(barH+2))}px;bottom:auto;height:${barH}px"
-              onclick="event.stopPropagation();openShiftModal('${emp.id}','${d}')">
-              <span class="shift-label">${esc(t.label)}</span>
-            </div>`;
-          }
+          const timeStr=sh.start&&sh.end?fmtRange(sh.start,sh.end):"";
+          cellContent+=`<div class="shift-bar" style="left:2%;width:96%;background:${t.bg};color:${t.text};border:1.5px solid ${t.dot}40;top:${4+(i*(barH+2))}px;bottom:auto;height:${barH}px;flex-direction:column;align-items:flex-start;justify-content:center;gap:0;padding:2px 7px;"
+            onclick="event.stopPropagation();openShiftModal('${emp.id}','${d}')">
+            <span class="shift-label" style="line-height:1.2;">${esc(t.label)}</span>
+            ${timeStr?`<span class="shift-times" style="margin-left:0;line-height:1.2;">${timeStr}</span>`:""}
+          </div>`;
         });
         cellContent+=`</div>`;
       } else {
@@ -2302,14 +2292,14 @@ function loadWeekSched(){const w=wkey(S.weekOffset);S.employees.forEach(e=>{cons
 // ── AUTO-SAVE (debounced) ──
 let _autoSaveTimer=null;
 function autoSave(empId){
-  // Show subtle saving indicator
+  const capturedOffset=S.weekOffset;
   showSaveStatus("saving");
   clearTimeout(_autoSaveTimer);
-  _autoSaveTimer=setTimeout(()=>_doAutoSave(empId),800);
+  _autoSaveTimer=setTimeout(()=>_doAutoSave(empId,capturedOffset),800);
 }
-async function _doAutoSave(empId){
+async function _doAutoSave(empId,capturedOffset){
   try{
-    const ws=getWS(S.weekOffset);
+    const ws=getWS(capturedOffset!=null?capturedOffset:S.weekOffset);
     // Save just the changed employee if provided, else all
     const toSave=empId?S.employees.filter(e=>e.id===empId):S.employees;
     await Promise.all(toSave.map(e=>upsertSched(e.id,ws,S.schedule[e.id]||defSched())));
