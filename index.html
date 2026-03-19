@@ -1902,16 +1902,23 @@ function saveDayNote(empId,day,val){
 }
 
 // ── MULTI-ASSIGN ──
-let _ma={task:null,days:[],empIds:[]};
+let _ma={task:null,days:[],empIds:[],start:null,end:null};
 
 function openMultiAssign(){
-  _ma={task:null,days:[],empIds:[]};
+  _ma={task:null,days:[],empIds:[],start:null,end:null};
   renderMultiAssign();
 }
 
 function renderMultiAssign(){
   const tm=TM();
   const defStart=`${WH.start}:00`,defEnd=`${WH.end}:00`;
+  // Preserve any time the user has already selected before re-rendering
+  const curStart=document.getElementById("ma_start");
+  const curEnd=document.getElementById("ma_end");
+  if(curStart)_ma.start=curStart.value;
+  if(curEnd)_ma.end=curEnd.value;
+  const selStart=_ma.start||defStart;
+  const selEnd=_ma.end||defEnd;
 
   // Task grid
   let taskHtml='<div class="task-grid">';
@@ -1967,8 +1974,8 @@ function renderMultiAssign(){
   <div class="modal-divider"></div>
   <div class="sect-label">Time</div>
   <div class="shift-form">
-    <div><div class="sf-label">Start</div><select class="sf-select" id="ma_start">${buildTimeOpts(defStart)}</select></div>
-    <div><div class="sf-label">End</div><select class="sf-select" id="ma_end">${buildTimeOpts(defEnd)}</select></div>
+    <div><div class="sf-label">Start</div><select class="sf-select" id="ma_start">${buildTimeOpts(selStart)}</select></div>
+    <div><div class="sf-label">End</div><select class="sf-select" id="ma_end">${buildTimeOpts(selEnd)}</select></div>
   </div>
 
   <div class="modal-divider"></div>
@@ -2016,8 +2023,8 @@ function maToggleEveryone(){
 }
 
 function applyMultiAssign(){
-  const s=document.getElementById("ma_start")?.value;
-  const e=document.getElementById("ma_end")?.value;
+  const s=document.getElementById("ma_start")?.value||_ma.start;
+  const e=document.getElementById("ma_end")?.value||_ma.end;
   if(!_ma.task){toast("Select a task first","error");return;}
   if(!_ma.days.length){toast("Select at least one day","error");return;}
   if(!_ma.empIds.length){toast("Select at least one employee","error");return;}
