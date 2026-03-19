@@ -2041,6 +2041,116 @@ function applyMultiAssign(){
   toast(`✓ "${tLabel}" assigned to ${_ma.empIds.length} employee${_ma.empIds.length!==1?"s":""} across ${_ma.days.length} day${_ma.days.length!==1?"s":""}`);
   _ma={task:null,days:[],empIds:[]};
 }
+// ── MULTI-CLEAR ──
+let _mc={task:"__all__",days:[],empIds:[]};
+
+function openMultiClear(){
+  _mc={task:"__all__",days:[],empIds:[]};
+  renderMultiClear();
+}
+
+function renderMultiClear(){
+  // Task filter — "__all__" means clear every task on that day/person
+  let taskHtml=`<div class="task-grid">`;
+  const allTaskSel=_mc.task==="__all__";
+  taskHtml+=`<button class="task-opt${allTaskSel?" sel":""}" style="background:rgba(239,68,68,0.08);color:#dc2626;border-color:${allTaskSel?"#dc2626":"transparent"}" onclick="mcPickTask('__all__')">
+    <span style="width:7px;height:7px;border-radius:50%;background:#dc2626;flex-shrink:0;display:inline-block"></span>
+    All Tasks
+  </button>`;
+  tasks.filter(t=>t.id!=="off"&&t.id!=="sick").forEach(t=>{
+    const sel=_mc.task===t.id;
+    taskHtml+=`<button class="task-opt${sel?" sel":""}" style="background:${t.bg};color:${t.text};border-color:${sel?t.dot:"transparent"}" onclick="mcPickTask('${t.id}')">
+      <span style="width:7px;height:7px;border-radius:50%;background:${t.dot};flex-shrink:0;display:inline-block"></span>
+      ${esc(t.label)}
+    </button>`;
+  });
+  taskHtml+=`</div>`;
+
+  let dayHtml=`<div class="ma-day-list">`;
+  S.activeDays.forEach(d=>{
+    const on=_mc.days.includes(d);
+    dayHtml+=`<button class="ma-day-btn${on?" on":""}" onclick="mcToggleDay('${d}')">${d.slice(0,3)}</button>`;
+  });
+  const allDaysOn=S.activeDays.every(d=>_mc.days.includes(d));
+  dayHtml+=`<button class="ma-day-btn${allDaysOn?" on":""}" onclick="mcToggleAllDays()" style="font-style:italic">All</button>`;
+  dayHtml+=`</div>`;
+
+  const allEmpOn=S.employees.length>0&&S.employees.every(e=>_mc.empIds.includes(e.id));
+  let empHtml=`<button class="ma-everyone-btn${allEmpOn?" all-on":""}" onclick="mcToggleEveryone()">
+    ${allEmpOn?"✓ Everyone selected":"👥 Select Everyone"}
+  </button><div class="ma-emp-list">`;
+  S.employees.forEach(e=>{
+    const checked=_mc.empIds.includes(e.id);
+    const[abg,afg]=ac(e.name);
+    empHtml+=`<label class="ma-emp-row${checked?" checked":""}" onclick="mcToggleEmp('${e.id}')">
+      <input type="checkbox" ${checked?"checked":""} onclick="event.preventDefault()">
+      <div class="avatar" style="background:${abg};color:${afg};width:26px;height:26px;font-size:11px;flex-shrink:0">${e.name[0].toUpperCase()}</div>
+      <span class="ma-emp-name">${esc(e.name)}</span>
+    </label>`;
+  });
+  empHtml+=`</div>`;
+
+  const selCount=_mc.empIds.length;
+  const ready=_mc.days.length>0&&selCount>0;
+  const taskLabel=_mc.task==="__all__"?"all tasks":(TM()[_mc.task]?.label||_mc.task);
+
+  const h=`
+  <div class="modal-title">🗑 Clear Multiple</div>
+  <div class="modal-sub">Remove shifts from selected employees and days in one go.</div>
+  <div class="sect-label">What to clear</div>
+  ${taskHtml}
+  <div class="modal-divider"></div>
+  <div class="sect-label">Days</div>
+  ${dayHtml}
+  <div class="modal-divider"></div>
+  <div class="sect-label">Employees <span style="font-weight:500;opacity:.6;text-transform:none;letter-spacing:0">${selCount>0?"("+selCount+" selected)":""}</span></div>
+  ${S.employees.length?empHtml:'<div style="font-size:12px;color:var(--fg-muted);padding:8px 0">No employees yet.</div>'}
+  <div class="modal-divider"></div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+    <button style="background:#dc2626;color:white;border:none;border-radius:var(--radius-sm);padding:10px 22px;font-size:13px;font-weight:600;cursor:pointer;opacity:${ready?1:0.45};pointer-events:${ready?"auto":"none"}" onclick="applyMultiClear()">
+      Clear${ready?" "+selCount+" × "+_mc.days.length+" day"+(_mc.days.length!==1?"s":""):""}
+    </button>
+  </div>`;
+  openModal(h,"480px");
+}
+
+function mcPickTask(id){_mc.task=id;renderMultiClear();}
+function mcToggleDay(d){const i=_mc.days.indexOf(d);if(i>=0)_mc.days.splice(i,1);else _mc.days.push(d);renderMultiClear();}
+function mcToggleAllDays(){const allOn=S.activeDays.every(d=>_mc.days.includes(d));_mc.days=allOn?[]:[...S.activeDays];renderMultiClear();}
+function mcToggleEmp(id){const i=_mc.empIds.indexOf(id);if(i>=0)_mc.empIds.splice(i,1);else _mc.empIds.push(id);renderMultiClear();}
+function mcToggleEveryone(){const allOn=S.employees.every(e=>_mc.empIds.includes(e.id));_mc.empIds=allOn?[]:S.employees.map(e=>e.id);renderMultiClear();}
+
+function applyMultiClear(){
+  if(!_mc.days.length||!_mc.empIds.length)return;
+  let cleared=0;
+  _mc.empIds.forEach(empId=>{
+    if(!S.schedule[empId])return;
+    _mc.days.forEach(day=>{
+      const dayData=S.schedule[empId][day];
+      if(!dayData)return;
+      if(_mc.task==="__all__"){
+        // Wipe entire day
+        S.schedule[empId][day]={status:"off",shifts:[]};
+        cleared++;
+      } else {
+        // Remove only shifts matching this task
+        const before=dayData.shifts.length;
+        dayData.shifts=dayData.shifts.filter(sh=>sh.task!==_mc.task);
+        if(dayData.shifts.length===0)dayData.status="off";
+        cleared+=before-dayData.shifts.length;
+      }
+    });
+    updBadge(empId);
+  });
+  autoSave(null);
+  closeModal();
+  refreshGrid();
+  const taskLabel=_mc.task==="__all__"?"all tasks":(TM()[_mc.task]?.label||_mc.task);
+  toast(`Cleared ${taskLabel} for ${_mc.empIds.length} employee${_mc.empIds.length!==1?"s":""} across ${_mc.days.length} day${_mc.days.length!==1?"s":""}`);
+  _mc={task:"__all__",days:[],empIds:[]};
+}
+
 function updBadge(empId){
   const el=document.getElementById(`hbadge_${empId}`);
   if(!el)return;
@@ -2155,6 +2265,7 @@ function buildSched(){
   h+=`<div class="ctrl-sep"></div>
     <button class="ctrl-btn" onclick="openTaskMgr()">⚙ Tasks</button>
     <button class="ctrl-btn" onclick="openMultiAssign()" style="background:var(--accent-light);color:var(--accent);border-color:var(--border-acc)">👥 Assign Multiple</button>
+    <button class="ctrl-btn" onclick="openMultiClear()" style="background:rgba(239,68,68,0.07);color:#dc2626;border-color:rgba(239,68,68,0.25)">🗑 Clear Multiple</button>
     <button class="ctrl-btn" onclick="openWHSettings()">⏰ ${fmtHour(WH.start,0)}–${fmtHour(WH.end,0)}</button>
   </div>`;
   if(!S.employees.length){
