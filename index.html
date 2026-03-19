@@ -1270,6 +1270,94 @@ th.day-col.is-today{background:rgba(26,122,60,0.04) !important;}
   .avatar{width:22px;height:22px;font-size:9px;}
   .task-grid{grid-template-columns:1fr;}
 }
+
+/* ─── WORKSHOP TASKS PAGE ────────────────────────────────────────────────────── */
+.wt-wrap{padding:24px 28px;}
+.wt-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.wt-title{font-size:20px;font-weight:700;color:var(--fg);letter-spacing:-.02em;}
+.wt-title span{font-size:13px;font-weight:500;color:var(--fg-muted);margin-left:8px;}
+.wt-add-btn{
+  background:var(--accent);color:#fff;border:none;
+  border-radius:var(--radius-sm);padding:9px 18px;
+  font-size:13px;font-weight:600;cursor:pointer;
+  box-shadow:var(--shadow-btn);
+  transition:opacity .18s,transform .18s var(--ease-out);
+  display:flex;align-items:center;gap:6px;
+}
+.wt-add-btn:hover{opacity:.88;transform:translateY(-1px);}
+.wt-board{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;}
+.wt-col{}
+.wt-col-hdr{
+  display:flex;align-items:center;gap:8px;margin-bottom:12px;
+  padding-bottom:10px;border-bottom:1px solid var(--border);
+}
+.wt-col-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-muted);}
+.wt-col-count{
+  font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;
+  background:var(--surface);color:var(--fg-muted);
+}
+.wt-col-count.done-count{background:rgba(26,122,60,.1);color:var(--accent);}
+.wt-card{
+  background:var(--bg-elevated);border-radius:var(--radius-sm);
+  border:1px solid var(--border);padding:14px 16px;margin-bottom:10px;
+  box-shadow:var(--shadow-card);cursor:pointer;
+  transition:box-shadow .18s,transform .18s var(--ease-out),border-color .18s;
+  position:relative;overflow:hidden;
+}
+.wt-card::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--accent);border-radius:3px 0 0 3px;
+}
+.wt-card.done-card{opacity:.7;}
+.wt-card.done-card::before{background:#94a3b8;}
+.wt-card:hover{box-shadow:var(--shadow-ch);transform:translateY(-1px);border-color:var(--border-h);}
+.wt-card-title{font-size:14px;font-weight:600;color:var(--fg);margin-bottom:6px;line-height:1.3;}
+.wt-card-desc{font-size:12px;color:var(--fg-muted);margin-bottom:10px;line-height:1.5;}
+.wt-card-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+.wt-chip{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;
+  background:var(--accent-light);color:var(--accent);
+  border:1px solid var(--border-acc);white-space:nowrap;
+}
+.wt-chip.date-chip{background:var(--surface);color:var(--fg-muted);border-color:var(--border);}
+.wt-chip.done-chip{background:rgba(26,122,60,.08);color:var(--accent);border-color:rgba(26,122,60,.2);}
+.wt-card-actions{display:flex;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--surface-h);}
+.wt-action-btn{
+  flex:1;border:none;border-radius:var(--radius-xs);padding:6px 10px;
+  font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;
+  transition:opacity .15s;
+}
+.wt-action-btn:hover{opacity:.8;}
+.wt-btn-done{background:rgba(26,122,60,.12);color:var(--accent);}
+.wt-btn-reopen{background:var(--surface);color:var(--fg-muted);}
+.wt-btn-edit{background:rgba(59,130,246,.1);color:#2563eb;}
+.wt-btn-del{background:rgba(239,68,68,.1);color:#dc2626;}
+.wt-empty{
+  text-align:center;padding:36px 20px;color:var(--fg-subtle);
+  font-size:13px;border:1.5px dashed var(--border);border-radius:var(--radius-sm);
+}
+.wt-empty-icon{font-size:28px;margin-bottom:8px;}
+
+/* Task modal form */
+.wt-form-row{margin-bottom:14px;}
+.wt-form-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:5px;}
+.wt-input,.wt-select,.wt-textarea{
+  width:100%;border:1px solid var(--border-h);border-radius:var(--radius-xs);
+  padding:9px 12px;font-size:13px;font-family:inherit;color:var(--fg);
+  background:var(--bg-elevated);transition:border-color .18s,box-shadow .18s;outline:none;
+}
+.wt-input:focus,.wt-select:focus,.wt-textarea:focus{
+  border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow2);
+}
+.wt-textarea{resize:vertical;min-height:72px;}
+.wt-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+@media(max-width:767px){
+  .wt-wrap{padding:12px 10px;}
+  .wt-board{grid-template-columns:1fr;gap:14px;}
+  .wt-form-grid{grid-template-columns:1fr;}
+}
 </style>
 </head>
 <body>
@@ -1353,6 +1441,7 @@ th.day-col.is-today{background:rgba(26,122,60,0.04) !important;}
     <button class="tab-btn" onclick="switchTab('history')">History</button>
     <button class="tab-btn" onclick="switchTab('analytics')">Analytics</button>
     <button class="tab-btn" onclick="switchTab('team')">Team</button>
+    <button class="tab-btn" onclick="switchTab('tasks')">🔧 Tasks</button>
   </nav>
   <span class="emp-badge" id="empCount">0 employees</span>
   <div style="display:flex;align-items:center;gap:8px">
@@ -1373,6 +1462,7 @@ th.day-col.is-today{background:rgba(26,122,60,0.04) !important;}
   <button class="mnav-btn" id="mnav-history" onclick="switchTab('history')"><span class="mni">📋</span>History</button>
   <button class="mnav-btn" id="mnav-analytics" onclick="switchTab('analytics')"><span class="mni">📊</span>Analytics</button>
   <button class="mnav-btn" id="mnav-team" onclick="switchTab('team')"><span class="mni">👥</span>Team</button>
+  <button class="mnav-btn" id="mnav-tasks" onclick="switchTab('tasks')"><span class="mni">🔧</span>Tasks</button>
 </nav>
 
 <script>
@@ -1958,11 +2048,11 @@ function tmAdd(){const n=document.getElementById("nname"),c=document.getElementB
 // ── RENDER ──
 function render(){
   const app=document.getElementById("app");
-  const labelMap={schedule:"Schedule",history:"History",analytics:"Analytics",team:"Team"};
+  const labelMap={schedule:"Schedule",history:"History",analytics:"Analytics",team:"Team","tasks":"🔧 Tasks"};
   // Sync desktop nav
   document.querySelectorAll(".tab-btn").forEach(b=>{b.classList.toggle("active",b.textContent.trim()===labelMap[S.tab]);});
   // Sync mobile nav
-  ["schedule","history","analytics","team"].forEach(t=>{
+  ["schedule","history","analytics","team","tasks"].forEach(t=>{
     const el=document.getElementById("mnav-"+t);
     if(el)el.classList.toggle("active",S.tab===t);
   });
@@ -1970,6 +2060,7 @@ function render(){
   if(S.tab==="schedule")app.innerHTML=buildSched();
   else if(S.tab==="history")app.innerHTML=buildHistory();
   else if(S.tab==="analytics"){app.innerHTML=buildAnalytics();requestAnimationFrame(()=>animateCounters());}
+  else if(S.tab==="tasks"){app.innerHTML=buildTasksPage();initTasksPage();}
   else{app.innerHTML=buildTeam();initTeamDrag();}
   updateFAB();
 }
@@ -2924,6 +3015,202 @@ function playSplitReveal(cb){
       cb&&cb();
     },950);
   },650);
+}
+
+// ── WORKSHOP TASKS ──────────────────────────────────────────────────────────────
+let WT={tasks:[],loading:false};
+
+async function loadWorkshopTasks(){
+  const res=await fetch(`${SUPABASE_URL}/rest/v1/workshop_tasks?order=created_at.desc`,{
+    headers:{apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${SUPABASE_ANON_KEY}`}
+  });
+  if(!res.ok)throw new Error("Failed to load tasks");
+  return res.json();
+}
+
+async function saveWorkshopTask(data){
+  const res=await fetch(`${SUPABASE_URL}/rest/v1/workshop_tasks`,{
+    method:"POST",
+    headers:{apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${SUPABASE_ANON_KEY}`,"Content-Type":"application/json","Prefer":"return=representation"},
+    body:JSON.stringify(data)
+  });
+  if(!res.ok)throw new Error("Failed to save task");
+  return res.json();
+}
+
+async function updateWorkshopTask(id,data){
+  const res=await fetch(`${SUPABASE_URL}/rest/v1/workshop_tasks?id=eq.${id}`,{
+    method:"PATCH",
+    headers:{apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${SUPABASE_ANON_KEY}`,"Content-Type":"application/json","Prefer":"return=representation"},
+    body:JSON.stringify(data)
+  });
+  if(!res.ok)throw new Error("Failed to update task");
+  return res.json();
+}
+
+async function deleteWorkshopTask(id){
+  const res=await fetch(`${SUPABASE_URL}/rest/v1/workshop_tasks?id=eq.${id}`,{
+    method:"DELETE",
+    headers:{apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${SUPABASE_ANON_KEY}`}
+  });
+  if(!res.ok)throw new Error("Failed to delete task");
+}
+
+function buildTasksPage(){
+  return`<div class="card"><div class="wt-wrap" id="wt-root"><div style="text-align:center;padding:40px;color:var(--fg-subtle)">Loading tasks…</div></div></div>`;
+}
+
+async function initTasksPage(){
+  try{
+    WT.tasks=await loadWorkshopTasks();
+    renderTasksBoard();
+  }catch(e){
+    const root=document.getElementById("wt-root");
+    if(root)root.innerHTML=`<div style="color:#dc2626;padding:20px">Failed to load tasks: ${e.message}</div>`;
+  }
+}
+
+function renderTasksBoard(){
+  const root=document.getElementById("wt-root");
+  if(!root)return;
+  const todo=WT.tasks.filter(t=>t.status==="todo");
+  const done=WT.tasks.filter(t=>t.status==="done");
+
+  function taskCard(t){
+    const isDone=t.status==="done";
+    let chips="";
+    if(t.assigned_to)chips+=`<span class="wt-chip">👤 ${esc(t.assigned_to)}</span>`;
+    if(t.started_at)chips+=`<span class="wt-chip date-chip">▶ Started ${fmtWTDate(t.started_at)}</span>`;
+    if(t.completed_at)chips+=`<span class="wt-chip done-chip">✓ Done ${fmtWTDate(t.completed_at)}</span>`;
+    const actions=isDone
+      ?`<button class="wt-action-btn wt-btn-reopen" onclick="wtReopen('${t.id}')">↩ Reopen</button>
+        <button class="wt-action-btn wt-btn-edit" onclick="wtOpenEdit('${t.id}')">✎ Edit</button>
+        <button class="wt-action-btn wt-btn-del" onclick="wtDelete('${t.id}')">✕ Delete</button>`
+      :`<button class="wt-action-btn wt-btn-done" onclick="wtMarkDone('${t.id}')">✓ Mark Done</button>
+        <button class="wt-action-btn wt-btn-edit" onclick="wtOpenEdit('${t.id}')">✎ Edit</button>
+        <button class="wt-action-btn wt-btn-del" onclick="wtDelete('${t.id}')">✕ Delete</button>`;
+    return`<div class="wt-card${isDone?" done-card":""}">
+      <div class="wt-card-title">${esc(t.title)}</div>
+      ${t.description?`<div class="wt-card-desc">${esc(t.description)}</div>`:""}
+      ${chips?`<div class="wt-card-meta">${chips}</div>`:""}
+      <div class="wt-card-actions">${actions}</div>
+    </div>`;
+  }
+
+  root.innerHTML=`
+    <div class="wt-header">
+      <div class="wt-title">Workshop Tasks <span>Downtime to-do list</span></div>
+      <button class="wt-add-btn" onclick="wtOpenAdd()">+ Add Task</button>
+    </div>
+    <div class="wt-board">
+      <div class="wt-col">
+        <div class="wt-col-hdr">
+          <span class="wt-col-label">To Do</span>
+          <span class="wt-col-count">${todo.length}</span>
+        </div>
+        ${todo.length?todo.map(taskCard).join(""):`<div class="wt-empty"><div class="wt-empty-icon">🛠️</div>Nothing to do — add a task above!</div>`}
+      </div>
+      <div class="wt-col">
+        <div class="wt-col-hdr">
+          <span class="wt-col-label">Done</span>
+          <span class="wt-col-count done-count">${done.length}</span>
+        </div>
+        ${done.length?done.map(taskCard).join(""):`<div class="wt-empty"><div class="wt-empty-icon">✅</div>Completed tasks will appear here.</div>`}
+      </div>
+    </div>`;
+}
+
+function fmtWTDate(d){
+  if(!d)return"";
+  const[y,m,day]=d.split("-");
+  return new Date(+y,+m-1,+day).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+}
+
+function wtOpenAdd(){wtOpenForm(null);}
+function wtOpenEdit(id){wtOpenForm(id);}
+
+function wtOpenForm(id){
+  const t=id?WT.tasks.find(x=>x.id===id):null;
+  const empOpts=S.employees.map(e=>`<option value="${esc(e.name)}"${t?.assigned_to===e.name?" selected":""}>${esc(e.name)}</option>`).join("");
+  const h=`
+    <div class="modal-title">${t?"Edit Task":"New Workshop Task"}</div>
+    <div class="modal-sub">${t?"Update the task details below.":"Add a task to do when there's downtime."}</div>
+    <div class="wt-form-row">
+      <div class="wt-form-label">Task Name *</div>
+      <input class="wt-input" id="wt_title" placeholder="e.g. Clean paint booth, Organize shelving…" value="${esc(t?.title||"")}">
+    </div>
+    <div class="wt-form-row">
+      <div class="wt-form-label">Description <span style="opacity:.5;font-weight:400;text-transform:none">(optional)</span></div>
+      <textarea class="wt-textarea" id="wt_desc" placeholder="Any extra details…">${esc(t?.description||"")}</textarea>
+    </div>
+    <div class="wt-form-grid">
+      <div class="wt-form-row">
+        <div class="wt-form-label">Assigned To</div>
+        <select class="wt-select" id="wt_assign">
+          <option value="">— Unassigned —</option>
+          ${empOpts}
+        </select>
+      </div>
+      <div class="wt-form-row">
+        <div class="wt-form-label">Start Date</div>
+        <input class="wt-input" type="date" id="wt_start" value="${t?.started_at||""}">
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-done" onclick="wtSaveForm('${id||""}')">${t?"Save Changes":"Add Task"}</button>
+    </div>`;
+  openModal(h,"480px");
+}
+
+async function wtSaveForm(id){
+  const title=document.getElementById("wt_title")?.value.trim();
+  if(!title){toast("Task name is required","error");return;}
+  const data={
+    title,
+    description:document.getElementById("wt_desc")?.value.trim()||null,
+    assigned_to:document.getElementById("wt_assign")?.value||null,
+    started_at:document.getElementById("wt_start")?.value||null,
+  };
+  try{
+    if(id){
+      await updateWorkshopTask(id,data);
+      const idx=WT.tasks.findIndex(t=>t.id===id);
+      if(idx>=0)WT.tasks[idx]={...WT.tasks[idx],...data};
+    }else{
+      const[created]=await saveWorkshopTask({...data,status:"todo"});
+      WT.tasks.unshift(created);
+    }
+    closeModal();renderTasksBoard();toast(id?"Task updated":"Task added");
+  }catch(e){toast(e.message,"error");}
+}
+
+async function wtMarkDone(id){
+  const today=new Date().toISOString().split("T")[0];
+  try{
+    await updateWorkshopTask(id,{status:"done",completed_at:today});
+    const t=WT.tasks.find(x=>x.id===id);
+    if(t){t.status="done";t.completed_at=today;}
+    renderTasksBoard();toast("Task marked done ✓");
+  }catch(e){toast(e.message,"error");}
+}
+
+async function wtReopen(id){
+  try{
+    await updateWorkshopTask(id,{status:"todo",completed_at:null});
+    const t=WT.tasks.find(x=>x.id===id);
+    if(t){t.status="todo";t.completed_at=null;}
+    renderTasksBoard();toast("Task reopened");
+  }catch(e){toast(e.message,"error");}
+}
+
+async function wtDelete(id){
+  if(!confirm("Delete this task? This can't be undone."))return;
+  try{
+    await deleteWorkshopTask(id);
+    WT.tasks=WT.tasks.filter(t=>t.id!==id);
+    renderTasksBoard();toast("Task deleted");
+  }catch(e){toast(e.message,"error");}
 }
 
 // On load — check session then boot app
