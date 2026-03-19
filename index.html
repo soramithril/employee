@@ -2023,7 +2023,6 @@ function applyMultiAssign(){
     const[sh,sm]=s.split(":").map(Number),[eh,em]=e.split(":").map(Number);
     if((eh+em/60)<=(sh+sm/60)){toast("End time must be after start","error");return;}
   }
-  const capturedOffset=S.weekOffset;
   _ma.empIds.forEach(empId=>{
     if(!S.schedule[empId])S.schedule[empId]=defSched();
     _ma.days.forEach(day=>{
@@ -2034,10 +2033,8 @@ function applyMultiAssign(){
     });
     updBadge(empId);
   });
-  // Save all affected employees in one go — calling autoSave per-employee in a loop
-  // cancels each previous timer, so only the last one would ever fire.
-  clearTimeout(_autoSaveTimer);
-  _autoSaveTimer=setTimeout(()=>_doAutoSave(null,capturedOffset),800);
+  // Use autoSave(null) which snapshots ALL employees at once right now
+  autoSave(null);
   closeModal();
   refreshGrid();
   const tLabel=TM()[_ma.task]?.label||_ma.task;
@@ -2293,20 +2290,26 @@ function loadWeekSched(){const w=wkey(S.weekOffset);S.employees.forEach(e=>{cons
 
 // ── AUTO-SAVE (debounced) ──
 let _autoSaveTimer=null;
+// Snapshot: {weekKey, scheduleData} captured at call time so navigation can't corrupt the save
+let _pendingSave=null;
 function autoSave(empId){
-  const capturedOffset=S.weekOffset;
+  const ws=getWS(S.weekOffset);
+  const w=ws.toISOString().split("T")[0];
+  // Snapshot the data RIGHT NOW before any navigation can overwrite S.schedule
+  const toSave=empId?S.employees.filter(e=>e.id===empId):S.employees;
+  const snapshot=toSave.map(e=>({emp:e,data:JSON.parse(JSON.stringify(S.schedule[e.id]||defSched()))}));
+  _pendingSave={w,ws,snapshot};
   showSaveStatus("saving");
   clearTimeout(_autoSaveTimer);
-  _autoSaveTimer=setTimeout(()=>_doAutoSave(empId,capturedOffset),800);
+  _autoSaveTimer=setTimeout(()=>_doAutoSave(),800);
 }
-async function _doAutoSave(empId,capturedOffset){
+async function _doAutoSave(){
+  if(!_pendingSave)return;
+  const{w,ws,snapshot}=_pendingSave;
+  _pendingSave=null;
   try{
-    const ws=getWS(capturedOffset!=null?capturedOffset:S.weekOffset);
-    // Save just the changed employee if provided, else all
-    const toSave=empId?S.employees.filter(e=>e.id===empId):S.employees;
-    await Promise.all(toSave.map(e=>upsertSched(e.id,ws,S.schedule[e.id]||defSched())));
-    const w=ws.toISOString().split("T")[0];
-    toSave.forEach(e=>{const i=S.allSchedules.findIndex(s=>s.employee_id===e.id&&s.week_start===w);const en={id:`${e.id}_${w}`,employee_id:e.id,week_start:w,schedule_data:JSON.parse(JSON.stringify(S.schedule[e.id]||defSched()))};if(i>=0)S.allSchedules[i]=en;else S.allSchedules.push(en);});
+    await Promise.all(snapshot.map(({emp,data})=>upsertSched(emp.id,ws,data)));
+    snapshot.forEach(({emp,data})=>{const i=S.allSchedules.findIndex(s=>s.employee_id===emp.id&&s.week_start===w);const en={id:`${emp.id}_${w}`,employee_id:emp.id,week_start:w,schedule_data:data};if(i>=0)S.allSchedules[i]=en;else S.allSchedules.push(en);});
     showSaveStatus("saved");
   }catch(e){showSaveStatus("error");toast("Auto-save failed: "+e.message,"error");}
 }
