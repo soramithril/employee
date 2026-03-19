@@ -2027,6 +2027,7 @@ function applyMultiAssign(){
   _ma.empIds.forEach(empId=>{
     if(!S.schedule[empId])S.schedule[empId]=defSched();
     _ma.days.forEach(day=>{
+      if(!S.schedule[empId][day])S.schedule[empId][day]={status:"off",shifts:[]};
       const dayData=S.schedule[empId][day];
       dayData.status="work";
       dayData.shifts=[...(dayData.shifts||[]),{task:_ma.task,start:s,end:e}];
@@ -2250,7 +2251,7 @@ function buildGrid(){
         const barH=Math.max(14, Math.floor(30/totalSlots)-2);
         cellContent=`<div class="multi-shift-wrap">`;
         shifts.forEach((sh,i)=>{
-          const t=tm[sh.task]||tm["bins"]||{bg:"#dcfce7",text:"#15803d",dot:"#22c55e",label:sh.task};
+          const t=tm[sh.task]||{bg:"#dcfce7",text:"#15803d",dot:"#22c55e",label:sh.task};
           if(sh.start&&sh.end){
             const[shr,smn]=sh.start.split(":").map(Number),[ehr,emn]=sh.end.split(":").map(Number);
             const startMin=(shr+smn/60-WH.start)*60,endMin=(ehr+emn/60-WH.start)*60,totalMin=daySpan*60;
