@@ -148,7 +148,7 @@ nav{display:flex;gap:2px;}
 
 /* ─── TOAST ─────────────────────────────────────────────────────────────────── */
 #toast{
-  position:fixed;top:24px;right:24px;z-index:9999;
+  position:fixed;top:24px;right:24px;z-index:10001;
   border-radius:12px;padding:12px 18px 12px 14px;
   font-size:13px;font-weight:500;
   display:none;
@@ -250,6 +250,34 @@ nav{display:flex;gap:2px;}
 /* ─── SCHEDULE GRID ──────────────────────────────────────────────────────────── */
 .grid-wrap{overflow-x:auto;}
 .sched-grid{width:100%;border-collapse:collapse;}
+
+/* ─── MOBILE DAY CARD VIEW (hidden on desktop) ───────────────────────────────── */
+.mobile-day-view{display:none;}
+.ctrl-more-btn{display:none;}
+
+/* ─── MOBILE DAY VIEW STYLES ─────────────────────────────────────────────────── */
+.mday-tabs{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:0 10px;gap:0;border-bottom:1px solid var(--border);}
+.mday-tabs::-webkit-scrollbar{display:none;}
+.mday-tab{flex-shrink:0;display:flex;flex-direction:column;align-items:center;padding:9px 13px;border:none;background:none;border-bottom:2.5px solid transparent;color:var(--fg-subtle);letter-spacing:.04em;cursor:pointer;transition:color .18s,border-color .18s;gap:1px;white-space:nowrap;margin-bottom:-1px;}
+.mday-tab .mdt-name{font-size:11px;font-weight:700;}
+.mday-tab .mdt-date{font-size:10px;font-weight:500;opacity:.75;}
+.mday-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.mday-tab.is-today .mdt-name{color:var(--accent);}
+.mday-tab.is-today .mdt-dot{display:block;width:4px;height:4px;border-radius:50%;background:var(--accent);margin:1px auto 0;}
+.mdt-dot{display:none;}
+.mday-cards{padding:10px 10px 4px;}
+.mday-emp-card{display:flex;align-items:center;gap:12px;padding:13px 14px;background:var(--bg-deep);border:1.5px solid var(--border);border-radius:12px;margin-bottom:8px;cursor:pointer;transition:border-color .18s,box-shadow .18s,opacity .12s;}
+.mday-emp-card:active{opacity:.85;}
+.mday-emp-card:hover{border-color:var(--border-acc);box-shadow:0 2px 10px rgba(26,122,60,0.08);}
+.mday-card-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;}
+.mday-card-info{flex:1;min-width:0;}
+.mday-card-name{font-size:14px;font-weight:700;color:var(--fg);}
+.mday-card-shift{font-size:12px;color:var(--fg-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mday-card-badge{flex-shrink:0;font-size:11px;font-weight:600;padding:4px 9px;border-radius:99px;}
+.mday-card-badge.off{color:var(--fg-subtle);background:rgba(0,0,0,0.05);}
+.mday-card-badge.working{color:var(--accent);background:var(--accent-light);border:1px solid rgba(26,122,60,0.18);}
+.mday-card-badge.sick{color:#c2410c;background:#fff7ed;border:1px solid rgba(249,115,22,0.25);}
+.mday-card-badge.dayoff{color:#1d4ed8;background:#eff6ff;border:1px solid rgba(59,130,246,0.2);}
 
 .sched-grid thead th{
   padding:0;border-right:1px solid var(--border);
@@ -1181,7 +1209,13 @@ th.day-col.is-today{background:rgba(26,122,60,0.04) !important;}
   }
   .mnav-btn .mni{font-size:22px;line-height:1;transition:transform .2s var(--ease-out);}
   .mnav-btn.active{color:var(--accent);}
-  .mnav-btn.active .mni{transform:scale(1.15);}
+  .mnav-btn.active .mni{transform:scale(1.18);}
+  .mnav-btn.active::after{
+    content:'';display:block;width:20px;height:2.5px;border-radius:99px;
+    background:var(--accent);margin:-2px auto 0;opacity:.75;
+  }
+  /* Modal task buttons — bigger tap targets */
+  .task-opt{padding:11px 8px;font-size:12px;min-height:44px;}
 
   /* Main content clears bottom nav */
   #app{padding:10px 8px 86px;}
@@ -1205,22 +1239,21 @@ th.day-col.is-today{background:rgba(26,122,60,0.04) !important;}
   .day-toggle{padding:4px 9px;font-size:10px;white-space:nowrap;}
   .ctrl-btn{padding:4px 10px;font-size:10px;white-space:nowrap;}
 
-  /* Grid — scrollable, tighter */
-  .grid-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
-  .sched-grid{width:max-content;min-width:100%;}
-  .sched-grid thead th.name-col{width:90px;min-width:90px;padding:7px 6px;}
-  td.name-col{padding:6px 6px;white-space:nowrap;}
-  .emp-name{font-size:11px;}
-  .emp-hrs{font-size:9px;}
-  .avatar{width:26px;height:26px;font-size:10px;}
-  td.day-cell{height:48px;min-width:72px;max-width:72px;padding:3px 2px;}
-  .drag-handle{display:none;}
-  .th-day-wrap{padding:6px 4px 3px;}
-  .th-day{font-size:10px;}
-  .th-date{font-size:9px;}
-  .time-tick{font-size:8px;}
-  .shift-bar{padding:0 4px;font-size:9px;}
-  .shift-times{display:none;}
+  /* Grid — replaced by Day Card view on mobile */
+  .grid-wrap{display:none;}
+  .mobile-day-view{display:block;}
+
+  /* Controls bar: hide advanced actions behind More button */
+  .ctrl-extra{display:none !important;}
+  .ctrl-bar.ctrl-expanded .ctrl-extra{display:inline-flex !important;}
+  .ctrl-more-btn{
+    display:inline-flex;align-items:center;gap:4px;
+    padding:4px 10px;font-size:10px;white-space:nowrap;
+  }
+  .ctrl-bar.ctrl-expanded .ctrl-more-btn-label::before{content:'✕ ';}
+
+  /* Analytics stat tiles: 2-col instead of 3 on mobile */
+  .stat-grid-3{grid-template-columns:repeat(2,1fr) !important;}
 
   /* Save bar */
   .save-bar{padding:10px 12px;}
@@ -1644,7 +1677,7 @@ function countH(s){
 }
 
 // Default: weekdays only
-let S={tab:"schedule",weekOffset:0,employees:[],allSchedules:[],schedule:{},activeDays:[...WEEKDAYS],saving:false,aPeriod:"4w",hFilter:"all",hPeriod:"4w",hOpen:{}};
+let S={tab:"schedule",weekOffset:0,employees:[],allSchedules:[],schedule:{},activeDays:[...WEEKDAYS],saving:false,aPeriod:"4w",hFilter:"all",hPeriod:"4w",hOpen:{},mobileDayIdx:0};
 
 function getWS(off=0){const n=new Date(),d=n.getDay(),r=new Date(n);r.setDate(n.getDate()-d+(d===0?-6:1)+off*7);r.setHours(0,0,0,0);return r;}
 // Use local date (Eastern) not UTC – avoids midnight-UTC rollover mismatching week keys
@@ -2191,7 +2224,10 @@ function updBadge(empId){
   el.textContent=`${h}h`;
   el.className="emp-hrs "+(pct>0.6?"hrs-high":pct>0.3?"hrs-mid":"hrs-low");
 }
-function refreshGrid(){const gw=document.getElementById("gw");if(gw)gw.innerHTML=buildGrid();}
+function refreshGrid(){
+  const gw=document.getElementById("gw");if(gw)gw.innerHTML=buildGrid();
+  const mdv=document.getElementById("mdv");if(mdv)mdv.innerHTML=buildMobileDayView();
+}
 
 // ── WORK HOURS ──
 function openWHSettings(){
@@ -2293,11 +2329,12 @@ function buildSched(){
     h+=`<button class="day-toggle weekend${S.activeDays.includes(d)?" on":""}" onclick="toggleDay('${d}')">${d.slice(0,3)}</button>`;
   });
 
-  h+=`<div class="ctrl-sep"></div>
-    <button class="ctrl-btn" onclick="openTaskMgr()">⚙ Tasks</button>
-    <button class="ctrl-btn" onclick="openMultiAssign()" style="background:var(--accent-light);color:var(--accent);border-color:var(--border-acc)">👥 Assign Multiple</button>
-    <button class="ctrl-btn" onclick="openMultiClear()" style="background:rgba(239,68,68,0.07);color:#dc2626;border-color:rgba(239,68,68,0.25)">🗑 Clear Multiple</button>
-    <button class="ctrl-btn" onclick="openWHSettings()">⏰ ${fmtHour(WH.start,0)}–${fmtHour(WH.end,0)}</button>
+  h+=`<div class="ctrl-sep ctrl-extra"></div>
+    <button class="ctrl-btn ctrl-extra" onclick="openTaskMgr()">⚙ Tasks</button>
+    <button class="ctrl-btn ctrl-extra" onclick="openMultiAssign()" style="background:var(--accent-light);color:var(--accent);border-color:var(--border-acc)">👥 Assign</button>
+    <button class="ctrl-btn ctrl-extra" onclick="openMultiClear()" style="background:rgba(239,68,68,0.07);color:#dc2626;border-color:rgba(239,68,68,0.25)">🗑 Clear</button>
+    <button class="ctrl-btn ctrl-extra" onclick="openWHSettings()">⏰ ${fmtHour(WH.start,0)}–${fmtHour(WH.end,0)}</button>
+    <button class="ctrl-btn ctrl-more-btn" onclick="this.closest('.ctrl-bar').classList.toggle('ctrl-expanded')"><span class="ctrl-more-btn-label">☰ More</span></button>
   </div>`;
   if(!S.employees.length){
     h+=`<div class="empty" style="padding:52px 24px;display:flex;flex-direction:column;align-items:center;gap:16px">
@@ -2310,6 +2347,7 @@ function buildSched(){
     </div>`;
   } else {
     h+=`<div class="grid-wrap" id="gw">${buildGrid()}</div>`;
+    h+=`<div class="mobile-day-view" id="mdv">${buildMobileDayView()}</div>`;
     h+=`<div class="save-bar" id="save-bar"><span id="save-status"></span><span style="font-size:10px;color:var(--fg-subtle)">Auto-saves as you edit</span></div>`;
   }
   const result=h+`</div>`;
@@ -2418,6 +2456,69 @@ function buildGrid(){
   return h;
 }
 
+// ── MOBILE DAY CARD VIEW ──
+function setMobileDay(idx){S.mobileDayIdx=idx;render();}
+
+function buildMobileDayView(){
+  const ws=getWS(S.weekOffset),tm=TM();
+  const todayName=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][new Date().getDay()];
+  const isCurrentWeek=S.weekOffset===0;
+  const days=S.activeDays;
+  if(!days.length)return`<div class="empty" style="padding:24px;text-align:center;color:var(--fg-muted);">No days selected</div>`;
+  if(S.mobileDayIdx>=days.length)S.mobileDayIdx=0;
+  const selDay=days[S.mobileDayIdx];
+
+  // Day tabs row
+  let h=`<div class="mday-tabs">`;
+  days.forEach((d,i)=>{
+    const dt=new Date(ws);dt.setDate(dt.getDate()+DAYS.indexOf(d));
+    const isToday=isCurrentWeek&&d===todayName;
+    h+=`<button class="mday-tab${S.mobileDayIdx===i?" active":""}${isToday?" is-today":""}" onclick="setMobileDay(${i})">
+      <span class="mdt-name">${d.slice(0,3).toUpperCase()}</span>
+      <span class="mdt-date">${dt.toLocaleDateString("en-US",{month:"short",day:"numeric"})}</span>
+      <span class="mdt-dot"></span>
+    </button>`;
+  });
+  h+=`</div>`;
+
+  // Employee cards for selected day
+  h+=`<div class="mday-cards">`;
+  if(!S.employees.length){
+    h+=`<div class="empty" style="padding:32px 16px;text-align:center;color:var(--fg-muted);font-size:13px;">No employees yet — go to Team tab to add staff</div>`;
+  } else {
+    S.employees.forEach(emp=>{
+      const sc=S.schedule[emp.id]||defSched();
+      const dayData=sc[selDay]||{status:"off",shifts:[]};
+      const status=dayData.status||"off";
+      const shifts=dayData.shifts||[];
+      const[abg,afg]=ac(emp.name);
+
+      let badgeCls="off",badgeTxt="Off",shiftInfo="Tap to schedule";
+      if(status==="sick"){
+        badgeCls="sick";badgeTxt="🤒 Sick";shiftInfo="Sick day";
+      } else if(status==="dayoff"){
+        badgeCls="dayoff";badgeTxt="📅 Day Off";shiftInfo="Day off";
+      } else if(shifts.length>0){
+        const taskLabels=shifts.map(sh=>{const t=tm[sh.task]||{label:sh.task};return t.label;});
+        const firstTime=shifts[0].start&&shifts[0].end?` · ${fmtRange(shifts[0].start,shifts[0].end)}`:"";
+        shiftInfo=taskLabels.slice(0,2).join(", ")+(shifts.length>2?` +${shifts.length-2} more`:"")+firstTime;
+        badgeCls="working";badgeTxt=`${shifts.length} task${shifts.length>1?"s":""}`;
+      }
+      const noteIcon=dayData.note?` <span title="${esc(dayData.note)}" style="color:#f59e0b;font-size:11px;">●</span>`:"";
+      h+=`<div class="mday-emp-card" onclick="openShiftModal('${emp.id}','${selDay}')">
+        <div class="mday-card-avatar" style="background:${abg};color:${afg};">${emp.name[0].toUpperCase()}</div>
+        <div class="mday-card-info">
+          <div class="mday-card-name">${esc(emp.name)}${noteIcon}</div>
+          <div class="mday-card-shift">${esc(shiftInfo)}</div>
+        </div>
+        <span class="mday-card-badge ${badgeCls}">${badgeTxt}</span>
+      </div>`;
+    });
+  }
+  h+=`</div>`;
+  return h;
+}
+
 function prevW(){S.weekOffset--;loadWeekSched();render();}
 function nextW(){S.weekOffset++;loadWeekSched();render();}
 function goToday(){S.weekOffset=0;loadWeekSched();render();}
@@ -2425,6 +2526,8 @@ function toggleDay(d){
   const i=S.activeDays.indexOf(d);
   if(i>=0)S.activeDays.splice(i,1);
   else S.activeDays=[...DAYS.filter(x=>[...S.activeDays,d].includes(x))];
+  // Clamp mobileDayIdx if days were removed
+  if(S.mobileDayIdx>=S.activeDays.length)S.mobileDayIdx=0;
   render();
 }
 function loadWeekSched(){const w=wkey(S.weekOffset);S.employees.forEach(e=>{const f=S.allSchedules.find(s=>s.employee_id===e.id&&s.week_start===w);S.schedule[e.id]=f?migrateSched(JSON.parse(JSON.stringify(f.schedule_data))):defSched();});}
@@ -2569,7 +2672,7 @@ function buildAnalytics(){
   const totOff=empData.reduce((n,e)=>n+e.daysOff,0);
 
   // Summary stat tiles
-  h+=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px">
+  h+=`<div class="stat-grid-3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px">
     <div class="stat-tile green">
       <div class="stat-num" data-count="${totH}" data-suffix="h">0h</div>
       <div class="stat-label">Total Hours</div>
@@ -3465,6 +3568,10 @@ async function bootApp(){
     const w=wkey(S.weekOffset);
     S.employees.forEach(e=>{const f=(scheds||[]).find(s=>s.employee_id===e.id&&s.week_start===w);S.schedule[e.id]=f?migrateSched(JSON.parse(JSON.stringify(f.schedule_data))):defSched();});
   }catch(e){toast("Load failed: "+e.message,"error");}
+  // Auto-select today in mobile day view for current week
+  const todayName=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][new Date().getDay()];
+  const todayIdx=S.activeDays.indexOf(todayName);
+  if(todayIdx>=0)S.mobileDayIdx=todayIdx;
   render();
 }
 
