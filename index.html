@@ -5,7 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Jeff White Group — Staff Scheduler</title>
 <link rel="icon" type="image/jpeg" href="https://chambermaster.blob.core.windows.net/images/customers/2454/representatives/44776186/400x400/JEFF+WHITE+GROUP+-+GREEN+TREE+CIRCLE+JPEG_141157.jpg"/>
-<link rel="apple-touch-icon" href="https://chambermaster.blob.core.windows.net/images/customers/2454/representatives/44776186/400x400/JEFF+WHITE+GROUP+-+GREEN+TREE+CIRCLE+JPEG_141157.jpg"/>
+<link rel="apple-touch-icon" sizes="180x180" href="https://chambermaster.blob.core.windows.net/images/customers/2454/representatives/44776186/400x400/JEFF+WHITE+GROUP+-+GREEN+TREE+CIRCLE+JPEG_141157.jpg"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="JWG Scheduler"/>
+<meta name="theme-color" content="#1a7a3c"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
@@ -149,7 +153,6 @@ nav{display:flex;gap:2px;}
   font-size:13px;font-weight:500;
   display:none;
   backdrop-filter:blur(16px);
-  display:none;
   align-items:center;gap:10px;
   min-width:220px;max-width:340px;
   box-shadow:0 4px 24px rgba(0,0,0,0.12),0 1px 0 rgba(255,255,255,0.6) inset;
@@ -365,11 +368,6 @@ td.day-cell:hover{background:var(--accent-light) !important;}
 .sick-btn:hover{background:rgba(249,115,22,0.15);}
 
 /* ─── SAVE BAR ───────────────────────────────────────────────────────────────── */
-.save-bar{
-  padding:14px 22px;border-top:1px solid var(--border);
-  display:flex;justify-content:flex-end;
-  background:linear-gradient(135deg,#f5faf6,#eef5f0);
-}
 .save-btn{
   background:var(--accent);color:white;border:none;
   border-radius:var(--radius-sm);padding:11px 28px;
@@ -1649,7 +1647,9 @@ function countH(s){
 let S={tab:"schedule",weekOffset:0,employees:[],allSchedules:[],schedule:{},activeDays:[...WEEKDAYS],saving:false,aPeriod:"4w",hFilter:"all",hPeriod:"4w",hOpen:{}};
 
 function getWS(off=0){const n=new Date(),d=n.getDay(),r=new Date(n);r.setDate(n.getDate()-d+(d===0?-6:1)+off*7);r.setHours(0,0,0,0);return r;}
-function wkey(off){return getWS(off).toISOString().split("T")[0];}
+// Use local date (Eastern) not UTC – avoids midnight-UTC rollover mismatching week keys
+function localDateStr(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function wkey(off){return localDateStr(getWS(off));}
 function fmtW(d){const e=new Date(d);e.setDate(e.getDate()+6);const o={month:"short",day:"numeric"};return`${d.toLocaleDateString("en-US",o)} – ${e.toLocaleDateString("en-US",{...o,year:"numeric"})}`;}
 function wlbl(o){return o===0?"This Week":o===1?"Next Week":o===-1?"Last Week":`Week ${o>0?"+":""}${o}`;}
 
@@ -1668,8 +1668,8 @@ function lsS(k,v){localStorage.setItem(k,JSON.stringify(v))}
 async function loadEmps(){if(USE_SUPABASE)return sbF("GET","employees?select=*&order=name");return lsG("ss_emps")||[];}
 async function saveEmp(name){if(USE_SUPABASE){const r=await sbF("POST","employees",{name});return r[0];}const l=lsG("ss_emps")||[],e={id:Date.now().toString(),name};lsS("ss_emps",[...l,e]);return e;}
 async function delEmp(id){if(USE_SUPABASE)return sbF("DELETE",`employees?id=eq.${id}`);lsS("ss_emps",(lsG("ss_emps")||[]).filter(e=>e.id!==id));}
-async function loadScheds(){if(USE_SUPABASE)return sbF("GET","schedules?select=*");return lsG("ss_scheds")||[];}
-async function upsertSched(eid,ws,data){const w=ws.toISOString().split("T")[0];if(USE_SUPABASE)return sbF("POST","schedules?on_conflict=employee_id,week_start",{employee_id:eid,week_start:w,schedule_data:data,updated_at:new Date().toISOString()});const l=lsG("ss_scheds")||[],i=l.findIndex(s=>s.employee_id===eid&&s.week_start===w);const e={id:`${eid}_${w}`,employee_id:eid,week_start:w,schedule_data:data};if(i>=0)l[i]=e;else l.push(e);lsS("ss_scheds",l);}
+async function loadScheds(){if(USE_SUPABASE){const since=new Date();since.setFullYear(since.getFullYear()-1);return sbF("GET","schedules?select=*&week_start=gte."+localDateStr(since));}return lsG("ss_scheds")||[];}
+async function upsertSched(eid,ws,data){const w=localDateStr(ws);if(USE_SUPABASE)return sbF("POST","schedules?on_conflict=employee_id,week_start",{employee_id:eid,week_start:w,schedule_data:data,updated_at:new Date().toISOString()});const l=lsG("ss_scheds")||[],i=l.findIndex(s=>s.employee_id===eid&&s.week_start===w);const e={id:`${eid}_${w}`,employee_id:eid,week_start:w,schedule_data:data};if(i>=0)l[i]=e;else l.push(e);lsS("ss_scheds",l);}
 
 let toastT;
 const TOAST_ICONS={success:"✓",error:"✕",info:"ℹ"};
@@ -1696,9 +1696,22 @@ function openModal(html,width){
   m.innerHTML=html;ov.appendChild(m);document.body.appendChild(ov);
 }
 
+// ── OVERLAP CHECK ──
+function shiftsOverlap(a,b){
+  if(!a.start||!a.end||!b.start||!b.end)return false;
+  const[as2,am]=a.start.split(":").map(Number),[ae,aem]=a.end.split(":").map(Number);
+  const[bs,bm]=b.start.split(":").map(Number),[be,bem]=b.end.split(":").map(Number);
+  return(as2+am/60)<(be+bem/60)&&(ae+aem/60)>(bs+bm/60);
+}
+function hasOverlap(shifts,newShift,skipIdx){
+  return shifts.some((sh,i)=>i!==skipIdx&&shiftsOverlap(newShift,sh));
+}
+
 // ── SHIFT MODAL ──
 let _selTask=null;
 let _editShiftIdx=null;
+let _editEmpId=null;
+let _editDay=null;
 function openShiftModal(empId,day){
   const emp=S.employees.find(e=>e.id===empId);
   if(!S.schedule[empId])S.schedule[empId]=defSched();
@@ -1787,37 +1800,39 @@ function renderShiftModal(empId,day,emp,dayData){
     </button>`;
   });
   h+=`</div>
-  <button class="add-shift-entry-btn" onclick="addShiftEntry('${empId}','${day}')">+ Add Task to Schedule</button>
   <div class="modal-divider"></div>
   <div class="day-note-wrap">
     <div class="sect-label">📝 Notes <span style="font-weight:400;opacity:.6;text-transform:none;letter-spacing:0">(optional)</span></div>
     <textarea class="day-note" id="day_note" rows="2" placeholder="e.g. Leaving early at 2pm, covering for Sarah, key with manager…" oninput="saveDayNote('${empId}','${day}',this.value)">${esc(dayData.note||"")}</textarea>
   </div>
   <div class="modal-divider"></div>
-  <div style="display:flex;gap:8px;margin-bottom:14px">
+  <div style="display:flex;gap:8px;margin-bottom:10px">
     <button class="clear-btn" style="flex:1;margin-bottom:0" onclick="markDayOff('${empId}','${day}')">📅 Mark as Day Off</button>
     <button class="sick-btn" onclick="markDaySick('${empId}','${day}')">🤒 Called In Sick</button>
   </div>
-  <div style="display:flex;justify-content:flex-end">
-    <button class="modal-done" onclick="closeSaveShift('${empId}','${day}')">Close</button>
+  <div style="display:flex;gap:8px;align-items:center;justify-content:space-between">
+    <button class="modal-cancel" onclick="closeSaveShift('${empId}','${day}')">Close</button>
+    <button class="add-shift-entry-btn" style="margin-bottom:0;flex:1;max-width:220px" onclick="addShiftEntry('${empId}','${day}')">+ Add Task &amp; Save</button>
   </div>`;
   openModal(h,"460px");
 }
 
 function startEditShift(empId,day,idx){
   _editShiftIdx=idx;
+  _editEmpId=empId;
+  _editDay=day;
   const emp=S.employees.find(e=>e.id===empId);
   const dayData=S.schedule[empId][day];
   renderShiftModal(empId,day,emp,dayData);
 }
 function cancelEditShift(){
   _editShiftIdx=null;
-  // re-open with current empId/day — stored in modal title, but easier to just re-render by re-reading state
-  // We need empId/day; pass them through a closure variable
-  _pendingEditRerender&&_pendingEditRerender();
+  if(_editEmpId&&_editDay){
+    const emp=S.employees.find(e=>e.id===_editEmpId);
+    const dayData=S.schedule[_editEmpId]?.[_editDay];
+    if(emp&&dayData)renderShiftModal(_editEmpId,_editDay,emp,dayData);
+  }
 }
-// We store a rerender callback
-let _pendingEditRerender=null;
 
 function saveEditShift(empId,day,idx){
   const s=document.getElementById(`edit_s${idx}`)?.value;
@@ -1826,6 +1841,7 @@ function saveEditShift(empId,day,idx){
     const[sh,sm]=s.split(":").map(Number),[eh,em]=e.split(":").map(Number);
     if((eh+em/60)<=(sh+sm/60)){toast("End time must be after start","error");return;}
   }
+  if(hasOverlap(S.schedule[empId][day].shifts||[],{start:s,end:e},idx)){toast("This shift overlaps with an existing one — adjust the times","error");return;}
   S.schedule[empId][day].shifts[idx].start=s;
   S.schedule[empId][day].shifts[idx].end=e;
   _editShiftIdx=null;
@@ -1854,12 +1870,14 @@ function addShiftEntry(empId,day){
   }
   if(!S.schedule[empId])S.schedule[empId]=defSched();
   const dayData=S.schedule[empId][day];
+  const newShift={task,start:s,end:e};
+  if(hasOverlap(dayData.shifts||[],newShift,-1)){toast("This shift overlaps with an existing one — adjust the times","error");return;}
   dayData.status="work";
-  dayData.shifts=[...(dayData.shifts||[]),{task,start:s,end:e}];
+  dayData.shifts=[...(dayData.shifts||[]),newShift];
   _selTask=null;
-  const emp=S.employees.find(e=>e.id===empId);
-  renderShiftModal(empId,day,emp,dayData);
+  closeModal();
   refreshGrid();updBadge(empId);autoSave(empId);
+  toast("Task added ✓");
 }
 
 function removeShiftEntry(empId,day,idx){
@@ -2032,13 +2050,16 @@ function applyMultiAssign(){
     const[sh,sm]=s.split(":").map(Number),[eh,em]=e.split(":").map(Number);
     if((eh+em/60)<=(sh+sm/60)){toast("End time must be after start","error");return;}
   }
+  let skipped=0;
+  const newShift={task:_ma.task,start:s,end:e};
   _ma.empIds.forEach(empId=>{
     if(!S.schedule[empId])S.schedule[empId]=defSched();
     _ma.days.forEach(day=>{
       if(!S.schedule[empId][day])S.schedule[empId][day]={status:"off",shifts:[]};
       const dayData=S.schedule[empId][day];
+      if(hasOverlap(dayData.shifts||[],newShift,-1)){skipped++;return;}
       dayData.status="work";
-      dayData.shifts=[...(dayData.shifts||[]),{task:_ma.task,start:s,end:e}];
+      dayData.shifts=[...(dayData.shifts||[]),{...newShift}];
     });
     updBadge(empId);
   });
@@ -2047,7 +2068,8 @@ function applyMultiAssign(){
   closeModal();
   refreshGrid();
   const tLabel=TM()[_ma.task]?.label||_ma.task;
-  toast(`✓ "${tLabel}" assigned to ${_ma.empIds.length} employee${_ma.empIds.length!==1?"s":""} across ${_ma.days.length} day${_ma.days.length!==1?"s":""}`);
+  const skipNote=skipped>0?` (${skipped} skipped — overlap)`:"";
+  toast(`✓ "${tLabel}" assigned to ${_ma.empIds.length} employee${_ma.empIds.length!==1?"s":""} across ${_ma.days.length} day${_ma.days.length!==1?"s":""}${skipNote}`);
   _ma={task:null,days:[],empIds:[]};
 }
 // ── MULTI-CLEAR ──
@@ -2396,7 +2418,6 @@ function buildGrid(){
   return h;
 }
 
-function switchTab(t){S.tab=t;render();}
 function prevW(){S.weekOffset--;loadWeekSched();render();}
 function nextW(){S.weekOffset++;loadWeekSched();render();}
 function goToday(){S.weekOffset=0;loadWeekSched();render();}
@@ -2410,15 +2431,20 @@ function loadWeekSched(){const w=wkey(S.weekOffset);S.employees.forEach(e=>{cons
 
 // ── AUTO-SAVE (debounced) ──
 let _autoSaveTimer=null;
-// Snapshot: {weekKey, scheduleData} captured at call time so navigation can't corrupt the save
+// Snapshot: {weekKey, ws, snapshot[]} captured at call time so navigation can't corrupt the save
 let _pendingSave=null;
 function autoSave(empId){
   const ws=getWS(S.weekOffset);
-  const w=ws.toISOString().split("T")[0];
-  // Snapshot the data RIGHT NOW before any navigation can overwrite S.schedule
+  const w=localDateStr(ws);
+  // Snapshot the changed employee(s) RIGHT NOW
   const toSave=empId?S.employees.filter(e=>e.id===empId):S.employees;
-  const snapshot=toSave.map(e=>({emp:e,data:JSON.parse(JSON.stringify(S.schedule[e.id]||defSched()))}));
-  _pendingSave={w,ws,snapshot};
+  const newEntries=toSave.map(e=>({emp:e,data:JSON.parse(JSON.stringify(S.schedule[e.id]||defSched()))}));
+  if(_pendingSave&&_pendingSave.w===w){
+    // Merge: update existing entries for same week, add any new ones
+    newEntries.forEach(ne=>{const idx=_pendingSave.snapshot.findIndex(s=>s.emp.id===ne.emp.id);if(idx>=0)_pendingSave.snapshot[idx]=ne;else _pendingSave.snapshot.push(ne);});
+  } else {
+    _pendingSave={w,ws,snapshot:newEntries};
+  }
   showSaveStatus("saving");
   clearTimeout(_autoSaveTimer);
   _autoSaveTimer=setTimeout(()=>_doAutoSave(),800);
@@ -2441,7 +2467,7 @@ function getPeriodWeeks(period){
   const thisMonday=getWS(0);
   const weeks=[];
   const addW=(off,lbl)=>{
-    const k=getWS(off).toISOString().split("T")[0];
+    const k=localDateStr(getWS(off));
     weeks.push({key:k,label:lbl||( off===0?"This Week":off===-1?"Last Week":`${-off} Weeks Ago`),offset:off});
   };
   if(period==="this_week"){addW(0,"This Week");}
@@ -2654,7 +2680,7 @@ const H_PERIODS=[
 function getHistoryWeekKeys(period){
   const thisMonday=getWS(0);
   const keys=[];
-  const addK=(off)=>{const k=getWS(off).toISOString().split("T")[0];if(!keys.includes(k))keys.push(k);};
+  const addK=(off)=>{const k=localDateStr(getWS(off));if(!keys.includes(k))keys.push(k);};
   if(period==="this_week"){addK(0);}
   else if(period==="last_week"){addK(-1);}
   else if(period==="2w"){addK(0);addK(-1);}
@@ -2986,14 +3012,12 @@ async function doLogin(){
 
   try{
     const url=`${SUPABASE_URL}/auth/v1/token?grant_type=password`;
-    console.log("Attempting login to:",url);
     const res=await fetch(url,{
       method:"POST",
       headers:{"Content-Type":"application/json","apikey":SUPABASE_ANON_KEY},
       body:JSON.stringify({email,password})
     });
     const data=await res.json();
-    console.log("Login response status:",res.status,"data:",data);
     if(data.access_token){
       localStorage.setItem("ss_session",JSON.stringify(data));
       _currentUser=data.user;
@@ -3205,41 +3229,10 @@ const PRIO_ORDER={high:0,medium:1,low:2};
 const PRIO_LABEL={high:"High",medium:"Medium",low:"Low"};
 const PRIO_CLASS={high:"ph",medium:"pm",low:"pl"};
 
-async function loadWorkshopTasks(){
-  const res=await fetch(`${SUPABASE_URL}/rest/v1/workshop_tasks?order=created_at.desc`,{
-    headers:{apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${SUPABASE_ANON_KEY}`}
-  });
-  if(!res.ok)throw new Error("Failed to load tasks");
-  return res.json();
-}
-
-async function saveWorkshopTask(data){
-  const res=await fetch(`${SUPABASE_URL}/rest/v1/workshop_tasks`,{
-    method:"POST",
-    headers:{apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${SUPABASE_ANON_KEY}`,"Content-Type":"application/json","Prefer":"return=representation"},
-    body:JSON.stringify(data)
-  });
-  if(!res.ok)throw new Error("Failed to save task");
-  return res.json();
-}
-
-async function updateWorkshopTask(id,data){
-  const res=await fetch(`${SUPABASE_URL}/rest/v1/workshop_tasks?id=eq.${id}`,{
-    method:"PATCH",
-    headers:{apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${SUPABASE_ANON_KEY}`,"Content-Type":"application/json","Prefer":"return=representation"},
-    body:JSON.stringify(data)
-  });
-  if(!res.ok)throw new Error("Failed to update task");
-  return res.json();
-}
-
-async function deleteWorkshopTask(id){
-  const res=await fetch(`${SUPABASE_URL}/rest/v1/workshop_tasks?id=eq.${id}`,{
-    method:"DELETE",
-    headers:{apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${SUPABASE_ANON_KEY}`}
-  });
-  if(!res.ok)throw new Error("Failed to delete task");
-}
+async function loadWorkshopTasks(){return sbF("GET","workshop_tasks?order=created_at.desc");}
+async function saveWorkshopTask(data){return sbF("POST","workshop_tasks",data);}
+async function updateWorkshopTask(id,data){return sbF("PATCH","workshop_tasks?id=eq."+id,data);}
+async function deleteWorkshopTask(id){return sbF("DELETE","workshop_tasks?id=eq."+id);}
 
 function buildTasksPage(){
   return`<div class="card"><div class="wt-wrap" id="wt-root"><div style="text-align:center;padding:40px;color:var(--fg-subtle)">Loading tasks…</div></div></div>`;
@@ -3435,7 +3428,7 @@ async function wtSaveForm(id){
 }
 
 async function wtMarkDone(id){
-  const today=new Date().toISOString().split("T")[0];
+  const today=localDateStr(new Date());
   try{
     await updateWorkshopTask(id,{status:"done",completed_at:today});
     const t=WT.tasks.find(x=>x.id===id);
