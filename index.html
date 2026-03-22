@@ -247,6 +247,40 @@ nav{display:flex;gap:2px;}
 }
 .ctrl-btn:hover{background:var(--accent-light);color:var(--accent);border-color:var(--border-acc);}
 
+/* ─── CTRL ACTIONS GROUP (desktop pill container) ───────────────────────────── */
+.ctrl-actions{
+  display:flex;gap:4px;align-items:center;
+  background:var(--bg-deep);border-radius:var(--radius-sm);
+  padding:3px;border:1px solid var(--border);margin-left:2px;
+}
+.ctrl-actions .ctrl-btn{box-shadow:none;font-size:11px;padding:4px 10px;}
+.ctrl-btn-accent{background:var(--accent-light) !important;color:var(--accent) !important;border-color:var(--border-acc) !important;}
+.ctrl-btn-accent:hover{background:var(--accent) !important;color:white !important;border-color:var(--accent) !important;}
+.ctrl-btn-danger{background:rgba(239,68,68,0.07) !important;color:#dc2626 !important;border-color:rgba(239,68,68,0.25) !important;}
+.ctrl-btn-danger:hover{background:rgba(239,68,68,0.15) !important;}
+
+/* ─── MODAL FOOTER REDESIGN ──────────────────────────────────────────────────── */
+.modal-footer-status{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.mfs-btn{
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  padding:9px 8px;border-radius:var(--radius-sm);
+  font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;
+  border:1.5px solid transparent;transition:all .18s;
+}
+.mfs-dayoff{background:var(--bg-deep);color:var(--fg-muted);border-color:var(--border-h);}
+.mfs-dayoff:hover{background:rgba(0,0,0,0.07);color:var(--fg);border-color:var(--border-h);}
+.mfs-sick{background:rgba(249,115,22,0.07);color:#c2410c;border-color:rgba(249,115,22,0.22);}
+.mfs-sick:hover{background:rgba(249,115,22,0.14);}
+.modal-footer-main{display:flex;align-items:center;gap:10px;}
+.modal-add-btn{
+  flex:1;padding:11px 20px;background:var(--accent);color:white;
+  border:none;border-radius:var(--radius-sm);
+  font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;
+  box-shadow:var(--shadow-btn);transition:all .2s var(--ease-out);letter-spacing:-.01em;
+}
+.modal-add-btn:hover{background:var(--accent-b);transform:translateY(-1px);}
+.modal-add-btn:active{transform:scale(.98);}
+
 /* ─── SCHEDULE GRID ──────────────────────────────────────────────────────────── */
 .grid-wrap{overflow-x:auto;}
 .sched-grid{width:100%;border-collapse:collapse;}
@@ -1004,7 +1038,7 @@ th.day-col.is-today{background:rgba(26,122,60,0.04) !important;}
 }
 .ma-emp-row:hover{border-color:var(--border-acc);background:var(--accent-light);}
 .ma-emp-row.checked{border-color:var(--accent);background:var(--accent-light);}
-.ma-emp-row input[type=checkbox]{accent-color:var(--accent);width:15px;height:15px;flex-shrink:0;cursor:pointer;}
+.ma-chk{display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .ma-emp-name{font-size:13px;font-weight:600;color:var(--fg);flex:1;}
 .ma-everyone-btn{
   width:100%;background:var(--surface);color:var(--fg-muted);
@@ -1239,13 +1273,32 @@ th.day-col.is-today{background:rgba(26,122,60,0.04) !important;}
   .day-toggle{padding:4px 9px;font-size:10px;white-space:nowrap;}
   .ctrl-btn{padding:4px 10px;font-size:10px;white-space:nowrap;}
 
-  /* Grid — replaced by Day Card view on mobile */
-  .grid-wrap{display:none;}
-  .mobile-day-view{display:block;}
+  /* ── COMPACT GRID (replaces day-card view) ── */
+  .grid-wrap{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .mobile-day-view{display:none;}
+  .time-ruler{display:none !important;}
+  /* Fixed layout: name col 38px, day cols share remaining width equally */
+  .sched-grid{table-layout:fixed;width:100% !important;min-width:0 !important;border-collapse:collapse;}
+  .sched-grid thead th.name-col{width:38px;min-width:38px;max-width:38px;font-size:0;padding:4px 0;overflow:hidden;}
+  td.name-col{width:38px;min-width:38px;max-width:38px;padding:4px 2px;}
+  .emp-cell-inner{justify-content:center;gap:0;}
+  .emp-name,.emp-hrs,.drag-handle{display:none !important;}
+  .avatar-wrap{width:28px !important;height:28px !important;overflow:hidden;}
+  .avatar-wrap svg{display:none !important;}
+  /* Override inline position:absolute;inset:3px to fill compact wrapper */
+  .emp-cell-inner .avatar{position:absolute !important;inset:0 !important;width:100% !important;height:100% !important;font-size:11px !important;}
+  td.day-cell{height:40px;min-width:0;padding:2px 1px;}
+  .th-day-wrap{padding:5px 3px 3px;}
+  .th-day{font-size:9px;font-weight:700;}
+  .th-date{font-size:8px;opacity:.8;}
+  .shift-bar{padding:0 3px;font-size:7px;border-radius:3px;}
+  .shift-label{font-size:7px;line-height:1.1;}
+  .shift-times{display:none !important;}
+  .status-label{font-size:8px;padding:1px 3px;border-radius:3px;}
 
-  /* Controls bar: hide advanced actions behind More button */
-  .ctrl-extra{display:none !important;}
-  .ctrl-bar.ctrl-expanded .ctrl-extra{display:inline-flex !important;}
+  /* ── ACTIONS GROUP behind More button ── */
+  .ctrl-actions{display:none;}
+  .ctrl-bar.ctrl-expanded .ctrl-actions{display:flex;flex-wrap:wrap;gap:5px;}
   .ctrl-more-btn{
     display:inline-flex;align-items:center;gap:4px;
     padding:4px 10px;font-size:10px;white-space:nowrap;
@@ -1300,10 +1353,7 @@ th.day-col.is-today{background:rgba(26,122,60,0.04) !important;}
 }
 
 @media(max-width:380px){
-  td.day-cell{min-width:58px;max-width:58px;height:44px;}
-  .sched-grid thead th.name-col{width:76px;min-width:76px;}
-  td.name-col{padding:4px 4px;}
-  .avatar{width:22px;height:22px;font-size:9px;}
+  /* Very small phones: task grid single column in modal */
   .task-grid{grid-template-columns:1fr;}
 }
 
@@ -1720,6 +1770,18 @@ function dismissToast(){
 }
 
 function closeModal(){const o=document.getElementById("moverlay");if(o)o.remove();}
+function updateModal(html,width){
+  // Update existing modal content in-place (preserves scroll, no flicker)
+  const m=document.querySelector("#moverlay .modal");
+  if(m){
+    const scrollTop=m.scrollTop;
+    m.innerHTML=html;
+    if(width)m.style.width=width;
+    m.scrollTop=scrollTop;
+  } else {
+    openModal(html,width);
+  }
+}
 function openModal(html,width){
   closeModal();
   const ov=document.createElement("div");ov.className="moverlay";ov.id="moverlay";
@@ -1739,9 +1801,13 @@ function shiftsOverlap(a,b){
 function hasOverlap(shifts,newShift,skipIdx){
   return shifts.some((sh,i)=>i!==skipIdx&&shiftsOverlap(newShift,sh));
 }
+// Returns an array of task IDs for a shift (handles both new {tasks:[]} and legacy {task:""} format)
+function getShiftTasks(sh){return sh.tasks&&sh.tasks.length?sh.tasks:(sh.task?[sh.task]:[]);}
+// Returns display label for shift tasks, joining with " + "
+function shiftTaskLabel(sh,tm){return getShiftTasks(sh).map(id=>(tm[id]?.label||id)).join(" + ")||"(no task)";}
 
 // ── SHIFT MODAL ──
-let _selTask=null;
+let _selTasks=[];  // array of selected task IDs (supports multi-task)
 let _editShiftIdx=null;
 let _editEmpId=null;
 let _editDay=null;
@@ -1749,7 +1815,7 @@ function openShiftModal(empId,day){
   const emp=S.employees.find(e=>e.id===empId);
   if(!S.schedule[empId])S.schedule[empId]=defSched();
   const dayData=S.schedule[empId][day]||{status:"off",shifts:[]};
-  _selTask=null;
+  _selTasks=[];
   _editShiftIdx=null;
   renderShiftModal(empId,day,emp,dayData);
 }
@@ -1778,14 +1844,16 @@ function renderShiftModal(empId,day,emp,dayData){
   if(shifts.length>0){
     shiftListHtml=`<div class="sect-label" style="margin-top:4px;margin-bottom:6px">Scheduled Tasks</div>`;
     shifts.forEach((sh,i)=>{
-      const t=tm[sh.task];
+      const taskIds=getShiftTasks(sh);
+      const firstT=tm[taskIds[0]];
+      const allLabels=taskIds.map(id=>tm[id]?.label||id).join(" + ");
       if(_editShiftIdx===i){
         // Editing this entry inline
-        shiftListHtml+=`<div style="background:${t?.bg||"#f5f5f5"};border:2px solid ${t?.dot||"#ccc"};border-radius:8px;padding:10px 12px;margin-bottom:6px;">
+        shiftListHtml+=`<div style="background:${firstT?.bg||"#f5f5f5"};border:2px solid ${firstT?.dot||"#ccc"};border-radius:8px;padding:10px 12px;margin-bottom:6px;">
           <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
-            <span style="width:8px;height:8px;border-radius:50%;background:${t?.dot||"#ccc"};display:inline-block;flex-shrink:0"></span>
-            <span style="font-weight:700;font-size:12px;color:${t?.text||"#333"}">${esc(t?.label||sh.task)}</span>
-            <span style="font-size:10px;color:${t?.text||"#333"};opacity:.6;margin-left:auto">editing</span>
+            <span style="width:8px;height:8px;border-radius:50%;background:${firstT?.dot||"#ccc"};display:inline-block;flex-shrink:0"></span>
+            <span style="font-weight:700;font-size:12px;color:${firstT?.text||"#333"}">${esc(allLabels)}</span>
+            <span style="font-size:10px;color:${firstT?.text||"#333"};opacity:.6;margin-left:auto">editing</span>
           </div>
           <div class="shift-form" style="margin-bottom:8px;">
             <div><div class="sf-label">Start</div><select class="sf-select" id="edit_s${i}">${buildTimeOpts(sh.start||defStart)}</select></div>
@@ -1797,11 +1865,11 @@ function renderShiftModal(empId,day,emp,dayData){
           </div>
         </div>`;
       } else {
-        shiftListHtml+=`<div style="background:${t?.bg||"#f5f5f5"};border:1.5px solid ${t?.dot||"#ccc"}40;border-radius:8px;padding:8px 10px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;gap:6px;">
+        shiftListHtml+=`<div style="background:${firstT?.bg||"#f5f5f5"};border:1.5px solid ${firstT?.dot||"#ccc"}40;border-radius:8px;padding:8px 10px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;gap:6px;">
           <div style="display:flex;align-items:center;gap:7px;min-width:0;">
-            <span style="width:8px;height:8px;border-radius:50%;background:${t?.dot||"#ccc"};display:inline-block;flex-shrink:0"></span>
-            <span style="font-weight:700;font-size:12px;color:${t?.text||"#333"};white-space:nowrap">${esc(t?.label||sh.task)}</span>
-            <span style="font-size:11px;color:${t?.text||"#333"};opacity:.7;white-space:nowrap">${fmtRange(sh.start,sh.end)}</span>
+            <span style="width:8px;height:8px;border-radius:50%;background:${firstT?.dot||"#ccc"};display:inline-block;flex-shrink:0"></span>
+            <span style="font-weight:700;font-size:12px;color:${firstT?.text||"#333"}">${esc(allLabels)}</span>
+            <span style="font-size:11px;color:${firstT?.text||"#333"};opacity:.7;white-space:nowrap">${fmtRange(sh.start,sh.end)}</span>
           </div>
           <div style="display:flex;gap:4px;flex-shrink:0;">
             <button onclick="startEditShift('${empId}','${day}',${i})" style="background:rgba(26,122,60,0.1);color:var(--accent);border:1px solid rgba(26,122,60,0.2);border-radius:5px;padding:3px 8px;font-size:11px;font-weight:600;cursor:pointer">✎</button>
@@ -1839,13 +1907,13 @@ function renderShiftModal(empId,day,emp,dayData){
     <textarea class="day-note" id="day_note" rows="2" placeholder="e.g. Leaving early at 2pm, covering for Sarah, key with manager…" oninput="saveDayNote('${empId}','${day}',this.value)">${esc(dayData.note||"")}</textarea>
   </div>
   <div class="modal-divider"></div>
-  <div style="display:flex;gap:8px;margin-bottom:10px">
-    <button class="clear-btn" style="flex:1;margin-bottom:0" onclick="markDayOff('${empId}','${day}')">📅 Mark as Day Off</button>
-    <button class="sick-btn" onclick="markDaySick('${empId}','${day}')">🤒 Called In Sick</button>
+  <div class="modal-footer-status">
+    <button class="mfs-btn mfs-dayoff" onclick="markDayOff('${empId}','${day}')">📅 Day Off</button>
+    <button class="mfs-btn mfs-sick" onclick="markDaySick('${empId}','${day}')">🤒 Called In Sick</button>
   </div>
-  <div style="display:flex;gap:8px;align-items:center;justify-content:space-between">
-    <button class="modal-cancel" onclick="closeSaveShift('${empId}','${day}')">Close</button>
-    <button class="add-shift-entry-btn" style="margin-bottom:0;flex:1;max-width:220px" onclick="addShiftEntry('${empId}','${day}')">+ Add Task &amp; Save</button>
+  <div class="modal-footer-main">
+    <button class="modal-cancel" onclick="closeSaveShift('${empId}','${day}')">Cancel</button>
+    <button class="modal-add-btn" onclick="addShiftEntry('${empId}','${day}')">+ Add Task &amp; Save</button>
   </div>`;
   openModal(h,"460px");
 }
@@ -1886,31 +1954,36 @@ function saveEditShift(empId,day,idx){
 }
 
 function pickTask(id){
-  _selTask=id;
-  document.querySelectorAll(".task-opt").forEach(b=>{b.classList.remove("sel");b.style.borderColor="transparent";});
-  const el=document.getElementById("topt_"+id);
-  if(el){el.classList.add("sel");const t=TM()[id];if(t)el.style.borderColor=t.dot;}
+  const i=_selTasks.indexOf(id);
+  if(i>=0) _selTasks.splice(i,1); else _selTasks.push(id);
+  const tm=TM();
+  document.querySelectorAll(".task-opt[id^='topt_']").forEach(b=>{b.classList.remove("sel");b.style.borderColor="transparent";});
+  _selTasks.forEach(tid=>{
+    const el=document.getElementById("topt_"+tid);
+    if(el){el.classList.add("sel");const t=tm[tid];if(t)el.style.borderColor=t.dot;}
+  });
 }
 
 function addShiftEntry(empId,day){
   const s=document.getElementById("sm_start")?.value;
   const e=document.getElementById("sm_end")?.value;
-  const task=_selTask;
-  if(!task){toast("Select a task first","error");return;}
+  if(!_selTasks.length){toast("Select at least one task first","error");return;}
   if(s&&e){
     const[sh,sm]=s.split(":").map(Number),[eh,em]=e.split(":").map(Number);
     if((eh+em/60)<=(sh+sm/60)){toast("End time must be after start","error");return;}
   }
   if(!S.schedule[empId])S.schedule[empId]=defSched();
   const dayData=S.schedule[empId][day];
-  const newShift={task,start:s,end:e};
+  const newShift={tasks:[..._selTasks],start:s,end:e};
   if(hasOverlap(dayData.shifts||[],newShift,-1)){toast("This shift overlaps with an existing one — adjust the times","error");return;}
   dayData.status="work";
   dayData.shifts=[...(dayData.shifts||[]),newShift];
-  _selTask=null;
+  _selTasks=[];
   closeModal();
   refreshGrid();updBadge(empId);autoSave(empId);
-  toast("Task added ✓");
+  const tm=TM();
+  const label=newShift.tasks.map(id=>tm[id]?.label||id).join(" + ");
+  toast(`"${label}" added ✓`);
 }
 
 function removeShiftEntry(empId,day,idx){
@@ -2004,11 +2077,11 @@ function renderMultiAssign(){
   S.employees.forEach(e=>{
     const checked=_ma.empIds.includes(e.id);
     const[abg,afg]=ac(e.name);
-    empHtml+=`<label class="ma-emp-row${checked?" checked":""}" onclick="maToggleEmp('${e.id}')">
-      <input type="checkbox" ${checked?"checked":""} onclick="event.preventDefault()">
+    empHtml+=`<div class="ma-emp-row${checked?" checked":""}" onclick="maToggleEmp('${e.id}')">
+      <span class="ma-chk">${checked?`<svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="var(--accent)"/><path d="M4 7l2 2 4-4" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`:`<span style="width:14px;height:14px;border-radius:50%;border:2px solid var(--border);display:inline-block;"></span>`}</span>
       <div class="avatar" style="background:${abg};color:${afg};width:26px;height:26px;font-size:11px;flex-shrink:0">${e.name[0].toUpperCase()}</div>
       <span class="ma-emp-name">${esc(e.name)}</span>
-    </label>`;
+    </div>`;
   });
   empHtml+='</div>';
 
@@ -2045,7 +2118,7 @@ function renderMultiAssign(){
     </button>
   </div>`;
 
-  openModal(h,"480px");
+  updateModal(h,"480px");
 }
 
 function maPick(id){
@@ -2146,11 +2219,11 @@ function renderMultiClear(){
   S.employees.forEach(e=>{
     const checked=_mc.empIds.includes(e.id);
     const[abg,afg]=ac(e.name);
-    empHtml+=`<label class="ma-emp-row${checked?" checked":""}" onclick="mcToggleEmp('${e.id}')">
-      <input type="checkbox" ${checked?"checked":""} onclick="event.preventDefault()">
+    empHtml+=`<div class="ma-emp-row${checked?" checked":""}" onclick="mcToggleEmp('${e.id}')">
+      <span class="ma-chk">${checked?`<svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="var(--accent)"/><path d="M4 7l2 2 4-4" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`:`<span style="width:14px;height:14px;border-radius:50%;border:2px solid var(--border);display:inline-block;"></span>`}</span>
       <div class="avatar" style="background:${abg};color:${afg};width:26px;height:26px;font-size:11px;flex-shrink:0">${e.name[0].toUpperCase()}</div>
       <span class="ma-emp-name">${esc(e.name)}</span>
-    </label>`;
+    </div>`;
   });
   empHtml+=`</div>`;
 
@@ -2176,7 +2249,7 @@ function renderMultiClear(){
       Clear${ready?" "+selCount+" × "+_mc.days.length+" day"+(_mc.days.length!==1?"s":""):""}
     </button>
   </div>`;
-  openModal(h,"480px");
+  updateModal(h,"480px");
 }
 
 function mcPickTask(id){_mc.task=id;renderMultiClear();}
@@ -2198,9 +2271,9 @@ function applyMultiClear(){
         S.schedule[empId][day]={status:"off",shifts:[]};
         cleared++;
       } else {
-        // Remove only shifts matching this task
+        // Remove only shifts matching this task (handles both legacy {task} and new {tasks:[]} format)
         const before=dayData.shifts.length;
-        dayData.shifts=dayData.shifts.filter(sh=>sh.task!==_mc.task);
+        dayData.shifts=dayData.shifts.filter(sh=>!getShiftTasks(sh).includes(_mc.task));
         if(dayData.shifts.length===0)dayData.status="off";
         cleared+=before-dayData.shifts.length;
       }
@@ -2329,11 +2402,13 @@ function buildSched(){
     h+=`<button class="day-toggle weekend${S.activeDays.includes(d)?" on":""}" onclick="toggleDay('${d}')">${d.slice(0,3)}</button>`;
   });
 
-  h+=`<div class="ctrl-sep ctrl-extra"></div>
-    <button class="ctrl-btn ctrl-extra" onclick="openTaskMgr()">⚙ Tasks</button>
-    <button class="ctrl-btn ctrl-extra" onclick="openMultiAssign()" style="background:var(--accent-light);color:var(--accent);border-color:var(--border-acc)">👥 Assign</button>
-    <button class="ctrl-btn ctrl-extra" onclick="openMultiClear()" style="background:rgba(239,68,68,0.07);color:#dc2626;border-color:rgba(239,68,68,0.25)">🗑 Clear</button>
-    <button class="ctrl-btn ctrl-extra" onclick="openWHSettings()">⏰ ${fmtHour(WH.start,0)}–${fmtHour(WH.end,0)}</button>
+  h+=`<div class="ctrl-sep"></div>
+    <div class="ctrl-actions">
+      <button class="ctrl-btn" onclick="openTaskMgr()">⚙ Tasks</button>
+      <button class="ctrl-btn ctrl-btn-accent" onclick="openMultiAssign()">👥 Assign</button>
+      <button class="ctrl-btn ctrl-btn-danger" onclick="openMultiClear()">🗑 Clear</button>
+      <button class="ctrl-btn" onclick="openWHSettings()">⏰ ${fmtHour(WH.start,0)}–${fmtHour(WH.end,0)}</button>
+    </div>
     <button class="ctrl-btn ctrl-more-btn" onclick="this.closest('.ctrl-bar').classList.toggle('ctrl-expanded')"><span class="ctrl-more-btn-label">☰ More</span></button>
   </div>`;
   if(!S.employees.length){
@@ -2430,11 +2505,13 @@ function buildGrid(){
         const barH=Math.max(28, Math.floor(46/totalSlots)-2);
         cellContent=`<div class="multi-shift-wrap">`;
         shifts.forEach((sh,i)=>{
-          const t=tm[sh.task]||{bg:"#dcfce7",text:"#15803d",dot:"#22c55e",label:sh.task};
+          const taskIds=getShiftTasks(sh);
+          const firstT=tm[taskIds[0]]||{bg:"#dcfce7",text:"#15803d",dot:"#22c55e",label:taskIds[0]||"?"};
+          const allLabels=taskIds.map(id=>tm[id]?.label||id).join(" + ");
           const timeStr=sh.start&&sh.end?fmtRange(sh.start,sh.end):"";
-          cellContent+=`<div class="shift-bar" style="left:2%;width:96%;background:${t.bg};color:${t.text};border:1.5px solid ${t.dot}40;top:${4+(i*(barH+2))}px;bottom:auto;height:${barH}px;flex-direction:column;align-items:flex-start;justify-content:center;gap:0;padding:2px 7px;"
+          cellContent+=`<div class="shift-bar" style="left:2%;width:96%;background:${firstT.bg};color:${firstT.text};border:1.5px solid ${firstT.dot}40;top:${4+(i*(barH+2))}px;bottom:auto;height:${barH}px;flex-direction:column;align-items:flex-start;justify-content:center;gap:0;padding:2px 7px;"
             onclick="event.stopPropagation();openShiftModal('${emp.id}','${d}')">
-            <span class="shift-label" style="line-height:1.2;">${esc(t.label)}</span>
+            <span class="shift-label" style="line-height:1.2;">${esc(allLabels)}</span>
             ${timeStr?`<span class="shift-times" style="margin-left:0;line-height:1.2;">${timeStr}</span>`:""}
           </div>`;
         });
@@ -2499,7 +2576,7 @@ function buildMobileDayView(){
       } else if(status==="dayoff"){
         badgeCls="dayoff";badgeTxt="📅 Day Off";shiftInfo="Day off";
       } else if(shifts.length>0){
-        const taskLabels=shifts.map(sh=>{const t=tm[sh.task]||{label:sh.task};return t.label;});
+        const taskLabels=shifts.map(sh=>shiftTaskLabel(sh,tm));
         const firstTime=shifts[0].start&&shifts[0].end?` · ${fmtRange(shifts[0].start,shifts[0].end)}`:"";
         shiftInfo=taskLabels.slice(0,2).join(", ")+(shifts.length>2?` +${shifts.length-2} more`:"")+firstTime;
         badgeCls="working";badgeTxt=`${shifts.length} task${shifts.length>1?"s":""}`;
