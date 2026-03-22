@@ -2026,10 +2026,10 @@ function saveDayNote(empId,day,val){
 }
 
 // ── MULTI-ASSIGN ──
-let _ma={task:null,days:[],empIds:[],start:null,end:null};
+let _ma={tasks:[],days:[],empIds:[],start:null,end:null};
 
 function openMultiAssign(){
-  _ma={task:null,days:[],empIds:[],start:null,end:null};
+  _ma={tasks:[],days:[],empIds:[],start:null,end:null};
   renderMultiAssign();
 }
 
@@ -2047,7 +2047,7 @@ function renderMultiAssign(){
   // Task grid
   let taskHtml='<div class="task-grid">';
   tasks.filter(t=>t.id!=="off"&&t.id!=="sick").forEach(t=>{
-    const sel=_ma.task===t.id;
+    const sel=_ma.tasks.includes(t.id);
     taskHtml+=`<button class="task-opt${sel?" sel":""}" id="matopt_${t.id}"
       style="background:${t.bg};color:${t.text};border-color:${sel?t.dot:"transparent"}"
       onclick="maPick('${t.id}')">
@@ -2086,7 +2086,7 @@ function renderMultiAssign(){
   empHtml+='</div>';
 
   const selCount=_ma.empIds.length;
-  const readyToAssign=_ma.task&&_ma.days.length>0&&selCount>0;
+  const readyToAssign=_ma.tasks.length>0&&_ma.days.length>0&&selCount>0;
 
   const h=`
   <div class="modal-title">👥 Assign to Multiple</div>
@@ -2122,8 +2122,24 @@ function renderMultiAssign(){
 }
 
 function maPick(id){
-  _ma.task=id;
-  renderMultiAssign();
+  const i=_ma.tasks.indexOf(id);
+  if(i>=0) _ma.tasks.splice(i,1); else _ma.tasks.push(id);
+  // Update button styles in-place (no full re-render = no scroll reset)
+  const tm=TM();
+  document.querySelectorAll(".task-opt[id^='matopt_']").forEach(b=>{b.classList.remove("sel");b.style.borderColor="transparent";});
+  _ma.tasks.forEach(tid=>{
+    const el=document.getElementById("matopt_"+tid);
+    if(el){el.classList.add("sel");const t=tm[tid];if(t)el.style.borderColor=t.dot;}
+  });
+  // Update the Assign button label/state
+  const btn=document.querySelector(".modal-done");
+  if(btn){
+    const ready=_ma.tasks.length>0&&_ma.days.length>0&&_ma.empIds.length>0;
+    btn.disabled=!ready;btn.style.opacity=ready?"1":"0.45";btn.style.cursor=ready?"pointer":"not-allowed";
+    if(_ma.empIds.length>0&&_ma.days.length>0)
+      btn.textContent=`Assign to ${_ma.empIds.length} × ${_ma.days.length} day${_ma.days.length!==1?"s":""}`;
+    else btn.textContent="Assign";
+  }
 }
 function maToggleDay(d){
   const i=_ma.days.indexOf(d);
@@ -2149,7 +2165,7 @@ function maToggleEveryone(){
 function applyMultiAssign(){
   const s=document.getElementById("ma_start")?.value||_ma.start;
   const e=document.getElementById("ma_end")?.value||_ma.end;
-  if(!_ma.task){toast("Select a task first","error");return;}
+  if(!_ma.tasks.length){toast("Select at least one task first","error");return;}
   if(!_ma.days.length){toast("Select at least one day","error");return;}
   if(!_ma.empIds.length){toast("Select at least one employee","error");return;}
   if(s&&e){
@@ -2157,7 +2173,7 @@ function applyMultiAssign(){
     if((eh+em/60)<=(sh+sm/60)){toast("End time must be after start","error");return;}
   }
   let skipped=0;
-  const newShift={task:_ma.task,start:s,end:e};
+  const newShift={tasks:[..._ma.tasks],start:s,end:e};
   _ma.empIds.forEach(empId=>{
     if(!S.schedule[empId])S.schedule[empId]=defSched();
     _ma.days.forEach(day=>{
@@ -2173,10 +2189,11 @@ function applyMultiAssign(){
   autoSave(null);
   closeModal();
   refreshGrid();
-  const tLabel=TM()[_ma.task]?.label||_ma.task;
+  const tm=TM();
+  const tLabel=_ma.tasks.map(id=>tm[id]?.label||id).join(" + ");
   const skipNote=skipped>0?` (${skipped} skipped — overlap)`:"";
   toast(`✓ "${tLabel}" assigned to ${_ma.empIds.length} employee${_ma.empIds.length!==1?"s":""} across ${_ma.days.length} day${_ma.days.length!==1?"s":""}${skipNote}`);
-  _ma={task:null,days:[],empIds:[]};
+  _ma={tasks:[],days:[],empIds:[]};
 }
 // ── MULTI-CLEAR ──
 let _mc={task:"__all__",days:[],empIds:[]};
