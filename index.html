@@ -1535,63 +1535,68 @@ body{overflow-x:hidden;max-width:100vw;}
   min-height:44px;display:inline-flex;align-items:center;
 }
 
-/* ── MOBILE BOTTOM NAV: default visible ─────────────────────────────────────────── */
+/* ── MOBILE BOTTOM NAV: default visible — 40% slimmer than original ──────────────── */
 #mobile-nav{
   display:flex;
   position:fixed;bottom:0;left:0;right:0;z-index:500;
   background:rgba(248,250,248,0.97);
   backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
   border-top:1px solid var(--border);
-  box-shadow:0 -2px 20px rgba(0,0,0,0.08);
+  box-shadow:0 -1px 12px rgba(0,0,0,0.07);
   /* Safe-area padding so home-bar doesn't overlap buttons */
-  padding-bottom:max(8px,env(safe-area-inset-bottom));
-  padding-top:6px;
+  padding-bottom:max(4px,env(safe-area-inset-bottom));
+  padding-top:3px;
 }
 .mnav-btn{
   flex:1;display:flex;flex-direction:column;align-items:center;
-  gap:2px;background:none;border:none;
-  /* Ensure at least 44px tap target */
-  min-height:44px;padding:4px 2px;justify-content:center;
-  color:var(--fg-subtle);font-size:10px;font-weight:700;letter-spacing:.05em;
+  /* Visual height ~27px (≈40% smaller than the old ~48px) */
+  gap:1px;background:none;border:none;
+  min-height:27px;padding:2px 2px;justify-content:center;
+  color:var(--fg-subtle);font-size:8px;font-weight:700;letter-spacing:.06em;
   text-transform:uppercase;transition:color .18s;
   -webkit-tap-highlight-color:transparent;
 }
-.mnav-btn .mni{font-size:22px;line-height:1;transition:transform .2s var(--ease-out);}
-.mnav-btn.active{color:var(--accent);}
-.mnav-btn.active .mni{transform:scale(1.18);}
-.mnav-btn.active::after{
-  content:'';display:block;width:20px;height:2.5px;border-radius:99px;
-  background:var(--accent);margin:-2px auto 0;opacity:.75;
+/* SVG icon inside each nav button */
+.mnav-icon{
+  width:15px;height:15px;display:block;flex-shrink:0;
+  transition:transform .2s var(--ease-out);
+  /* stroke inherits currentColor → green when active, muted otherwise */
 }
-/* Active state for touch (replaces hover) */
-.mnav-btn:active{color:var(--accent);opacity:.8;}
+.mnav-btn.active{color:var(--accent);}
+.mnav-btn.active .mnav-icon{transform:scale(1.14);}
+.mnav-btn.active::after{
+  content:'';display:block;width:14px;height:2px;border-radius:99px;
+  background:var(--accent);margin:0 auto 0;opacity:.8;
+}
+/* Touch feedback */
+.mnav-btn:active{color:var(--accent);opacity:.75;}
 
 /* ── MAIN CONTENT: clear bottom nav + safe area ─────────────────────────────────── */
 #app{
   padding-top:10px;
   padding-right:8px;
   padding-left:8px;
-  /* Bottom padding = mobile nav height (~68px) + extra breathing room + safe area */
-  padding-bottom:max(86px, calc(68px + env(safe-area-inset-bottom) + 12px));
+  /* Bottom padding = slimmer nav height (~34px) + safe area + breathing room */
+  padding-bottom:max(56px, calc(34px + env(safe-area-inset-bottom) + 16px));
 }
 
 /* ── TOAST: bottom-positioned on mobile (above nav bar) ─────────────────────────── */
 #toast{
   top:auto;
-  bottom:max(92px, calc(68px + env(safe-area-inset-bottom) + 16px));
+  bottom:max(52px, calc(34px + env(safe-area-inset-bottom) + 10px));
   right:12px;left:12px;max-width:none;
   font-size:14px;
 }
 #toast.show{animation:toastInMobile .35s var(--ease-out) both;}
 @keyframes toastInMobile{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
 
-/* ── FAB + SCROLL-TOP: keep above mobile nav ─────────────────────────────────────── */
+/* ── FAB + SCROLL-TOP: keep above slimmer mobile nav ────────────────────────────── */
 #fab{
-  bottom:max(88px, calc(68px + env(safe-area-inset-bottom) + 12px));
+  bottom:max(54px, calc(34px + env(safe-area-inset-bottom) + 12px));
   right:16px;
 }
 #scroll-top{
-  bottom:max(88px, calc(68px + env(safe-area-inset-bottom) + 12px));
+  bottom:max(54px, calc(34px + env(safe-area-inset-bottom) + 12px));
   right:76px;
 }
 
@@ -2126,11 +2131,54 @@ input,select,textarea,
 
 <!-- Mobile bottom nav -->
 <nav id="mobile-nav">
-  <button class="mnav-btn active" id="mnav-schedule" onclick="switchTab('schedule')"><span class="mni">📅</span>Schedule</button>
-  <button class="mnav-btn" id="mnav-history" onclick="switchTab('history')"><span class="mni">📋</span>History</button>
-  <button class="mnav-btn" id="mnav-analytics" onclick="switchTab('analytics')"><span class="mni">📊</span>Analytics</button>
-  <button class="mnav-btn" id="mnav-team" onclick="switchTab('team')"><span class="mni">👥</span>Team</button>
-  <button class="mnav-btn" id="mnav-tasks" onclick="switchTab('tasks')"><span class="mni">📋</span>Tasks</button>
+  <button class="mnav-btn active" id="mnav-schedule" onclick="switchTab('schedule')">
+    <!-- Calendar icon -->
+    <svg class="mnav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2"/>
+      <line x1="16" y1="2" x2="16" y2="6"/>
+      <line x1="8" y1="2" x2="8" y2="6"/>
+      <line x1="3" y1="10" x2="21" y2="10"/>
+      <rect x="8" y="14" width="3" height="3" rx=".5" fill="currentColor" stroke="none"/>
+    </svg>
+    Schedule
+  </button>
+  <button class="mnav-btn" id="mnav-history" onclick="switchTab('history')">
+    <!-- Clock / history icon -->
+    <svg class="mnav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="1 4 1 10 7 10"/>
+      <path d="M3.51 15a9 9 0 1 0 .49-5.05"/>
+      <polyline points="12 7 12 12 15 15"/>
+    </svg>
+    History
+  </button>
+  <button class="mnav-btn" id="mnav-analytics" onclick="switchTab('analytics')">
+    <!-- Bar chart icon -->
+    <svg class="mnav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="20" x2="18" y2="10"/>
+      <line x1="12" y1="20" x2="12" y2="4"/>
+      <line x1="6" y1="20" x2="6" y2="14"/>
+      <line x1="2" y1="20" x2="22" y2="20"/>
+    </svg>
+    Analytics
+  </button>
+  <button class="mnav-btn" id="mnav-team" onclick="switchTab('team')">
+    <!-- Users / team icon -->
+    <svg class="mnav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+      <circle cx="9" cy="7" r="4"/>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </svg>
+    Team
+  </button>
+  <button class="mnav-btn" id="mnav-tasks" onclick="switchTab('tasks')">
+    <!-- Check-square / tasks icon -->
+    <svg class="mnav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9 11 12 14 22 4"/>
+      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+    </svg>
+    Tasks
+  </button>
 </nav>
 
 <script>
