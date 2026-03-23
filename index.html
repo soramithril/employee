@@ -1506,6 +1506,526 @@ th.day-col.is-today{background:rgba(26,122,60,0.04) !important;}
   .wt-form-grid{grid-template-columns:1fr;}
   .wt-priority-picker{gap:5px;}
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   MOBILE-FIRST RESTRUCTURE
+   Base styles target 390px. Desktop enhancements behind @media(min-width:768px).
+   All rules here override the desktop-first defaults written above.
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* ── PREVENT iOS TEXT SIZE ADJUSTMENT ─────────────────────────────────────────── */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+
+/* ── BODY: guarantee no horizontal overflow ────────────────────────────────────── */
+body{overflow-x:hidden;max-width:100vw;}
+
+/* ── HEADER: compact mobile bar ────────────────────────────────────────────────── */
+#header{
+  height:54px;padding:0 12px;
+  display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;
+}
+#header nav{display:none;}
+.logo-words{display:none;}
+.logo-img-wrap{width:40px;height:40px;}
+.emp-badge{display:none;}
+#user-badge{display:none !important;}
+/* Sign-Out button: full 44px tap target */
+.logout-btn{
+  padding:0 14px;font-size:13px;
+  min-height:44px;display:inline-flex;align-items:center;
+}
+
+/* ── MOBILE BOTTOM NAV: default visible ─────────────────────────────────────────── */
+#mobile-nav{
+  display:flex;
+  position:fixed;bottom:0;left:0;right:0;z-index:500;
+  background:rgba(248,250,248,0.97);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-top:1px solid var(--border);
+  box-shadow:0 -2px 20px rgba(0,0,0,0.08);
+  /* Safe-area padding so home-bar doesn't overlap buttons */
+  padding-bottom:max(8px,env(safe-area-inset-bottom));
+  padding-top:6px;
+}
+.mnav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  gap:2px;background:none;border:none;
+  /* Ensure at least 44px tap target */
+  min-height:44px;padding:4px 2px;justify-content:center;
+  color:var(--fg-subtle);font-size:10px;font-weight:700;letter-spacing:.05em;
+  text-transform:uppercase;transition:color .18s;
+  -webkit-tap-highlight-color:transparent;
+}
+.mnav-btn .mni{font-size:22px;line-height:1;transition:transform .2s var(--ease-out);}
+.mnav-btn.active{color:var(--accent);}
+.mnav-btn.active .mni{transform:scale(1.18);}
+.mnav-btn.active::after{
+  content:'';display:block;width:20px;height:2.5px;border-radius:99px;
+  background:var(--accent);margin:-2px auto 0;opacity:.75;
+}
+/* Active state for touch (replaces hover) */
+.mnav-btn:active{color:var(--accent);opacity:.8;}
+
+/* ── MAIN CONTENT: clear bottom nav + safe area ─────────────────────────────────── */
+#app{
+  padding-top:10px;
+  padding-right:8px;
+  padding-left:8px;
+  /* Bottom padding = mobile nav height (~68px) + extra breathing room + safe area */
+  padding-bottom:max(86px, calc(68px + env(safe-area-inset-bottom) + 12px));
+}
+
+/* ── TOAST: bottom-positioned on mobile (above nav bar) ─────────────────────────── */
+#toast{
+  top:auto;
+  bottom:max(92px, calc(68px + env(safe-area-inset-bottom) + 16px));
+  right:12px;left:12px;max-width:none;
+  font-size:14px;
+}
+#toast.show{animation:toastInMobile .35s var(--ease-out) both;}
+@keyframes toastInMobile{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* ── FAB + SCROLL-TOP: keep above mobile nav ─────────────────────────────────────── */
+#fab{
+  bottom:max(88px, calc(68px + env(safe-area-inset-bottom) + 12px));
+  right:16px;
+}
+#scroll-top{
+  bottom:max(88px, calc(68px + env(safe-area-inset-bottom) + 12px));
+  right:76px;
+}
+
+/* ── CARDS ─────────────────────────────────────────────────────────────────────── */
+.card{border-radius:12px;margin-bottom:12px;}
+
+/* ── WEEK NAV ──────────────────────────────────────────────────────────────────── */
+.week-nav{padding:10px 12px;gap:6px;}
+.week-label strong{font-size:13px;}
+.week-label span{display:none;}
+/* 44px tap targets on prev/next week */
+.nav-btn{
+  padding:0 14px;font-size:13px;
+  min-height:44px;display:inline-flex;align-items:center;
+}
+.nav-btn:active{background:var(--accent-light);color:var(--accent);border-color:var(--border-acc);}
+
+/* ── CONTROLS BAR ─────────────────────────────────────────────────────────────── */
+.ctrl-bar{
+  overflow-x:auto;flex-wrap:nowrap;padding:6px 10px;gap:5px;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.ctrl-bar::-webkit-scrollbar{display:none;}
+.ctrl-label{font-size:9px;white-space:nowrap;}
+/* Day toggles — 44px tap target */
+.day-toggle{
+  padding:0 10px;font-size:11px;white-space:nowrap;
+  min-height:44px;display:inline-flex;align-items:center;
+}
+.day-toggle:active:not(.on){background:var(--accent-light);color:var(--accent);border-color:var(--border-acc);}
+/* Control buttons — 44px tap target */
+.ctrl-btn{
+  padding:0 10px;font-size:11px;white-space:nowrap;
+  min-height:44px;display:inline-flex;align-items:center;
+}
+.ctrl-btn:active{background:var(--accent-light);color:var(--accent);border-color:var(--border-acc);}
+.ctrl-actions{display:none;}
+.ctrl-more-btn{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:0 10px;font-size:11px;white-space:nowrap;min-height:44px;
+}
+.ctrl-bar.ctrl-expanded .ctrl-actions{display:flex;flex-wrap:wrap;gap:5px;}
+.ctrl-bar.ctrl-expanded .ctrl-more-btn-label::before{content:'✕ ';}
+
+/* ── SCHEDULE GRID (compact avatar-only view on mobile) ──────────────────────────── */
+.grid-wrap{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.mobile-day-view{display:none;}
+.time-ruler{display:none !important;}
+.sched-grid{table-layout:fixed;width:100% !important;min-width:0 !important;border-collapse:collapse;}
+.sched-grid thead th.name-col{
+  width:36px;min-width:36px;max-width:36px;
+  font-size:0;padding:4px 0;overflow:hidden;
+}
+td.name-col{width:36px;min-width:36px;max-width:36px;padding:4px 2px;}
+.emp-cell-inner{justify-content:center;gap:0;}
+.emp-name,.emp-hrs,.drag-handle{display:none !important;}
+.avatar-wrap{width:28px !important;height:28px !important;overflow:hidden;}
+.avatar-wrap svg{display:none !important;}
+.emp-cell-inner .avatar{
+  position:absolute !important;inset:0 !important;
+  width:100% !important;height:100% !important;font-size:11px !important;
+}
+/* Day cells: 44px height makes the grid itself a valid tap target */
+td.day-cell{height:44px;min-width:0;padding:2px 1px;cursor:pointer;}
+td.day-cell:active{background:var(--accent-light) !important;}
+.th-day-wrap{padding:5px 3px 3px;}
+.th-day{font-size:9px;font-weight:700;}
+.th-date{font-size:8px;opacity:.8;}
+.shift-bar{padding:0 3px;font-size:7px;border-radius:3px;top:4px;bottom:4px;}
+.shift-label{font-size:7px;line-height:1.1;}
+.shift-times{display:none !important;}
+.status-label{font-size:8px;padding:1px 3px;border-radius:3px;}
+
+/* ── INPUTS: 16px prevents iOS auto-zoom on focus ───────────────────────────────── */
+input,select,textarea,
+.sf-select,
+.wh-field select,
+.login-input,
+.addinput,
+.tname,
+.new-tname,
+.day-note,
+.wt-input,.wt-select,.wt-textarea{
+  font-size:16px !important;
+}
+
+/* ── FORMS: full-width on mobile ────────────────────────────────────────────────── */
+.shift-form{grid-template-columns:1fr 1fr;gap:8px;}
+.task-grid{grid-template-columns:1fr 1fr;gap:5px;}
+/* Task option buttons: 44px tap target */
+.task-opt{padding:10px 8px;font-size:12px;min-height:44px;}
+.task-opt:active{filter:brightness(.96);transform:scale(.98);}
+.sf-select{padding:12px 36px 12px 12px;}
+.wh-form{grid-template-columns:1fr 1fr;gap:14px;}
+/* Modal footer status buttons: 44px */
+.mfs-btn{min-height:44px;padding:10px 8px;}
+.mfs-btn:active{opacity:.85;}
+/* Modal add/save button: 44px */
+.modal-add-btn{min-height:44px;padding:13px 20px;}
+.modal-done{min-height:44px;padding:12px 22px;display:inline-flex;align-items:center;}
+
+/* ── MODAL: slide up from bottom on mobile ───────────────────────────────────────── */
+.moverlay{align-items:flex-end;padding:0;}
+.modal{
+  width:100%;max-width:100%;
+  border-radius:20px 20px 0 0;
+  /* Bottom padding respects iOS home indicator */
+  padding:20px 16px max(28px,env(safe-area-inset-bottom));
+  max-height:90vh;
+  animation:mSlideUp .25s var(--ease-out);
+}
+
+/* ── SAVE BAR ──────────────────────────────────────────────────────────────────── */
+.save-bar{padding:10px 12px;}
+.save-btn{
+  width:100%;padding:13px;min-height:44px;
+}
+.save-btn:active{transform:scale(.98);}
+
+/* ── ANALYTICS / HISTORY / TEAM ─────────────────────────────────────────────────── */
+.awrap,.hwrap,.twrap{padding:14px 12px;}
+.shdr{flex-direction:column;align-items:flex-start;gap:10px;}
+.stitle{font-size:16px;}
+.period-selector{
+  gap:4px;overflow-x:auto;flex-wrap:nowrap;
+  padding-bottom:10px;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.period-selector::-webkit-scrollbar{display:none;}
+/* Period buttons: 44px tap target */
+.period-btn{
+  padding:0 12px;font-size:12px;white-space:nowrap;
+  flex-shrink:0;min-height:44px;display:inline-flex;align-items:center;
+}
+.period-btn:active:not(.on){background:var(--accent-light);color:var(--accent);}
+/* Range-select buttons in analytics */
+.rbtn{min-height:44px;padding:0 13px;display:inline-flex;align-items:center;}
+.rbtn:active:not(.on){background:var(--accent-light);color:var(--accent);}
+.week-stat-card{padding:11px 12px;}
+.acard{padding:12px 14px;}
+.stat-grid-3{grid-template-columns:repeat(2,1fr) !important;}
+
+/* Employee filter chips in history: 44px */
+.h-emp-chip{min-height:44px;display:inline-flex;align-items:center;padding:0 14px;}
+.h-emp-chip:active:not(.on){background:var(--surface);color:var(--fg);}
+
+/* ── HISTORY ────────────────────────────────────────────────────────────────────── */
+.dchips{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.dchip{flex-shrink:0;}
+
+/* ── TEAM: color swatch larger on mobile ─────────────────────────────────────────── */
+.addbox{padding:12px;}
+.tcard{padding:11px 12px;}
+.add-task-row{flex-wrap:wrap;}
+.tswatch{width:40px;height:40px;}
+.addbtn{min-height:44px;padding:0 20px;display:inline-flex;align-items:center;}
+.addbtn:active{background:var(--accent-b);transform:none;}
+.add-tbtn{min-height:44px;padding:0 16px;display:inline-flex;align-items:center;}
+.rmbtn{min-height:44px;padding:0 14px;display:inline-flex;align-items:center;}
+.tdelbtn{min-height:44px;padding:0 10px;display:inline-flex;align-items:center;}
+
+/* ── MULTI-ASSIGN ────────────────────────────────────────────────────────────────── */
+/* Employee rows: 44px tap target */
+.ma-emp-row{min-height:44px;}
+.ma-emp-row:active{border-color:var(--accent);background:var(--accent-light);}
+/* Day buttons: 44px tap target */
+.ma-day-btn{
+  min-height:44px;padding:0 12px;
+  display:inline-flex;align-items:center;justify-content:center;
+}
+.ma-day-btn:active:not(.on){background:var(--accent-light);color:var(--accent);}
+.ma-everyone-btn{min-height:44px;display:flex;align-items:center;justify-content:center;}
+
+/* ── MOBILE DAY VIEW TABS ────────────────────────────────────────────────────────── */
+.mday-tab{min-height:44px;padding:8px 13px;}
+.mday-emp-card{min-height:56px;}
+.mday-emp-card:active{border-color:var(--border-acc);box-shadow:0 2px 10px rgba(26,122,60,0.08);opacity:.9;}
+
+/* ── LOGIN ───────────────────────────────────────────────────────────────────────── */
+.login-card{padding:28px 20px max(24px,env(safe-area-inset-bottom));}
+.login-logo-ring-wrap{width:78px;height:78px;}
+.login-brand{font-size:18px;}
+/* 16px on login inputs prevents iOS zoom */
+.login-input{font-size:16px !important;padding:14px 16px;}
+/* Tall login button: easy tap */
+.login-btn{min-height:52px;font-size:16px;padding:14px;}
+.login-btn:active{transform:scale(.98);}
+
+/* ── WORKSHOP TASKS ──────────────────────────────────────────────────────────────── */
+.wt-wrap{padding:12px 10px;}
+.wt-board{grid-template-columns:1fr;gap:14px;}
+.wt-form-grid{grid-template-columns:1fr;}
+.wt-priority-picker{gap:5px;}
+/* Inputs: already 16px via global rule above */
+/* Priority option: 44px */
+.wt-prio-opt{min-height:44px;padding:10px 8px;display:flex;align-items:center;justify-content:center;}
+.wt-prio-opt:active{filter:brightness(.96);}
+/* Person chips: 44px */
+.wt-person-opt{min-height:44px;display:inline-flex;align-items:center;padding:0 14px;}
+.wt-person-opt:active{background:var(--accent-light);color:var(--accent);}
+/* Action buttons: 44px */
+.wt-action-btn{min-height:44px;padding:8px;}
+.wt-action-btn:active{opacity:.75;}
+/* Add-task button: 44px */
+.wt-add-btn{min-height:44px;}
+.wt-add-btn:active{opacity:.85;transform:none;}
+/* Filter buttons: 44px */
+.wt-filter-btn{min-height:44px;padding:0 14px;display:inline-flex;align-items:center;}
+.wt-filter-btn:active{background:var(--accent-light);color:var(--accent);border-color:var(--border-acc);}
+
+/* ── HOVER INTERACTIONS → @media(hover:hover) guard ─────────────────────────────── */
+/* On touch devices (hover:none) we remove hover-only visual effects             */
+/* so they don't get stuck in the hovered state after a tap.                     */
+/* :active equivalents are provided above for each component.                    */
+@media(hover:none){
+  .card:hover{box-shadow:var(--shadow-card);transform:none;}
+  .shift-bar:hover{filter:none;transform:none;box-shadow:0 1px 4px rgba(0,0,0,0.12),inset 0 1px 0 rgba(255,255,255,0.3);}
+  .stat-tile:hover{transform:none;}
+  .nav-btn:hover{background:white;color:var(--fg-muted);border-color:var(--border-h);}
+  .tab-btn:hover:not(.active){background:transparent;color:var(--fg-muted);}
+  .day-toggle:hover:not(.on){background:white;color:var(--fg-muted);border-color:var(--border-h);}
+  .ctrl-btn:hover{background:white;color:var(--fg-muted);border-color:var(--border-h);}
+  .ctrl-btn-accent:hover{background:var(--accent-light) !important;color:var(--accent) !important;border-color:var(--border-acc) !important;}
+  .ctrl-btn-danger:hover{background:rgba(239,68,68,0.07) !important;}
+  .period-btn:hover:not(.on){background:var(--bg-deep);color:var(--fg-muted);}
+  .rbtn:hover:not(.on){background:white;color:var(--fg-muted);}
+  .acard:hover{border-color:var(--border);box-shadow:none;}
+  .hcard:hover{border-color:var(--border);}
+  .mday-emp-card:hover{border-color:var(--border);box-shadow:none;}
+  .tcard:hover{border-color:var(--border);}
+  .modal-add-btn:hover{background:var(--accent);transform:none;}
+  .modal-done:hover{background:var(--accent);transform:none;}
+  .save-btn:hover{background:var(--accent);box-shadow:var(--shadow-btn);transform:none;}
+  .wt-card:hover{box-shadow:var(--shadow-card);transform:none;border-color:var(--border);}
+  .wt-add-btn:hover{opacity:1;transform:none;}
+  .wt-action-btn:hover{opacity:1;}
+  .wt-filter-btn:hover{background:var(--bg-elevated);color:var(--fg-muted);border-color:var(--border);}
+  .ma-emp-row:hover{border-color:var(--border-h);background:var(--bg-deep);}
+  .ma-everyone-btn:hover:not(.all-on){background:var(--surface);color:var(--fg-muted);border-color:var(--border-h);}
+  .ma-day-btn:hover:not(.on){background:var(--bg-deep);color:var(--fg-muted);border-color:var(--border-h);}
+  .add-shift-entry-btn:hover{background:var(--accent-light);color:var(--accent);border-style:dashed;}
+  .sick-btn:hover{background:rgba(249,115,22,0.08);}
+  .h-emp-chip:hover:not(.on){background:white;color:var(--fg-muted);}
+  .addbtn:hover{background:var(--accent);transform:none;}
+  .add-tbtn:hover{background:var(--accent);transform:none;}
+  .rmbtn:hover{background:rgba(239,68,68,0.07);}
+  .tdelbtn:hover{background:rgba(239,68,68,0.07);}
+  .login-btn:hover{transform:none;box-shadow:0 0 0 1px rgba(34,160,80,0.5),0 4px 20px rgba(34,160,80,0.35);}
+  .wk-hdr:hover{background:linear-gradient(135deg,#f0f6f2,#e9f2ec);}
+  .wk-emp-row:hover{background:transparent;}
+  .week-stat-card:hover{border-color:var(--border);box-shadow:none;}
+  .task-opt:hover{filter:none;transform:none;}
+  .wt-prio-opt:hover.opt-high{background:transparent;border-color:var(--border);color:var(--fg);}
+  .wt-prio-opt:hover.opt-medium{background:transparent;border-color:var(--border);color:var(--fg);}
+  .wt-prio-opt:hover.opt-low{background:transparent;border-color:var(--border);color:var(--fg);}
+  .wt-person-opt:hover{background:var(--bg-elevated);color:var(--fg-muted);border-color:var(--border);}
+  .wt-filter-btn:hover{background:var(--bg-elevated);color:var(--fg-muted);}
+  .logout-btn:hover{background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.2);}
+  #fab:hover{transform:none;box-shadow:0 4px 20px rgba(26,122,60,0.45),0 1px 0 rgba(255,255,255,0.2) inset;}
+  #scroll-top:hover{transform:none;color:var(--fg-muted);box-shadow:0 2px 12px rgba(0,0,0,0.1);}
+  .clear-btn:hover{background:var(--surface);color:var(--fg-muted);border-color:var(--border-h);}
+  .mfs-dayoff:hover{background:var(--bg-deep);color:var(--fg-muted);border-color:var(--border-h);}
+  .mfs-sick:hover{background:rgba(249,115,22,0.07);}
+  .mnav-btn.active .mni{transform:scale(1.18);}
+}
+
+/* ── VERY SMALL PHONES (< 380px) ─────────────────────────────────────────────────── */
+@media(max-width:379px){
+  .task-grid{grid-template-columns:1fr;}
+  .shift-form{grid-template-columns:1fr;}
+  .wt-priority-picker{flex-direction:column;}
+  .modal-footer-status{grid-template-columns:1fr;}
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   DESKTOP ENHANCEMENTS — min-width: 768px
+   Restores side-by-side layouts, larger type, full navigation, hover effects.
+   ═══════════════════════════════════════════════════════════════════════════════ */
+@media(min-width:768px){
+  /* Header */
+  #header{
+    height:68px;padding:0 28px;
+    display:flex;align-items:center;justify-content:space-between;
+    grid-template-columns:unset;
+  }
+  #header nav{display:flex;}
+  .logo-words{display:flex;}
+  .logo-img-wrap{width:52px;height:52px;}
+  .emp-badge{display:inline-block;}
+  #user-badge{display:flex !important;}
+  .logout-btn{padding:6px 14px;font-size:12px;min-height:0;}
+
+  /* Hide mobile nav on desktop */
+  #mobile-nav{display:none;}
+
+  /* Main content: no bottom-nav clearance needed */
+  #app{padding:22px 28px 36px;}
+
+  /* Toast: top-right on desktop */
+  #toast{
+    top:24px;bottom:auto;
+    right:24px;left:auto;max-width:340px;
+    font-size:13px;
+  }
+  #toast.show{animation:toastIn .35s var(--ease-out) both;}
+
+  /* FAB and scroll-top */
+  #fab{bottom:96px;right:20px;}
+  #scroll-top{bottom:96px;right:80px;}
+
+  /* Cards */
+  .card{border-radius:var(--radius);margin-bottom:20px;}
+
+  /* Week nav */
+  .week-nav{padding:14px 22px;}
+  .week-label strong{font-size:15px;}
+  .week-label span{display:inline;}
+  .nav-btn{padding:7px 16px;font-size:12px;min-height:0;}
+
+  /* Controls bar */
+  .ctrl-bar{overflow-x:visible;flex-wrap:wrap;padding:10px 22px;gap:8px;}
+  .ctrl-label{font-size:10px;}
+  .day-toggle{padding:5px 11px;font-size:11px;min-height:0;display:inline-block;}
+  .ctrl-btn{padding:5px 13px;font-size:11px;min-height:0;display:inline-block;}
+  .ctrl-actions{display:flex;}
+  .ctrl-more-btn{display:none;}
+
+  /* Schedule grid: full desktop view */
+  .time-ruler{display:flex !important;}
+  .sched-grid{table-layout:auto;}
+  .sched-grid thead th.name-col{
+    width:160px;min-width:160px;max-width:none;
+    font-size:11px;padding:10px 16px;
+  }
+  td.name-col{width:auto;min-width:auto;max-width:none;padding:10px 14px;}
+  .emp-cell-inner{justify-content:flex-start;gap:10px;}
+  .emp-name,.emp-hrs{display:block !important;}
+  .drag-handle{display:flex !important;}
+  .avatar-wrap{width:34px !important;height:34px !important;overflow:visible;}
+  .avatar-wrap svg{display:block !important;}
+  .emp-cell-inner .avatar{
+    position:absolute !important;inset:0 !important;
+    width:100% !important;height:100% !important;font-size:13px !important;
+  }
+  td.day-cell{height:72px;padding:5px 4px;}
+  .th-day-wrap{padding:8px 10px 4px;}
+  .th-day{font-size:11px;}
+  .th-date{font-size:10px;opacity:1;}
+  .shift-bar{padding:0 9px;font-size:10px;border-radius:6px;top:7px;bottom:7px;}
+  .shift-label{font-size:10px;line-height:1;}
+  .shift-times{display:inline !important;}
+  .status-label{font-size:10px;padding:4px 10px;border-radius:6px;}
+
+  /* Inputs: let them revert to design-specified sizes on desktop */
+  input,select,textarea,
+  .sf-select,
+  .wh-field select,
+  .login-input,
+  .addinput,
+  .tname,
+  .new-tname,
+  .day-note,
+  .wt-input,.wt-select,.wt-textarea{
+    font-size:unset !important;
+  }
+  .sf-select{font-size:13px !important;padding:10px 32px 10px 12px;}
+  .wh-field select{font-size:14px !important;}
+  .login-input{font-size:14px !important;padding:13px 16px;}
+  .login-btn{font-size:14px;min-height:0;padding:14px;}
+  .addinput{font-size:13px !important;}
+  .tname,.new-tname{font-size:13px !important;}
+  .day-note{font-size:12px !important;}
+  .wt-input,.wt-select,.wt-textarea{font-size:13px !important;}
+
+  /* Forms */
+  .task-opt{min-height:0;padding:9px 12px;}
+  .mfs-btn{min-height:0;padding:9px 8px;}
+  .modal-add-btn{min-height:0;padding:11px 20px;}
+  .modal-done{min-height:0;padding:10px 22px;display:inline-block;}
+
+  /* Modal: centered overlay on desktop */
+  .moverlay{align-items:center;padding:24px;}
+  .modal{
+    width:480px;max-width:95vw;
+    border-radius:var(--radius);
+    padding:28px;
+    animation:sUp .2s var(--ease-out);
+  }
+
+  /* Save bar */
+  .save-bar{padding:8px 22px;}
+  .save-btn{width:auto;padding:11px 28px;min-height:0;}
+
+  /* Analytics */
+  .awrap,.hwrap,.twrap{padding:24px;}
+  .shdr{flex-direction:row;align-items:center;}
+  .stitle{font-size:18px;}
+  .period-selector{overflow-x:visible;flex-wrap:wrap;padding-bottom:0;}
+  .period-btn{padding:6px 14px;font-size:12px;min-height:0;display:inline-block;}
+  .rbtn{min-height:0;padding:5px 13px;display:inline-block;}
+  .h-emp-chip{min-height:0;padding:4px 12px;display:inline-block;}
+  .stat-grid-3{grid-template-columns:repeat(3,1fr) !important;}
+
+  /* History */
+  .dchips{flex-wrap:wrap;}
+
+  /* Team */
+  .addbox{padding:18px;}
+  .tcard{padding:13px 16px;}
+  .add-task-row{flex-wrap:nowrap;}
+  .tswatch{width:28px;height:28px;}
+  .addbtn{min-height:0;padding:10px 20px;display:inline-block;}
+  .add-tbtn{min-height:0;padding:10px 16px;display:inline-block;}
+  .rmbtn{min-height:0;padding:5px 12px;display:inline-block;}
+  .tdelbtn{min-height:0;padding:5px 10px;display:inline-block;}
+
+  /* Multi-assign */
+  .ma-emp-row{min-height:0;}
+  .ma-day-btn{min-height:0;padding:5px 11px;display:inline-block;}
+  .ma-everyone-btn{min-height:0;}
+
+  /* Mobile day view */
+  .mday-tab{min-height:0;padding:9px 13px;}
+
+  /* Workshop tasks */
+  .wt-wrap{padding:24px 28px;}
+  .wt-board{grid-template-columns:1fr 1fr;gap:24px;}
+  .wt-form-grid{grid-template-columns:1fr 1fr;}
+  .wt-priority-picker{gap:8px;}
+  .wt-prio-opt{min-height:0;padding:9px 8px;display:block;}
+  .wt-person-opt{min-height:0;padding:5px 13px;display:inline-block;}
+  .wt-action-btn{min-height:0;padding:7px 8px;}
+  .wt-add-btn{min-height:0;}
+  .wt-filter-btn{min-height:0;padding:5px 14px;display:inline-block;}
+}
 </style>
 </head>
 <body>
