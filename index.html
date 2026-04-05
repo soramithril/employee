@@ -1013,6 +1013,42 @@ th.day-col.is-today{background:rgba(26,122,60,0.04) !important;}
 .week-stat-card:hover{border-color:var(--border-acc);box-shadow:0 2px 12px rgba(26,122,60,0.07);}
 
 .modal-divider{height:1px;background:var(--border);margin:16px 0;}
+
+/* ─── SESSION TIMEOUT WARNING ────────────────────────────────────────────────── */
+#timeout-overlay{
+  display:none;position:fixed;inset:0;z-index:10002;
+  background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;
+  animation:fadeIn .25s ease both;
+}
+#timeout-overlay.show{display:flex;}
+.timeout-card{
+  background:linear-gradient(145deg,rgba(30,30,30,0.97),rgba(20,20,20,0.99));
+  border:1.5px solid rgba(255,255,255,0.08);
+  border-radius:var(--radius);padding:36px 32px 28px;
+  max-width:380px;width:90%;text-align:center;
+  box-shadow:0 24px 80px rgba(0,0,0,0.4);
+  animation:fadeUp .35s var(--ease-out) both;
+}
+.timeout-icon{font-size:42px;margin-bottom:14px;display:block;}
+.timeout-title{font-size:18px;font-weight:700;color:#fff;margin-bottom:8px;letter-spacing:-.02em;}
+.timeout-msg{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.6;margin-bottom:6px;}
+.timeout-countdown{font-size:28px;font-weight:800;color:#f59e0b;margin:12px 0 20px;font-variant-numeric:tabular-nums;}
+.timeout-actions{display:flex;gap:10px;justify-content:center;}
+.timeout-btn{
+  padding:11px 24px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;
+  border:none;cursor:pointer;transition:all .15s ease;
+}
+.timeout-btn-primary{
+  background:linear-gradient(135deg,var(--accent),var(--accent-b));color:#fff;
+  box-shadow:0 0 0 1px rgba(26,122,60,0.4),0 4px 14px rgba(26,122,60,0.25);
+}
+.timeout-btn-primary:hover{transform:translateY(-1px);box-shadow:0 0 0 1px rgba(34,160,80,0.6),0 8px 28px rgba(34,160,80,0.35);}
+.timeout-btn-secondary{
+  background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);
+  border:1px solid rgba(255,255,255,0.12);
+}
+.timeout-btn-secondary:hover{background:rgba(255,255,255,0.14);color:#fff;}
 .sect-label{font-size:10px;font-weight:700;color:var(--fg-muted);letter-spacing:.09em;text-transform:uppercase;margin-bottom:9px;}
 .day-note-wrap{margin-top:14px;}
 .day-note{
@@ -2083,7 +2119,7 @@ input,select,textarea,
       <div class="login-error" id="li-err">Incorrect username or password.</div>
       <button class="login-btn" id="li-btn" onclick="doLogin()">Sign In</button>
     </div>
-    <div class="login-footer">Jeff White Group © 2025 · Internal Use Only</div>
+    <div class="login-footer">Jeff White Group © 2026 · Internal Use Only</div>
   </div>
 </div>
 
@@ -2122,6 +2158,20 @@ input,select,textarea,
 
 <div id="toast"></div>
 <div id="tooltip-el"></div>
+
+<!-- Session Timeout Warning -->
+<div id="timeout-overlay">
+  <div class="timeout-card">
+    <span class="timeout-icon">⏳</span>
+    <div class="timeout-title">Still there?</div>
+    <div class="timeout-msg">You've been inactive for a while. For security, you'll be signed out soon.</div>
+    <div class="timeout-countdown" id="timeout-countdown">5:00</div>
+    <div class="timeout-actions">
+      <button class="timeout-btn timeout-btn-primary" onclick="resetInactivityTimer()">I'm still here</button>
+      <button class="timeout-btn timeout-btn-secondary" onclick="doLogout()">Sign out now</button>
+    </div>
+  </div>
+</div>
 <button id="fab" onclick="openMultiAssign()" title="Assign Multiple">👥</button>
 <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
 <div id="app"><div id="loading"><div class="spinner"></div><span class="loading-text">Loading schedule…</span></div></div>
@@ -2320,6 +2370,7 @@ async function refreshSession(){
   }catch(e){console.warn("[session] Refresh failed:",e);}
   return false;
 }
+let _visibilityHandler=null;
 function startSessionKeepAlive(){
   clearInterval(_refreshTimer);
   // Refresh every 45 minutes (Supabase tokens expire after 1 hour)
@@ -2330,8 +2381,9 @@ function startSessionKeepAlive(){
       doLogout();
     }
   },45*60*1000);
-  // Also refresh when the page regains focus (user returns after being away)
-  document.addEventListener("visibilitychange",async()=>{
+  // Remove previous listener before adding a new one (prevents leak on re-login)
+  if(_visibilityHandler)document.removeEventListener("visibilitychange",_visibilityHandler);
+  _visibilityHandler=async()=>{
     if(document.visibilityState==="visible"){
       const ok=await refreshSession();
       if(!ok){
@@ -2339,7 +2391,75 @@ function startSessionKeepAlive(){
         doLogout();
       }
     }
-  });
+  };
+  document.addEventListener("visibilitychange",_visibilityHandler);
+}
+
+// ── INACTIVITY TIMEOUT: sign out after 30 min of no interaction ──
+const IDLE_WARN_MS   = 25*60*1000;   // show warning at 25 min
+const IDLE_LOGOUT_MS = 30*60*1000;   // force logout at 30 min
+let _idleTimer=null, _idleWarnTimer=null, _idleCountdown=null, _idleSecondsLeft=0;
+
+function resetInactivityTimer(){
+  // Hide warning if showing
+  const overlay=document.getElementById("timeout-overlay");
+  const wasWarning=overlay&&overlay.classList.contains("show");
+  if(overlay)overlay.classList.remove("show");
+  clearTimeout(_idleTimer);
+  clearTimeout(_idleWarnTimer);
+  clearInterval(_idleCountdown);
+
+  // Only run timeout when user is authenticated
+  if(!_currentUser)return;
+
+  // If the warning was showing, the user's been idle 25+ min — refresh token now
+  // so their next save uses a fresh token
+  if(wasWarning)refreshSession();
+
+  // Set warning at 25 min
+  _idleWarnTimer=setTimeout(()=>showTimeoutWarning(), IDLE_WARN_MS);
+  // Set hard logout at 30 min
+  _idleTimer=setTimeout(()=>{
+    toast("Signed out due to inactivity","info");
+    doLogout();
+  }, IDLE_LOGOUT_MS);
+}
+
+function showTimeoutWarning(){
+  const overlay=document.getElementById("timeout-overlay");
+  if(!overlay)return;
+  overlay.classList.add("show");
+  _idleSecondsLeft=Math.round((IDLE_LOGOUT_MS-IDLE_WARN_MS)/1000);
+  updateCountdownDisplay();
+  clearInterval(_idleCountdown);
+  _idleCountdown=setInterval(()=>{
+    _idleSecondsLeft--;
+    if(_idleSecondsLeft<=0){clearInterval(_idleCountdown);return;}
+    updateCountdownDisplay();
+  },1000);
+}
+
+function updateCountdownDisplay(){
+  const el=document.getElementById("timeout-countdown");
+  if(!el)return;
+  const m=Math.floor(_idleSecondsLeft/60);
+  const s=_idleSecondsLeft%60;
+  el.textContent=`${m}:${String(s).padStart(2,"0")}`;
+}
+
+function startInactivityTimer(){
+  // Include input/change so form interactions (dropdowns, time pickers) count as activity
+  const events=["mousedown","mousemove","keydown","scroll","touchstart","click","input","change"];
+  // Throttle resets to avoid performance overhead
+  let _lastReset=0;
+  function onActivity(){
+    const now=Date.now();
+    if(now-_lastReset<5000)return; // only reset every 5s at most
+    _lastReset=now;
+    resetInactivityTimer();
+  }
+  events.forEach(ev=>document.addEventListener(ev,onActivity,{passive:true}));
+  resetInactivityTimer();
 }
 
 async function sbF(m,p,b){
@@ -2389,6 +2509,7 @@ function dismissToast(){
 }
 
 function closeModal(){const o=document.getElementById("moverlay");if(o)o.remove();}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
 function updateModal(html,width){
   // Update existing modal content in-place (preserves scroll, no flicker)
   const m=document.querySelector("#moverlay .modal");
@@ -2993,7 +3114,7 @@ function tmCC(i,hex){
   const sw=document.querySelectorAll(".tswatch");if(sw[i])sw[i].style.background=hex;
   saveTasks();
 }
-function tmDel(i){if(tasks[i].builtIn){toast("Can't delete default tasks","error");return;}const id=tasks[i].id;tasks.splice(i,1);Object.values(S.schedule).forEach(emp=>DAYS.forEach(d=>{if(emp[d]?.shifts)emp[d].shifts=emp[d].shifts.filter(sh=>sh.task!==id);if(emp[d]?.shifts?.length===0&&emp[d]?.status==="work")emp[d].status="off";}));saveTasks();reTMList();toast("Task deleted");}
+function tmDel(i){if(tasks[i].builtIn){toast("Can't delete default tasks","error");return;}const id=tasks[i].id;tasks.splice(i,1);Object.values(S.schedule).forEach(emp=>DAYS.forEach(d=>{if(emp[d]?.shifts){emp[d].shifts=emp[d].shifts.map(sh=>{const t=getShiftTasks(sh).filter(t=>t!==id);return{...sh,tasks:t};}).filter(sh=>sh.tasks.length>0);}if(emp[d]?.shifts?.length===0&&emp[d]?.status==="work")emp[d].status="off";}));saveTasks();reTMList();toast("Task deleted");}
 function tmAdd(){const n=document.getElementById("nname"),c=document.getElementById("ncol");const nm=(n?.value||"").trim();if(!nm){toast("Enter a task name","error");return;}const hex=c?.value||"#1a7a3c";const[r,g,b]=hex2rgb(hex);tasks.push({id:"c"+Date.now(),label:nm,bg:`rgba(${r},${g},${b},0.12)`,text:darken(hex),dot:hex});saveTasks();if(n)n.value="";reTMList();toast(`"${nm}" added`);}
 
 // ── RENDER ──
@@ -3316,7 +3437,7 @@ function getWeekStats(weekKey){
       if(!day)return;
       if(day.status==="sick")daysSick++;
       else if(day.status==="dayoff")daysOff++;  // only explicit day-off, not default "off"
-      else if(day.status==="work"&&day.shifts?.length>0){daysWorked++;day.shifts.forEach(sh=>{if(sh.task)tally[sh.task]=(tally[sh.task]||0)+1;});}
+      else if(day.status==="work"&&day.shifts?.length>0){daysWorked++;day.shifts.forEach(sh=>{getShiftTasks(sh).forEach(t=>{tally[t]=(tally[t]||0)+1;});});}
     });
   });
   return{totalH:Math.round(totalH*10)/10,daysOff,daysSick,daysWorked,tally};
@@ -3594,13 +3715,13 @@ function buildHistory(){
         } else if(status==="dayoff"){
           h+=`<div class="dc2" style="background:rgba(0,0,0,0.04);color:rgba(0,0,0,0.35);border-color:rgba(0,0,0,0.1)" title="${d}${note?" · "+esc(note):""}"><span class="dc-d">${d.slice(0,3).toUpperCase()}</span><span class="dc-t">📅 Off</span>${note?`<span class="dc-n">${esc(note)}</span>`:""}</div>`;
         } else if(status==="work"&&day.shifts?.length>0){
-          const firstTask=day.shifts[0].task;
+          const firstTask=getShiftTasks(day.shifts[0])[0];
           const t=tm[firstTask];
           if(t)usedTaskIds.add(firstTask);
           const multiLabel=day.shifts.length>1?`+${day.shifts.length-1}`:"";
-          h+=`<div class="dc2" style="background:${t?t.bg:"var(--surface-sm)"};color:${t?t.text:"var(--fg-subtle)"};border-color:${t?t.dot+"40":"var(--border)"}" title="${d}: ${day.shifts.map(sh=>(tm[sh.task]?.label||sh.task)+(sh.start?` ${fmtRange(sh.start,sh.end)}`:"")+( day.note?" · "+day.note:"")).join(", ")}">
+          h+=`<div class="dc2" style="background:${t?t.bg:"var(--surface-sm)"};color:${t?t.text:"var(--fg-subtle)"};border-color:${t?t.dot+"40":"var(--border)"}" title="${d}: ${day.shifts.map(sh=>{const tid=getShiftTasks(sh)[0];return(tm[tid]?.label||tid)+(sh.start?` ${fmtRange(sh.start,sh.end)}`:"")+( day.note?" · "+day.note:"");}).join(", ")}">
             <span class="dc-d">${d.slice(0,3).toUpperCase()}</span>
-            <span class="dc-t">${esc(t?.label||firstTask)}${multiLabel?`<span style="font-size:8px;opacity:.7"> ${multiLabel}</span>`:""}</span>
+            <span class="dc-t">${esc(t?.label||firstTask||"")}${multiLabel?`<span style="font-size:8px;opacity:.7"> ${multiLabel}</span>`:""}</span>
             ${day.shifts[0].start?`<span class="dc-r">${fmtRange(day.shifts[0].start,day.shifts[0].end)}</span>`:""}
             ${note?`<span class="dc-n">${esc(note)}</span>`:""}
           </div>`;
@@ -3858,6 +3979,7 @@ async function doLogin(){
 }
 
 async function doLogout(){
+  clearTimeout(_idleTimer);clearTimeout(_idleWarnTimer);clearInterval(_idleCountdown);
   try{
     const stored=localStorage.getItem("ss_session");
     if(stored){
@@ -4267,6 +4389,7 @@ async function wtDelete(id){
 async function bootApp(){
   showSkeleton();
   startSessionKeepAlive();
+  startInactivityTimer();
   try{
     await loadSettings();
     const[emps,scheds]=await Promise.all([loadEmps(),loadScheds()]);
