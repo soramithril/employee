@@ -3111,15 +3111,7 @@ function buildGrid(){
       <td class="name-col">
         <div class="emp-cell-inner">
           <span class="drag-handle" data-tip="Drag to reorder" title="Drag to reorder">⠿</span>
-          <div class="avatar-wrap" data-tip="${tipText}" style="width:38px;height:38px;">
-            <svg viewBox="0 0 40 40" style="position:absolute;inset:-3px;width:44px;height:44px;transform:rotate(-90deg)">
-              <circle cx="20" cy="20" r="${r}" stroke="transparent" stroke-width="2.5"/>
-              <circle cx="20" cy="20" r="${r}" stroke="${ringColor}" stroke-width="2.5"
-                stroke-dasharray="${dash} ${gap}" stroke-linecap="round"
-                style="transition:stroke-dasharray .8s var(--ease-out);opacity:${pct>0?1:0}"/>
-            </svg>
-            <div class="avatar" style="background:${abg};color:${afg};position:absolute;inset:3px;width:auto;height:auto;">${emp.name[0].toUpperCase()}</div>
-          </div>
+          <div class="avatar" data-tip="${tipText}" style="background:${abg};color:${afg};width:38px;height:38px;font-size:14px;flex-shrink:0">${emp.name[0].toUpperCase()}</div>
           <div><div class="emp-name">${esc(emp.name)}</div><div class="emp-hrs ${hrsCls}" id="hbadge_${emp.id}">${hrs}h</div></div>
         </div>
       </td>`;
