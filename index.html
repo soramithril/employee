@@ -1282,8 +1282,7 @@ th.day-col.is-today{background:rgba(26,122,60,0.04) !important;}
   .emp-name,.emp-hrs,.drag-handle{display:none !important;}
   .avatar-wrap{width:28px !important;height:28px !important;overflow:hidden;}
   .avatar-wrap svg{display:none !important;}
-  /* Override inline position:absolute;inset:3px to fill compact wrapper */
-  .emp-cell-inner .avatar{position:absolute !important;inset:0 !important;width:100% !important;height:100% !important;font-size:11px !important;}
+  .emp-cell-inner .avatar{position:relative !important;inset:auto !important;width:28px !important;height:28px !important;font-size:11px !important;flex-shrink:0 !important;}
   td.day-cell{height:40px;min-width:0;padding:2px 1px;}
   .th-day-wrap{padding:5px 3px 3px;}
   .th-day{font-size:9px;font-weight:700;}
@@ -1653,8 +1652,8 @@ td.name-col{width:36px;min-width:36px;max-width:36px;padding:4px 2px;}
 .avatar-wrap{width:28px !important;height:28px !important;overflow:hidden;}
 .avatar-wrap svg{display:none !important;}
 .emp-cell-inner .avatar{
-  position:absolute !important;inset:0 !important;
-  width:100% !important;height:100% !important;font-size:11px !important;
+  position:relative !important;inset:auto !important;
+  width:28px !important;height:28px !important;font-size:11px !important;flex-shrink:0 !important;
 }
 /* Day cells: 44px height makes the grid itself a valid tap target */
 td.day-cell{height:44px;min-width:0;padding:2px 1px;cursor:pointer;}
@@ -1934,8 +1933,8 @@ input,select,textarea,
   .avatar-wrap{width:34px !important;height:34px !important;overflow:visible;}
   .avatar-wrap svg{display:block !important;}
   .emp-cell-inner .avatar{
-    position:absolute !important;inset:0 !important;
-    width:100% !important;height:100% !important;font-size:13px !important;
+    position:relative !important;inset:auto !important;
+    width:34px !important;height:34px !important;font-size:13px !important;flex-shrink:0 !important;
   }
   td.day-cell{height:72px;padding:5px 4px;}
   .th-day-wrap{padding:8px 10px 4px;}
