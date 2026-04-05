@@ -2115,26 +2115,39 @@ input,select,textarea,
   /* Location/Item cards */
   .loc-card,
   .inv-card{
-    background:var(--bg-elevated);border:1px solid var(--border);
-    border-radius:var(--radius-sm);padding:16px;
-    margin-bottom:12px;display:flex;justify-content:space-between;align-items:flex-start;
-    gap:12px;transition:all .2s;
+    background:var(--bg-elevated);border:1.5px solid var(--border);
+    border-radius:var(--radius-sm);padding:0;
+    margin-bottom:10px;display:flex;justify-content:space-between;align-items:stretch;
+    gap:0;transition:all .2s;overflow:hidden;
   }
+  .loc-card{border-left:5px solid var(--accent);}
   .loc-card:hover,
-  .inv-card:hover{border-color:var(--border-h);box-shadow:0 2px 12px rgba(26,122,60,0.06);}
+  .inv-card:hover{border-color:var(--border-h);box-shadow:0 2px 12px rgba(26,122,60,0.08);}
+  .loc-card:hover{border-left-color:var(--accent-b);}
 
   .loc-info,
-  .inv-info{flex:1;}
+  .inv-info{flex:1;padding:14px 16px;}
+  .loc-top{display:flex;align-items:baseline;gap:10px;margin-bottom:4px;flex-wrap:wrap;}
   .loc-name,
-  .inv-name{font-weight:600;font-size:14px;color:var(--fg);margin-bottom:4px;}
+  .inv-name{font-weight:700;font-size:15px;color:var(--fg);margin:0;}
+  .loc-city-tag{font-size:11px;font-weight:600;color:var(--fg-muted);background:var(--surface);padding:2px 8px;border-radius:10px;}
   .loc-addr{font-size:12px;color:var(--fg-muted);margin-bottom:2px;}
-  .loc-city{font-size:11px;color:var(--fg-muted);opacity:.8;}
   .inv-category{font-size:11px;color:var(--accent);font-weight:600;margin-bottom:4px;}
   .inv-stock{font-size:12px;color:var(--fg-muted);margin-bottom:4px;}
 
   .loc-services,
-  .inv-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
-  .service-badge,
+  .inv-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+  .service-badge{
+    padding:7px 16px;border-radius:8px;font-size:14px;font-weight:800;letter-spacing:.01em;line-height:1.3;
+  }
+  .svc-color-0{background:#dcfce7;color:#15803d;border:1.5px solid #86efac;}
+  .svc-color-1{background:#dbeafe;color:#1d4ed8;border:1.5px solid #93c5fd;}
+  .svc-color-2{background:#ede9fe;color:#7c3aed;border:1.5px solid #c4b5fd;}
+  .svc-color-3{background:#ffedd5;color:#c2410c;border:1.5px solid #fdba74;}
+  .svc-color-4{background:#fef9c3;color:#a16207;border:1.5px solid #fde047;}
+  .svc-color-5{background:#e0f2fe;color:#0369a1;border:1.5px solid #7dd3fc;}
+  .svc-color-6{background:#fce7f3;color:#be185d;border:1.5px solid #f9a8d4;}
+  .svc-color-7{background:#fee2e2;color:#dc2626;border:1.5px solid #fca5a5;}
   .status-badge{
     background:var(--accent-light);color:var(--accent);
     padding:4px 8px;border-radius:6px;font-size:10px;font-weight:600;
@@ -2144,7 +2157,7 @@ input,select,textarea,
   .status-badge.ordered{background:#dbeafe;color:#2563eb;}
 
   .loc-notes,
-  .inv-notes{font-size:12px;color:var(--fg-muted);margin-top:6px;line-height:1.4;}
+  .inv-notes{font-size:12px;color:var(--fg-muted);margin-top:6px;line-height:1.4;font-style:italic;}
 
   .card-actions{display:flex;gap:6px;flex-direction:column;}
   .loc-action-btn,
@@ -2223,24 +2236,47 @@ input,select,textarea,
 
   /* Print styles */
   @media print{
-    #header,#mobile-nav,#fab,#scroll-top,#toast,#tooltip-el{display:none !important;}
-    .si-filter-bar,.si-actions,.card-actions,.loc-action-btn,.inv-action-btn{display:none !important;}
-    body{background:white;padding:0;}
-    .si-header{
-      padding:20px 0;border-bottom:2px solid #000;margin-bottom:20px;
-    }
-    .si-header::before{
-      content:'Jeff\'s Junk — Services';display:block;font-size:14px;font-weight:700;margin-bottom:4px;
-    }
-    .si-header::after{
-      content:'Printed: 'attr(data-date);display:block;font-size:10px;color:#666;margin-top:4px;
-    }
+    /* Hide everything non-essential */
+    #header,#mobile-nav,#fab,#scroll-top,#toast,#tooltip-el,#modal-overlay,
+    .si-filter-bar,.si-actions,.card-actions,.loc-action-btn,.inv-action-btn,
+    .si-header,.si-empty-sub,
+    nav,.emp-badge,.user-section{display:none !important;}
+    body{background:white !important;padding:0;margin:0;font-size:11px;color:#000 !important;}
+    *{box-shadow:none !important;text-shadow:none !important;}
+
+    /* Cards become tight table rows */
     .loc-card,.inv-card{
-      page-break-inside:avoid;margin-bottom:20px;border:1px solid #999;
-      padding:12px;background:white;
+      page-break-inside:avoid;margin:0;padding:8px 12px;
+      background:white !important;border:none !important;border-left:none !important;
+      border-bottom:1px solid #ccc !important;border-radius:0 !important;
+      display:flex;align-items:center;gap:12px;
     }
-    .salt-section{background:white;border:1px solid #ccc;}
-    @page{margin:20mm;}
+    .loc-info,.inv-info{padding:4px 0;flex:1;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+    .loc-top{margin-bottom:0;gap:6px;}
+    .loc-name,.inv-name{font-size:12px;font-weight:700;color:#000;min-width:140px;}
+    .loc-city-tag{font-size:10px;padding:1px 6px;background:#eee !important;color:#333 !important;border-radius:4px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .loc-addr{font-size:10px;color:#444;margin:0;}
+    .loc-notes{font-size:9px;color:#666;margin:0;}
+    .loc-services,.inv-meta{margin-top:0;gap:4px;}
+    .service-badge{
+      padding:3px 8px !important;font-size:10px !important;font-weight:700 !important;
+      border-radius:4px !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;
+    }
+    .svc-color-0,.svc-color-1,.svc-color-2,.svc-color-3,
+    .svc-color-4,.svc-color-5,.svc-color-6,.svc-color-7{
+      -webkit-print-color-adjust:exact;print-color-adjust:exact;
+    }
+    .salt-section{background:white !important;border:none !important;padding:2px 0;font-size:10px;}
+    .salt-count,.salt-threshold{font-size:10px;}
+    .stock-btn{display:none !important;}
+    .salt-indicator{font-size:9px;padding:1px 4px;}
+
+    /* Inventory specifics */
+    .inv-category{font-size:9px;margin:0;}
+    .inv-stock{font-size:10px;margin:0;}
+    .status-badge{font-size:8px;padding:1px 4px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+
+    @page{margin:12mm 10mm;}
   }
 }
 </style>
@@ -4439,14 +4475,15 @@ function renderSummerPage(){
       const services=SUM.locationServices.filter(ls=>ls.location_id===loc.id);
       h+=`<div class="loc-card">
         <div class="loc-info">
-          <div class="loc-name">${esc(loc.client_name)}</div>
+          <div class="loc-top"><div class="loc-name">${esc(loc.client_name)}</div><span class="loc-city-tag">${esc(loc.city)}</span></div>
           <div class="loc-addr">${esc(loc.address)}</div>
-          <div class="loc-city">${esc(loc.city)}</div>
           ${loc.notes?`<div class="loc-notes">${esc(loc.notes)}</div>`:""}
           <div class="loc-services">
             ${services.map(s=>{
               const type=SUM.serviceTypes.find(t=>t.id===s.service_type_id);
-              return`<span class="service-badge">${type?esc(type.name):"?"}</span>`;
+              const ci=SUM.serviceTypes.findIndex(t=>t.id===s.service_type_id)%8;
+              const freq=s.frequency?` · ${esc(s.frequency)}`:"";
+              return`<span class="service-badge svc-color-${ci}">${type?esc(type.name):"?"}${freq}</span>`;
             }).join("")}
           </div>
         </div>
@@ -4465,30 +4502,61 @@ function renderSummerPage(){
 function filterAndSortSummer(){renderSummerPage();}
 
 function openAddSummerLocation(){
-  const html=`<div class="si-modal-actions" style="flex-direction:column;margin-top:0;">
+  let svcToggles=SUM.serviceTypes.map(t=>{
+    return`<div style="background:var(--bg-deep);border-radius:8px;padding:10px 12px;margin-bottom:6px;">
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;cursor:pointer;">
+        <input type="checkbox" class="sum-svc-toggle-add" data-type="${t.id}" style="accent-color:var(--accent);width:16px;height:16px;">
+        ${esc(t.name)}
+      </label>
+      <div class="svc-detail" style="margin-top:6px;display:none;gap:8px;flex-wrap:wrap;">
+        <select class="si-form-input" data-freq-add="${t.id}" style="flex:1;min-width:120px;padding:5px 8px;font-size:12px;">
+          <option value="">Frequency…</option>
+          <option value="Weekly">Weekly</option>
+          <option value="Bi-weekly">Bi-weekly</option>
+          <option value="Monthly">Monthly</option>
+          <option value="One-time">One-time</option>
+          <option value="As needed">As needed</option>
+        </select>
+        <input type="text" class="si-form-input" data-snotes-add="${t.id}" placeholder="Notes for this service…" style="flex:2;min-width:140px;padding:5px 8px;font-size:12px;">
+      </div>
+    </div>`;
+  }).join("");
+  const html=`<div style="flex-direction:column;margin-top:0;">
     <h3 style="margin-bottom:14px;">Add Summer Service Location</h3>
     <div class="si-form-group">
       <label class="si-form-label">Client Name</label>
-      <input type="text" class="si-form-input" id="sum-name" placeholder="e.g., Acme Corp">
+      <input type="text" class="si-form-input" id="sum-name" placeholder="Client name">
     </div>
     <div class="si-form-group">
       <label class="si-form-label">Address</label>
-      <input type="text" class="si-form-input" id="sum-addr" placeholder="e.g., 123 Main St">
+      <input type="text" class="si-form-input" id="sum-addr" placeholder="Street address">
     </div>
     <div class="si-form-group">
       <label class="si-form-label">City</label>
-      <input type="text" class="si-form-input" id="sum-city" placeholder="e.g., Denver">
+      <input type="text" class="si-form-input" id="sum-city" placeholder="City">
     </div>
     <div class="si-form-group">
       <label class="si-form-label">Notes</label>
       <textarea class="si-form-textarea" id="sum-notes" placeholder="Optional notes…"></textarea>
     </div>
+    ${SUM.serviceTypes.length?`<div class="si-form-group">
+      <label class="si-form-label">Services</label>
+      <div id="sum-svc-toggles-add">${svcToggles}</div>
+    </div>`:""}
     <div class="si-modal-actions">
       <button class="modal-done" onclick="saveSummerLocation()">Save Location</button>
       <button class="modal-cancel" onclick="closeModal()">Cancel</button>
     </div>
   </div>`;
-  openModal(html,"480px");
+  openModal(html,"520px");
+  setTimeout(()=>{
+    document.querySelectorAll('.sum-svc-toggle-add').forEach(cb=>{
+      cb.addEventListener('change',()=>{
+        const detail=cb.closest('div').querySelector('.svc-detail');
+        if(detail)detail.style.display=cb.checked?'flex':'none';
+      });
+    });
+  },50);
 }
 
 async function saveSummerLocation(){
@@ -4499,6 +4567,20 @@ async function saveSummerLocation(){
   if(!name||!addr||!city){toast("Please fill in required fields","error");return;}
   try{
     const result=await sbF("POST","service_locations",{client_name:name,address:addr,city,notes,has_summer_service:true,has_winter_service:false,is_archived:false});
+    // Save service toggles if any were selected
+    const checkboxes=document.querySelectorAll('.sum-svc-toggle-add');
+    if(result&&result.length>0){
+      const locId=result[0].id;
+      for(const cb of checkboxes){
+        if(!cb.checked)continue;
+        const typeId=cb.dataset.type;
+        const freqEl=document.querySelector(`[data-freq-add="${typeId}"]`);
+        const notesEl=document.querySelector(`[data-snotes-add="${typeId}"]`);
+        const freq=freqEl?.value||'';
+        const svcNotes=notesEl?.value||'';
+        await sbF("POST","location_services",{location_id:locId,service_type_id:typeId,frequency:freq,notes:svcNotes,is_active:true});
+      }
+    }
     toast("Location added");
     closeModal();
     await loadSummerData();
@@ -4732,12 +4814,17 @@ function renderWinterPage(){
     filtered.forEach(loc=>{
       const salt=WIN.saltBins.find(s=>s.location_id===loc.id);
       const isLow=salt&&salt.current_bags<=salt.min_threshold;
+      const wServices=WIN.locationServices?WIN.locationServices.filter(ls=>ls.location_id===loc.id):[];
       h+=`<div class="loc-card">
         <div class="loc-info">
-          <div class="loc-name">${esc(loc.client_name)}</div>
+          <div class="loc-top"><div class="loc-name">${esc(loc.client_name)}</div><span class="loc-city-tag">${esc(loc.city)}</span></div>
           <div class="loc-addr">${esc(loc.address)}</div>
-          <div class="loc-city">${esc(loc.city)}</div>
           ${loc.notes?`<div class="loc-notes">${esc(loc.notes)}</div>`:""}
+          ${wServices.length?`<div class="loc-services">${wServices.map(s=>{
+            const type=WIN.serviceTypes.find(t=>t.id===s.service_type_id);
+            const ci=WIN.serviceTypes.findIndex(t=>t.id===s.service_type_id)%8;
+            return`<span class="service-badge svc-color-${ci}">${type?esc(type.name):"?"}</span>`;
+          }).join("")}</div>`:""}
           ${salt?`<div class="salt-section">
             <div class="salt-label">Salt Bags</div>
             <div class="salt-controls">
