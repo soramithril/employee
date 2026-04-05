@@ -2343,6 +2343,314 @@ input,select,textarea,
     @page{margin:10mm 8mm;}
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   VISUAL POLISH LAYER — richer gradients, shadows, color depth
+   Applied on top of base styles; affects both mobile and desktop.
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* Richer accent gradient button */
+.si-action-btn{
+  background:linear-gradient(135deg,#1a7a3c 0%,#22a050 60%,#34c766 100%) !important;
+  box-shadow:0 4px 14px rgba(26,122,60,0.28),0 1px 0 rgba(255,255,255,0.25) inset,0 0 0 1px rgba(26,122,60,0.4) !important;
+  font-weight:700 !important;letter-spacing:.01em;
+}
+.si-action-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 6px 22px rgba(26,122,60,0.38),0 1px 0 rgba(255,255,255,0.3) inset,0 0 0 1px rgba(26,122,60,0.5) !important;
+}
+.si-action-btn.secondary{
+  background:linear-gradient(180deg,#ffffff,#f4f8f5) !important;
+  color:var(--fg) !important;
+  box-shadow:0 1px 3px rgba(0,0,0,0.05),0 0 0 1px rgba(0,0,0,0.08) !important;
+}
+
+/* Services/Inventory page header: gradient band */
+.si-header{
+  background:linear-gradient(180deg,rgba(232,245,238,0.55),rgba(255,255,255,0));
+  border-bottom:1px solid rgba(26,122,60,0.1);
+}
+.si-title{
+  background:linear-gradient(135deg,#0f4a24 0%,#1a7a3c 60%,#22a050 100%);
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;-webkit-text-fill-color:transparent;
+  font-weight:800;letter-spacing:-.02em;
+}
+
+/* Table header gradient */
+.sum-th,.win-th,.inv-th{
+  background:linear-gradient(180deg,#f1f7f3 0%,#e8f1eb 100%) !important;
+  color:#0f4a24 !important;
+  border-bottom:2px solid rgba(26,122,60,0.2) !important;
+  font-weight:800 !important;
+}
+
+/* Card-like rows with subtle lift on hover */
+.sum-row,.win-row,.inv-row{
+  transition:background .18s,box-shadow .18s,transform .18s;
+}
+.sum-row:hover,.win-row:hover,.inv-row:hover{
+  background:linear-gradient(90deg,rgba(26,122,60,0.04),rgba(26,122,60,0.01)) !important;
+  box-shadow:inset 4px 0 0 var(--accent);
+}
+
+/* Weekly calendar cards: richer shadows and color stripes */
+.sum-cal-col{
+  background:linear-gradient(180deg,#ffffff,#fafcfb) !important;
+  box-shadow:0 1px 2px rgba(0,0,0,0.04),0 4px 14px rgba(0,0,0,0.04);
+  transition:transform .2s,box-shadow .2s;
+}
+.sum-cal-col:hover{
+  transform:translateY(-2px);
+  box-shadow:0 2px 4px rgba(0,0,0,0.06),0 10px 28px rgba(26,122,60,0.10);
+}
+.sum-cal-day-header{
+  background:linear-gradient(180deg,#f6faf7,#eef5f0) !important;
+  color:#0f4a24 !important;
+}
+.sum-cal-item{
+  background:linear-gradient(180deg,#ffffff,#f7faf8) !important;
+  box-shadow:0 1px 2px rgba(0,0,0,0.03);
+}
+
+/* Day badges with deeper gradients */
+.sum-day-monday{background:linear-gradient(135deg,#dbeafe,#bfdbfe) !important;box-shadow:0 1px 2px rgba(29,78,216,0.15);}
+.sum-day-tuesday{background:linear-gradient(135deg,#dcfce7,#bbf7d0) !important;box-shadow:0 1px 2px rgba(21,128,61,0.15);}
+.sum-day-wednesday{background:linear-gradient(135deg,#ede9fe,#ddd6fe) !important;box-shadow:0 1px 2px rgba(124,58,237,0.15);}
+.sum-day-thursday{background:linear-gradient(135deg,#ffedd5,#fed7aa) !important;box-shadow:0 1px 2px rgba(194,65,12,0.15);}
+.sum-day-friday{background:linear-gradient(135deg,#fce7f3,#fbcfe8) !important;box-shadow:0 1px 2px rgba(190,24,93,0.15);}
+
+/* Service badge polish */
+.service-badge{
+  box-shadow:0 1px 2px rgba(0,0,0,0.04),inset 0 1px 0 rgba(255,255,255,0.4);
+  font-weight:800 !important;
+}
+.svc-color-0{background:linear-gradient(135deg,#dcfce7,#bbf7d0) !important;}
+.svc-color-1{background:linear-gradient(135deg,#dbeafe,#bfdbfe) !important;}
+.svc-color-2{background:linear-gradient(135deg,#ede9fe,#ddd6fe) !important;}
+.svc-color-3{background:linear-gradient(135deg,#ffedd5,#fed7aa) !important;}
+.svc-color-4{background:linear-gradient(135deg,#fef9c3,#fef08a) !important;}
+.svc-color-5{background:linear-gradient(135deg,#e0f2fe,#bae6fd) !important;}
+.svc-color-6{background:linear-gradient(135deg,#fce7f3,#fbcfe8) !important;}
+.svc-color-7{background:linear-gradient(135deg,#fee2e2,#fecaca) !important;}
+
+/* Card global polish */
+.card{
+  box-shadow:0 0 0 1px rgba(0,0,0,0.05),0 2px 12px rgba(0,0,0,0.04),0 12px 40px rgba(26,122,60,0.04) !important;
+}
+
+/* Accent FAB glow */
+#fab{
+  background:linear-gradient(135deg,#1a7a3c 0%,#22a050 50%,#34c766 100%) !important;
+  box-shadow:0 6px 22px rgba(26,122,60,0.48),0 1px 0 rgba(255,255,255,0.25) inset !important;
+}
+
+/* Save button glow */
+.save-btn{
+  background:linear-gradient(135deg,#1a7a3c,#22a050 55%,#34c766) !important;
+}
+
+/* Modal action buttons */
+.modal-add-btn,.modal-done{
+  background:linear-gradient(135deg,#1a7a3c,#22a050 55%,#34c766) !important;
+  box-shadow:0 4px 14px rgba(26,122,60,0.28),0 1px 0 rgba(255,255,255,0.25) inset !important;
+}
+
+/* Inventory thumb: rounded with border glow */
+.inv-thumb{
+  box-shadow:0 1px 2px rgba(0,0,0,0.06),0 0 0 1px rgba(0,0,0,0.04);
+  background:linear-gradient(180deg,#f6faf7,#eef3ef) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE LAYER — Services/Inventory tables, weekly calendar, bottom nav
+   ═══════════════════════════════════════════════════════════════════════════════ */
+@media(max-width:767px){
+  /* ── BOTTOM NAV: bigger tap targets, clearer labels, safer bottom padding ── */
+  #mobile-nav{
+    padding-top:6px !important;
+    padding-bottom:max(10px,env(safe-area-inset-bottom)) !important;
+    background:rgba(255,255,255,0.92) !important;
+    backdrop-filter:blur(26px) saturate(180%) !important;
+    -webkit-backdrop-filter:blur(26px) saturate(180%) !important;
+    border-top:1px solid rgba(26,122,60,0.12) !important;
+    box-shadow:0 -6px 24px rgba(0,0,0,0.08),0 -1px 0 rgba(26,122,60,0.05) !important;
+  }
+  .mnav-btn{
+    min-height:52px !important;
+    gap:3px !important;
+    font-size:9px !important;
+    padding:4px 2px !important;
+  }
+  .mnav-icon{
+    width:22px !important;height:22px !important;
+  }
+  .mnav-btn.active::after{
+    width:20px !important;height:3px !important;margin-top:2px !important;
+  }
+  /* Main content clears the TALLER mobile nav */
+  #app{
+    padding-bottom:calc(72px + env(safe-area-inset-bottom) + 12px) !important;
+  }
+  /* Toast sits above taller nav */
+  #toast{
+    bottom:calc(82px + env(safe-area-inset-bottom)) !important;
+  }
+  /* FAB and scroll-top above taller nav */
+  #fab,#scroll-top{
+    bottom:calc(82px + env(safe-area-inset-bottom)) !important;
+  }
+
+  /* ── HEADER: richer gradient on mobile ── */
+  #header{
+    background:linear-gradient(180deg,rgba(255,255,255,0.97),rgba(248,252,249,0.92)) !important;
+    backdrop-filter:blur(24px) saturate(180%) !important;
+    -webkit-backdrop-filter:blur(24px) saturate(180%) !important;
+    box-shadow:0 1px 0 rgba(26,122,60,0.08),0 4px 20px rgba(0,0,0,0.05) !important;
+  }
+
+  /* ── SERVICES / INVENTORY page header: mobile stack ── */
+  .si-header{
+    display:flex !important;flex-direction:column;align-items:stretch;
+    padding:14px 12px 12px !important;gap:10px;
+  }
+  .si-title{font-size:18px !important;}
+  .si-actions{display:flex;flex-wrap:wrap;gap:6px;}
+  .si-action-btn{
+    flex:1;min-width:0;min-height:42px;padding:0 12px !important;
+    font-size:12px !important;display:inline-flex !important;
+    align-items:center;justify-content:center;border-radius:10px !important;
+  }
+  .si-filter-bar{
+    display:flex;flex-direction:column;gap:8px;
+    padding:10px 12px !important;border-bottom:1px solid rgba(0,0,0,0.08);
+    background:var(--bg-deep);
+  }
+  .si-filter-input,.si-filter-select{
+    width:100%;background:var(--bg-elevated);
+    border:1.5px solid rgba(0,0,0,0.08);border-radius:10px;
+    padding:11px 13px;font-size:16px;color:var(--fg);
+  }
+
+  /* ── TRANSFORM TABLES → STACKED CARDS on mobile ── */
+  .sum-table,.win-table,.inv-table{
+    display:block;width:100%;border-collapse:separate;
+    border-spacing:0;padding:12px 10px 6px;
+  }
+  .sum-table thead,.win-table thead,.inv-table thead{display:none;}
+  .sum-table tbody,.win-table tbody,.inv-table tbody{display:block;width:100%;}
+  .sum-row,.win-row,.inv-row{
+    display:block;
+    background:linear-gradient(180deg,#ffffff,#fafcfb) !important;
+    border:1.5px solid rgba(0,0,0,0.07);
+    border-radius:14px;
+    padding:14px 14px 12px;margin-bottom:10px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.04),0 6px 20px rgba(0,0,0,0.05),0 0 40px rgba(26,122,60,0.03) !important;
+    position:relative;overflow:hidden;
+  }
+  .sum-row::before,.win-row::before,.inv-row::before{
+    content:'';position:absolute;left:0;top:0;bottom:0;width:4px;
+    background:linear-gradient(180deg,#1a7a3c,#34c766);
+    border-radius:14px 0 0 14px;
+  }
+  .sum-row:hover,.win-row:hover,.inv-row:hover{
+    box-shadow:inset 0 0 0 0 transparent,0 2px 6px rgba(0,0,0,0.06),0 10px 28px rgba(26,122,60,0.12) !important;
+  }
+  .sum-td,.win-td,.inv-td{
+    display:block;padding:4px 0 4px 10px;border:none !important;
+    font-size:13px;line-height:1.4;
+  }
+  .sum-td:empty,.win-td:empty,.inv-td:empty{display:none;}
+  .sum-td[data-label]::before,
+  .win-td[data-label]::before,
+  .inv-td[data-label]::before{
+    content:attr(data-label);
+    display:inline-block;min-width:72px;
+    font-size:9px;font-weight:800;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--fg-muted);margin-right:10px;
+    vertical-align:middle;
+  }
+  .sum-td-client,.win-td-client,.inv-td-name{
+    display:block !important;
+    font-size:16px !important;font-weight:800 !important;
+    color:var(--fg) !important;padding:0 0 8px 10px !important;
+    margin-bottom:6px;
+    border-bottom:1px dashed rgba(0,0,0,0.08);
+    letter-spacing:-.01em;white-space:normal !important;
+  }
+  .sum-td-client::before,
+  .win-td-client::before,
+  .inv-td-name::before{display:none !important;}
+  .sum-td-notes,.win-td-notes,.inv-td-notes{
+    max-width:none !important;
+    padding-top:2px;
+  }
+  /* Service badges section full-width on mobile */
+  .sum-row .loc-services,.win-row .loc-services{
+    margin-top:4px;padding-left:0;
+  }
+  /* Action buttons: full row at bottom of card */
+  .sum-row .card-actions,.win-row .card-actions,.inv-row .card-actions{
+    display:flex !important;flex-direction:row !important;gap:8px;
+    padding:10px 0 0 10px !important;margin-top:10px;
+    border-top:1px dashed rgba(0,0,0,0.08);
+  }
+  .sum-row .card-actions button,
+  .win-row .card-actions button,
+  .inv-row .card-actions button{
+    flex:1;min-height:40px;padding:0 10px;font-size:12px;font-weight:700;
+    border-radius:8px;white-space:nowrap;
+  }
+  .sum-row .card-actions::before,
+  .win-row .card-actions::before,
+  .inv-row .card-actions::before{display:none !important;}
+
+  /* Day badge more prominent on mobile */
+  .sum-row .sum-day-badge{
+    font-size:13px;padding:6px 14px;min-width:54px;
+  }
+
+  /* Inventory thumb inline with item name on mobile */
+  .inv-row{padding-left:78px !important;min-height:80px;}
+  .inv-row .inv-thumb{
+    position:absolute;left:14px;top:14px;
+    width:56px !important;height:56px !important;
+    border-radius:10px;
+  }
+  .inv-row .inv-td:first-child{display:none;}
+
+  /* ── WEEKLY CALENDAR: single column stack on mobile, prominent day colors ── */
+  .sum-cal-wrap{margin:18px 8px 8px !important;padding-top:16px;}
+  .sum-cal-header{padding:0 4px;margin-bottom:12px;}
+  .sum-cal-title{font-size:15px !important;}
+  .sum-cal-sub{font-size:11px;}
+  .sum-cal-grid{
+    display:flex !important;flex-direction:column;gap:10px;
+    grid-template-columns:unset !important;
+  }
+  .sum-cal-col{min-height:0;border-radius:12px;}
+  .sum-cal-day-header{padding:11px 14px;font-size:13px;}
+  .sum-cal-day-body{padding:8px 10px 10px;}
+
+  /* Collapse toggle: 44px tap */
+  .collapse-toggle{min-height:44px;font-size:13px;border-radius:10px;}
+
+  /* Modal actions stack on mobile */
+  .si-modal-actions{flex-direction:column;gap:8px;}
+  .si-modal-actions button{width:100%;min-height:44px;font-size:14px;font-weight:700;}
+  .si-form-input,.si-form-select,.si-form-textarea{
+    font-size:16px !important;padding:11px 13px !important;border-radius:10px !important;
+  }
+
+  /* Summer/Winter controls bar: chips scroll horizontally */
+  .si-filter-bar select,.si-filter-bar input{min-height:44px;}
+}
+
+/* Tablet (≥768px, <1100px): keep tables but make calendar grid 2 columns (existing) and reduce col padding */
+@media(min-width:768px) and (max-width:1024px){
+  .sum-th,.win-th,.inv-th,.sum-td,.win-td,.inv-td{padding:9px 10px !important;font-size:12px !important;}
+  .sum-td-client,.win-td-client,.inv-td-name{font-size:13px !important;}
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
@@ -4563,17 +4871,17 @@ function renderSummerPage(){
       const dayFull=loc.service_day||"—";
       const dayClass=loc.service_day?`sum-day-${loc.service_day.toLowerCase()}`:"sum-day-none";
       h+=`<tr class="sum-row">
-        <td class="sum-td"><span class="sum-day-badge ${dayClass}">${esc(dayShort)}</span></td>
+        <td class="sum-td" data-label="Day"><span class="sum-day-badge ${dayClass}">${esc(dayShort)}</span></td>
         <td class="sum-td sum-td-client">${esc(loc.client_name)}</td>
-        <td class="sum-td">${esc(loc.address)}</td>
-        <td class="sum-td">${esc(loc.city)}</td>
-        <td class="sum-td"><div class="loc-services">${services.map(s=>{
+        <td class="sum-td" data-label="Address">${esc(loc.address)}</td>
+        <td class="sum-td" data-label="City">${esc(loc.city)}</td>
+        <td class="sum-td" data-label="Services"><div class="loc-services">${services.map(s=>{
           const type=SUM.serviceTypes.find(t=>t.id===s.service_type_id);
           const ci=SUM.serviceTypes.findIndex(t=>t.id===s.service_type_id)%8;
           const freq=s.frequency?` · ${esc(s.frequency)}`:"";
           return`<span class="service-badge svc-color-${ci}">${type?esc(type.name):"?"}${freq}</span>`;
         }).join("")}</div></td>
-        <td class="sum-td sum-td-notes">${esc(loc.notes||"")}</td>
+        <td class="sum-td sum-td-notes" data-label="Notes">${esc(loc.notes||"")}</td>
         <td class="sum-td card-actions">
           <button class="loc-action-btn" onclick="editSummerLocation('${loc.id}')">Edit</button>
           <button class="loc-action-btn delete" onclick="if(confirm('Delete this location?'))deleteSummerLocation('${loc.id}')">Delete</button>
@@ -4975,21 +5283,21 @@ function renderWinterPage(){
       const wServices=WIN.locationServices?WIN.locationServices.filter(ls=>ls.location_id===loc.id):[];
       h+=`<tr class="win-row">
         <td class="win-td win-td-client">${esc(loc.client_name)}</td>
-        <td class="win-td">${esc(loc.address)}</td>
-        <td class="win-td">${esc(loc.city)}</td>
-        <td class="win-td"><div class="loc-services">${wServices.map(s=>{
+        <td class="win-td" data-label="Address">${esc(loc.address)}</td>
+        <td class="win-td" data-label="City">${esc(loc.city)}</td>
+        <td class="win-td" data-label="Services"><div class="loc-services">${wServices.map(s=>{
           const type=WIN.serviceTypes.find(t=>t.id===s.service_type_id);
           const ci=WIN.serviceTypes.findIndex(t=>t.id===s.service_type_id)%8;
           return`<span class="service-badge svc-color-${ci}">${type?esc(type.name):"?"}</span>`;
         }).join("")}</div></td>
-        <td class="win-td">${salt?`<div class="salt-inline">
+        <td class="win-td" data-label="Salt">${salt?`<div class="salt-inline">
           <button class="stock-btn" onclick="adjustWinterSalt('${loc.id}',-1)">−</button>
           <span class="salt-count">${salt.current_bags}</span>
           <span class="salt-threshold">/ ${salt.min_threshold}</span>
           <button class="stock-btn" onclick="adjustWinterSalt('${loc.id}',1)">+</button>
           ${isLow?`<span class="salt-indicator">LOW</span>`:""}
         </div>`:`<span style="color:var(--fg-muted)">—</span>`}</td>
-        <td class="win-td win-td-notes">${esc(loc.notes||"")}</td>
+        <td class="win-td win-td-notes" data-label="Notes">${esc(loc.notes||"")}</td>
         <td class="win-td card-actions">
           <button class="loc-action-btn" onclick="editWinterLocation('${loc.id}')">Edit</button>
           <button class="loc-action-btn delete" onclick="if(confirm('Delete this location?'))deleteWinterLocation('${loc.id}')">Delete</button>
@@ -5330,12 +5638,12 @@ function renderInventoryPage(){
       h+=`<tr class="inv-row">
         <td class="inv-td"><div class="inv-thumb">${item.image_url?`<img src="${esc(item.image_url)}" alt="${esc(item.item_name)}">`:`<span class="inv-thumb-ph">📦</span>`}</div></td>
         <td class="inv-td inv-td-name">${esc(item.item_name)}</td>
-        <td class="inv-td"><span class="service-badge svc-color-${INV.categories.findIndex(c=>c.id===item.category_id)%8}">${cat?esc(cat.name):"?"}</span></td>
-        <td class="inv-td" style="font-weight:700;font-size:14px;">${item.current_stock} <span style="font-weight:400;font-size:11px;color:var(--fg-muted)">${esc(item.unit)}</span></td>
-        <td class="inv-td" style="color:var(--fg-muted);">${item.min_threshold}</td>
-        <td class="inv-td"><span class="${statusClass}">${item.status.replace(/_/g," ").toUpperCase()}</span></td>
-        <td class="inv-td inv-td-notes">${esc(item.notes||"")}</td>
-        <td class="inv-td" style="text-align:center;"><div style="display:flex;gap:4px;justify-content:center;align-items:center;">
+        <td class="inv-td" data-label="Category"><span class="service-badge svc-color-${INV.categories.findIndex(c=>c.id===item.category_id)%8}">${cat?esc(cat.name):"?"}</span></td>
+        <td class="inv-td" data-label="Stock" style="font-weight:700;font-size:14px;">${item.current_stock} <span style="font-weight:400;font-size:11px;color:var(--fg-muted)">${esc(item.unit)}</span></td>
+        <td class="inv-td" data-label="Min" style="color:var(--fg-muted);">${item.min_threshold}</td>
+        <td class="inv-td" data-label="Status"><span class="${statusClass}">${item.status.replace(/_/g," ").toUpperCase()}</span></td>
+        <td class="inv-td inv-td-notes" data-label="Notes">${esc(item.notes||"")}</td>
+        <td class="inv-td" data-label="Adjust" style="text-align:center;"><div style="display:flex;gap:4px;justify-content:center;align-items:center;">
           <button class="stock-btn" onclick="adjustInventory('${item.id}',-1)">−</button>
           <button class="stock-btn" onclick="adjustInventory('${item.id}',1)">+</button>
           ${item.status==="ordered"?`<button class="stock-btn" onclick="restockItem('${item.id}')">Restocked</button>`:`<button class="stock-btn" onclick="markOrdered('${item.id}')">Mark Ordered</button>`}
