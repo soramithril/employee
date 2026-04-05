@@ -4701,7 +4701,7 @@ function renderWinterPage(){
     </select>
     <select class="si-filter-select" id="win-svc" onchange="WIN.serviceFilter=this.value;filterAndSortWinter()">
       <option value="">All Services</option>
-      ${WIN.serviceTypes.map(t=>\`<option value="\${t.id}">\${esc(t.name)}</option>\`).join("")}
+      ${WIN.serviceTypes.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join("")}
     </select>
   </div>
   <div style="padding:14px 24px;">`;
