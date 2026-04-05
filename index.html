@@ -127,7 +127,11 @@ body::after{
 }
 
 /* ─── NAV ────────────────────────────────────────────────────────────────────── */
-nav{display:flex;gap:2px;}
+nav{display:flex;gap:2px;align-items:flex-end;}
+.nav-group{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.nav-group-label{font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-subtle);user-select:none;}
+.nav-group-btns{display:flex;gap:2px;align-items:center;}
+.nav-group+.nav-group{margin-left:14px;padding-left:14px;border-left:1.5px solid var(--border-h);}
 .tab-btn{
   background:transparent;color:var(--fg-muted);border:none;
   border-radius:var(--radius-xs);padding:8px 16px;
@@ -138,13 +142,14 @@ nav{display:flex;gap:2px;}
   background:var(--accent-light);color:var(--accent);font-weight:600;
   box-shadow:inset 0 0 0 1px var(--border-acc);
 }
-.tab-btn:hover:not(.active){background:var(--surface);color:var(--fg);}
+.tab-btn:hover:not(.active){background:var(--surface-h);color:var(--fg);}
 .emp-badge{
   font-size:12px;font-weight:500;padding:5px 13px;border-radius:20px;
   background:var(--accent-light);color:var(--accent);
   border:1px solid var(--border-acc);
-  letter-spacing:.01em;
+  letter-spacing:.01em;cursor:pointer;transition:all .2s var(--ease-out);
 }
+.emp-badge:hover{background:var(--accent);color:white;}
 
 /* ─── TOAST ─────────────────────────────────────────────────────────────────── */
 #toast{
@@ -310,7 +315,7 @@ nav{display:flex;gap:2px;}
 .mday-card-badge{flex-shrink:0;font-size:11px;font-weight:600;padding:4px 9px;border-radius:99px;}
 .mday-card-badge.off{color:var(--fg-subtle);background:rgba(0,0,0,0.05);}
 .mday-card-badge.working{color:var(--accent);background:var(--accent-light);border:1px solid rgba(26,122,60,0.18);}
-.mday-card-badge.sick{color:#c2410c;background:#fff7ed;border:1px solid rgba(249,115,22,0.25);}
+.mday-card-badge.sick{color:#b91c1c;background:#fee2e2;border:1px solid rgba(220,38,38,0.25);}
 .mday-card-badge.dayoff{color:#1d4ed8;background:#eff6ff;border:1px solid rgba(59,130,246,0.2);}
 
 .sched-grid thead th{
@@ -942,10 +947,11 @@ th.day-col.is-today{background:rgba(26,122,60,0.04) !important;}
   min-width:44px;border:1.5px solid transparent;
 }
 .dc2 .dc-d{font-size:9px;font-weight:700;letter-spacing:.05em;opacity:.6;}
-.dc2 .dc-t{font-size:10px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52px;}
+.dc2 .dc-t{font-size:10px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:72px;}
 .dc2 .dc-r{font-size:9px;opacity:.6;font-weight:500;}
-.dc2 .dc-n{font-size:9px;color:rgba(0,0,0,0.4);font-style:italic;max-width:52px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.chip-sick{background:#fff7ed;color:#c2410c;border-color:rgba(249,115,22,0.3) !important;}
+.dc2 .dc-n{font-size:9px;color:rgba(0,0,0,0.4);font-style:italic;max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.dc2[title]{cursor:default;}
+.chip-sick{background:#fee2e2;color:#b91c1c;border-color:rgba(220,38,38,0.3) !important;}
 
 .wk-legend{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:8px 12px;border-top:1px solid var(--border);background:#fafcfa;}
 .wk-legend-lbl{font-size:9px;font-weight:700;color:var(--fg-subtle);letter-spacing:.09em;text-transform:uppercase;}
@@ -1478,9 +1484,9 @@ th.day-col.is-today{background:rgba(26,122,60,0.04) !important;}
 .wt-chip.done-chip{background:rgba(26,122,60,.08);color:var(--accent);border-color:rgba(26,122,60,.2);}
 
 /* Action buttons */
-.wt-card-actions{display:flex;gap:5px;padding:10px 16px 12px 20px;border-top:1px solid var(--surface-h);}
+.wt-card-actions{display:flex;gap:4px;padding:8px 16px 10px 20px;border-top:1px solid var(--surface-h);}
 .wt-action-btn{
-  flex:1;border:none;border-radius:var(--radius-xs);padding:7px 8px;
+  flex:0 1 auto;border:none;border-radius:var(--radius-xs);padding:5px 10px;
   font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;
   transition:opacity .15s,background .15s;white-space:nowrap;
 }
@@ -2188,7 +2194,8 @@ input,select,textarea,
     text-align:center;padding:48px 24px;color:var(--fg-muted);
   }
   .si-empty-icon{font-size:48px;margin-bottom:12px;}
-  .si-empty-text{font-size:13px;color:var(--fg-muted);}
+  .si-empty-text{font-size:13px;color:var(--fg-muted);font-weight:600;}
+  .si-empty-sub{font-size:12px;color:var(--fg-subtle);margin-top:6px;}
 
   /* Modal form grid */
   .si-form-group{margin-bottom:14px;}
@@ -2316,25 +2323,31 @@ input,select,textarea,
     </div>
   </div>
   <nav>
-    <!-- SCHEDULING -->
-    <div style="display:flex;align-items:center;gap:2px;">
-      <button class="tab-btn active" onclick="switchTab('schedule')">Schedule</button>
-      <button class="tab-btn" onclick="switchTab('history')">History</button>
-      <button class="tab-btn" onclick="switchTab('analytics')">Analytics</button>
-      <button class="tab-btn" onclick="switchTab('team')">Team</button>
-      <button class="tab-btn" onclick="switchTab('tasks')">Tasks</button>
+    <div class="nav-group">
+      <span class="nav-group-label">Scheduling</span>
+      <div class="nav-group-btns">
+        <button class="tab-btn active" onclick="switchTab('schedule')">Schedule</button>
+        <button class="tab-btn" onclick="switchTab('history')">History</button>
+        <button class="tab-btn" onclick="switchTab('analytics')">Analytics</button>
+        <button class="tab-btn" onclick="switchTab('team')">Team</button>
+        <button class="tab-btn" onclick="switchTab('tasks')">Tasks</button>
+      </div>
     </div>
-    <!-- SERVICES -->
-    <div style="display:flex;align-items:center;gap:2px;margin-left:14px;padding-left:14px;border-left:1px solid var(--border);">
-      <button class="tab-btn" onclick="switchTab('summer')">Summer</button>
-      <button class="tab-btn" onclick="switchTab('winter')">Winter</button>
+    <div class="nav-group">
+      <span class="nav-group-label">Services</span>
+      <div class="nav-group-btns">
+        <button class="tab-btn" onclick="switchTab('summer')">Summer</button>
+        <button class="tab-btn" onclick="switchTab('winter')">Winter</button>
+      </div>
     </div>
-    <!-- OPERATIONS -->
-    <div style="display:flex;align-items:center;gap:2px;margin-left:14px;padding-left:14px;border-left:1px solid var(--border);">
-      <button class="tab-btn" onclick="switchTab('inventory')">Inventory</button>
+    <div class="nav-group">
+      <span class="nav-group-label">Operations</span>
+      <div class="nav-group-btns">
+        <button class="tab-btn" onclick="switchTab('inventory')">Inventory</button>
+      </div>
     </div>
   </nav>
-  <span class="emp-badge" id="empCount">0 employees</span>
+  <span class="emp-badge" id="empCount" onclick="switchTab('team')" title="View Team">0 employees</span>
   <div style="display:flex;align-items:center;gap:8px">
     <span id="user-badge" style="display:none;font-size:12px;font-weight:600;color:var(--fg-muted);background:var(--surface);border:1px solid var(--border-h);border-radius:20px;padding:5px 12px;"></span>
     <button class="logout-btn" onclick="doLogout()">Sign Out</button>
@@ -2499,7 +2512,8 @@ const AVC=[
   ["#fee2e2","#dc2626"],["#fef9c3","#a16207"],["#e0f2fe","#0369a1"],
   ["#ffedd5","#c2410c"],["#e8f5ee","#1a7a3c"]
 ];
-const ac=n=>AVC[(n||"?").charCodeAt(0)%AVC.length];
+const ac=n=>{const s=n||"?";const h=([...s]).reduce((a,c)=>a+c.charCodeAt(0),0);return AVC[h%AVC.length];};
+function empInitials(name){const p=(name||"?").trim().split(/\s+/);if(p.length>=2)return(p[0][0]+p[1][0]).toUpperCase();if(name.length>=2)return(name[0]+name[1]).toUpperCase();return name[0].toUpperCase();}
 function esc(s){const d=document.createElement("div");d.textContent=s;return d.innerHTML;}
 
 function defSched(){const s={};DAYS.forEach(d=>{s[d]={status:"off",shifts:[]};});return s;}
@@ -3009,7 +3023,7 @@ function renderMultiAssign(){
     const[abg,afg]=ac(e.name);
     empHtml+=`<div class="ma-emp-row${checked?" checked":""}" onclick="maToggleEmp('${e.id}')">
       <span class="ma-chk">${checked?`<svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="var(--accent)"/><path d="M4 7l2 2 4-4" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`:`<span style="width:14px;height:14px;border-radius:50%;border:2px solid var(--border);display:inline-block;"></span>`}</span>
-      <div class="avatar" style="background:${abg};color:${afg};width:26px;height:26px;font-size:11px;flex-shrink:0">${e.name[0].toUpperCase()}</div>
+      <div class="avatar" style="background:${abg};color:${afg};width:26px;height:26px;font-size:11px;flex-shrink:0">${empInitials(e.name)}</div>
       <span class="ma-emp-name">${esc(e.name)}</span>
     </div>`;
   });
@@ -3168,7 +3182,7 @@ function renderMultiClear(){
     const[abg,afg]=ac(e.name);
     empHtml+=`<div class="ma-emp-row${checked?" checked":""}" onclick="mcToggleEmp('${e.id}')">
       <span class="ma-chk">${checked?`<svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="var(--accent)"/><path d="M4 7l2 2 4-4" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`:`<span style="width:14px;height:14px;border-radius:50%;border:2px solid var(--border);display:inline-block;"></span>`}</span>
-      <div class="avatar" style="background:${abg};color:${afg};width:26px;height:26px;font-size:11px;flex-shrink:0">${e.name[0].toUpperCase()}</div>
+      <div class="avatar" style="background:${abg};color:${afg};width:26px;height:26px;font-size:11px;flex-shrink:0">${empInitials(e.name)}</div>
       <span class="ma-emp-name">${esc(e.name)}</span>
     </div>`;
   });
@@ -3357,7 +3371,7 @@ function buildSched(){
       <button class="ctrl-btn" onclick="openTaskMgr()">⚙ Tasks</button>
       <button class="ctrl-btn ctrl-btn-accent" onclick="openMultiAssign()">👥 Assign</button>
       <button class="ctrl-btn ctrl-btn-danger" onclick="openMultiClear()">🗑 Clear</button>
-      <button class="ctrl-btn" onclick="openWHSettings()">⏰ ${fmtHour(WH.start,0)}–${fmtHour(WH.end,0)}</button>
+      <button class="ctrl-btn" onclick="openWHSettings()" title="Change visible work hours">⏰ ${fmtHour(WH.start,0)}–${fmtHour(WH.end,0)}</button>
     </div>
     <button class="ctrl-btn ctrl-more-btn" onclick="this.closest('.ctrl-bar').classList.toggle('ctrl-expanded')"><span class="ctrl-more-btn-label">☰ More</span></button>
   </div>`;
@@ -3424,7 +3438,7 @@ function buildGrid(){
       <td class="name-col">
         <div class="emp-cell-inner">
           <span class="drag-handle" data-tip="Drag to reorder" title="Drag to reorder">⠿</span>
-          <div class="avatar" data-tip="${tipText}" style="background:${abg};color:${afg};width:38px;height:38px;font-size:14px;flex-shrink:0">${emp.name[0].toUpperCase()}</div>
+          <div class="avatar" data-tip="${tipText}" style="background:${abg};color:${afg};width:38px;height:38px;font-size:12px;flex-shrink:0">${empInitials(emp.name)}</div>
           <div><div class="emp-name">${esc(emp.name)}</div><div class="emp-hrs ${hrsCls}" id="hbadge_${emp.id}">${hrs}h</div></div>
         </div>
       </td>`;
@@ -3525,7 +3539,7 @@ function buildMobileDayView(){
       }
       const noteIcon=dayData.note?` <span title="${esc(dayData.note)}" style="color:#f59e0b;font-size:11px;">●</span>`:"";
       h+=`<div class="mday-emp-card" onclick="openShiftModal('${emp.id}','${selDay}')">
-        <div class="mday-card-avatar" style="background:${abg};color:${afg};">${emp.name[0].toUpperCase()}</div>
+        <div class="mday-card-avatar" style="background:${abg};color:${afg};">${empInitials(emp.name)}</div>
         <div class="mday-card-info">
           <div class="mday-card-name">${esc(emp.name)}${noteIcon}</div>
           <div class="mday-card-shift">${esc(shiftInfo)}</div>
@@ -3712,7 +3726,7 @@ function buildAnalytics(){
     const[abg,afg]=ac(emp.name);
     const top=Object.entries(emp.tally).filter(([k])=>k!=="off"&&k!=="sick").sort((a,b)=>b[1]-a[1])[0];
     h+=`<div class="acard"><div style="display:flex;align-items:center;gap:12px">
-      <div class="avatar" style="background:${abg};color:${afg}">${emp.name[0].toUpperCase()}</div>
+      <div class="avatar" style="background:${abg};color:${afg}">${empInitials(emp.name)}</div>
       <div style="flex:1">
         <div style="display:flex;justify-content:space-between;align-items:baseline">
           <span style="font-weight:600;font-size:14px;color:var(--fg)">${esc(emp.name)}</span>
@@ -3768,7 +3782,7 @@ function buildAnalytics(){
           const off=DAYS.filter(d=>sched[d]?.status==="dayoff").length;
           const[abg,afg]=ac(emp.name);
           h+=`<div style="display:flex;align-items:center;gap:6px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:5px 10px">
-            <div style="width:20px;height:20px;border-radius:50%;background:${abg};color:${afg};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;flex-shrink:0">${emp.name[0].toUpperCase()}</div>
+            <div style="width:20px;height:20px;border-radius:50%;background:${abg};color:${afg};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;flex-shrink:0">${empInitials(emp.name)}</div>
             <span style="font-size:11px;font-weight:600;color:var(--fg)">${esc(emp.name)}</span>
             <span style="font-size:11px;font-weight:700;color:var(--accent)">${hrs}h</span>
             ${sick>0?`<span style="font-size:10px;color:#c2410c">🤒${sick}</span>`:""}
@@ -3895,7 +3909,7 @@ function buildHistory(){
       const[abg,afg]=ac(emp.name);
       h+=`<div class="wk-emp-row">
         <div class="wk-name-col">
-          <div class="avatar" style="background:${abg};color:${afg};width:28px;height:28px;font-size:11px;flex-shrink:0">${emp.name[0].toUpperCase()}</div>
+          <div class="avatar" style="background:${abg};color:${afg};width:28px;height:28px;font-size:11px;flex-shrink:0">${empInitials(emp.name)}</div>
           <div><div class="emp-name">${esc(emp.name)}</div><div class="emp-hrs">${empH}h</div></div>
         </div>
         <div class="wk-days-col">`;
@@ -3954,7 +3968,7 @@ function buildTeam(){
       h+=`<div class="tcard" draggable="true" data-empid="${emp.id}" data-empidx="${i}">
         <span style="cursor:grab;color:rgba(0,0,0,0.18);font-size:18px;padding:0 10px 0 0;user-select:none;flex-shrink:0;display:flex;align-items:center;" title="Drag to reorder">⠿</span>
         <div style="display:flex;align-items:center;gap:11px;flex:1;min-width:0">
-          <div class="avatar" style="background:${abg};color:${afg};width:38px;height:38px;font-size:14px;flex-shrink:0">${emp.name[0].toUpperCase()}</div>
+          <div class="avatar" style="background:${abg};color:${afg};width:38px;height:38px;font-size:12px;flex-shrink:0">${empInitials(emp.name)}</div>
           <div style="min-width:0"><div style="font-weight:600;font-size:14px;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(emp.name)}</div><div style="font-size:12px;color:var(--fg-muted)">${tot}h total scheduled</div></div>
         </div>
         <button class="rmbtn" onclick="removeEmp('${emp.id}','${esc(emp.name)}')">Remove</button>
@@ -4246,6 +4260,10 @@ function switchTab(t){
   app.classList.add("tab-out");
   setTimeout(()=>{
     S.tab=t;
+    // Show skeleton for async tabs while data loads
+    if(["summer","winter","inventory","tasks"].includes(t)){
+      showSkeleton();
+    }
     render();
     app.classList.remove("tab-out");
     app.classList.add("tab-in");
@@ -4380,7 +4398,7 @@ function renderSummerPage(){
     <div><div class="si-title">Summer Services (Landscaping)</div></div>
     <div class="si-actions">
       <button class="si-action-btn" onclick="openAddSummerLocation()">+ Add Location</button>
-      <button class="si-action-btn secondary" onclick="openManageSummerServiceTypes()">⚙ Manage Types</button>
+      <button class="si-action-btn secondary" onclick="openManageSummerServiceTypes()">⚙ Service Types</button>
       <button class="si-action-btn secondary" onclick="window.print()">🖨 Print</button>
     </div>
   </div>
@@ -4415,7 +4433,7 @@ function renderSummerPage(){
   });
 
   if(!filtered.length){
-    h+=`<div class="si-empty"><div class="si-empty-icon">🌱</div><div class="si-empty-text">No summer service locations</div></div>`;
+    h+=`<div class="si-empty"><div class="si-empty-icon">🌱</div><div class="si-empty-text">No summer service locations</div><div class="si-empty-sub">Track landscaping clients and service schedules</div></div>`;
   }else{
     filtered.forEach(loc=>{
       const services=SUM.locationServices.filter(ls=>ls.location_id===loc.id);
@@ -4670,7 +4688,7 @@ function renderWinterPage(){
     <div><div class="si-title">Winter Services (De-icing & Snow Removal)</div></div>
     <div class="si-actions">
       <button class="si-action-btn" onclick="openAddWinterLocation()">+ Add Location</button>
-      <button class="si-action-btn secondary" onclick="openManageWinterServiceTypes()">⚙ Manage Types</button>
+      <button class="si-action-btn secondary" onclick="openManageWinterServiceTypes()">⚙ Service Types</button>
       <button class="si-action-btn secondary" onclick="window.print()">🖨 Print</button>
     </div>
   </div>
@@ -4681,11 +4699,19 @@ function renderWinterPage(){
       <option value="city">Sort: by City</option>
       <option value="salt-low">Needs Restock</option>
     </select>
+    <select class="si-filter-select" id="win-svc" onchange="WIN.serviceFilter=this.value;filterAndSortWinter()">
+      <option value="">All Services</option>
+      ${WIN.serviceTypes.map(t=>\`<option value="\${t.id}">\${esc(t.name)}</option>\`).join("")}
+    </select>
   </div>
   <div style="padding:14px 24px;">`;
 
   let filtered=WIN.locations.filter(loc=>{
     if(WIN.filter&&!loc.client_name.toLowerCase().includes(WIN.filter.toLowerCase())&&!loc.address.toLowerCase().includes(WIN.filter.toLowerCase()))return false;
+    if(WIN.serviceFilter){
+      const hasService=WIN.locationServices.some(ls=>ls.location_id===loc.id&&ls.service_type_id===WIN.serviceFilter);
+      if(!hasService)return false;
+    }
     if(WIN.sortBy==="salt-low"){
       const salt=WIN.saltBins.find(s=>s.location_id===loc.id);
       if(!salt||salt.current_bags>salt.min_threshold)return false;
@@ -4701,7 +4727,7 @@ function renderWinterPage(){
   });
 
   if(!filtered.length){
-    h+=`<div class="si-empty"><div class="si-empty-icon">❄️</div><div class="si-empty-text">No winter service locations</div></div>`;
+    h+=`<div class="si-empty"><div class="si-empty-icon">❄️</div><div class="si-empty-text">No winter service locations</div><div class="si-empty-sub">Manage snow removal routes and salt bins</div></div>`;
   }else{
     filtered.forEach(loc=>{
       const salt=WIN.saltBins.find(s=>s.location_id===loc.id);
@@ -4976,7 +5002,8 @@ function renderInventoryPage(){
     <div><div class="si-title">Back Shop Inventory</div></div>
     <div class="si-actions">
       <button class="si-action-btn" onclick="openAddInventoryItem()">+ Add Item</button>
-      <button class="si-action-btn secondary" onclick="openManageCategories()">⚙ Categories</button>
+      <button class="si-action-btn secondary" onclick="openManageCategories()">⚙ Manage Categories</button>
+      <button class="si-action-btn secondary" onclick="window.print()">🖨 Print</button>
     </div>
   </div>
   <div class="si-filter-bar">
@@ -5007,7 +5034,7 @@ function renderInventoryPage(){
   });
 
   if(!filtered.length){
-    h+=`<div class="si-empty"><div class="si-empty-icon">📦</div><div class="si-empty-text">No items found</div></div>`;
+    h+=`<div class="si-empty"><div class="si-empty-icon">📦</div><div class="si-empty-text">No items found</div><div class="si-empty-sub">Track tools, parts, and supplies</div></div>`;
   }else{
     filtered.forEach(item=>{
       const cat=INV.categories.find(c=>c.id===item.category_id);
