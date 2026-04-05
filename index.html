@@ -2167,6 +2167,30 @@ input,select,textarea,
   .sum-day-friday{background:#fce7f3;color:#be185d;border:1.5px solid #f9a8d4;}
   .sum-day-none{background:var(--surface);color:var(--fg-muted);border:1.5px solid var(--border);}
 
+  /* Summer weekly calendar */
+  .sum-cal-wrap{margin:24px 14px 0;border-top:2px solid var(--border);padding-top:18px;}
+  .sum-cal-header{display:flex;align-items:baseline;gap:12px;margin-bottom:12px;padding:0 6px;}
+  .sum-cal-title{margin:0;font-size:16px;font-weight:700;color:var(--fg);}
+  .sum-cal-sub{font-size:12px;color:var(--fg-muted);}
+  .sum-cal-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+  .sum-cal-col{border-radius:10px;border:1.5px solid var(--border);background:var(--bg-elevated);overflow:hidden;min-height:180px;display:flex;flex-direction:column;}
+  .sum-cal-col.sum-day-monday{border-top:4px solid #3b82f6;}
+  .sum-cal-col.sum-day-tuesday{border-top:4px solid #16a34a;}
+  .sum-cal-col.sum-day-wednesday{border-top:4px solid #8b5cf6;}
+  .sum-cal-col.sum-day-thursday{border-top:4px solid #ea580c;}
+  .sum-cal-col.sum-day-friday{border-top:4px solid #db2777;}
+  .sum-cal-day-header{padding:10px 12px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--fg);background:var(--bg-deep);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+  .sum-cal-count{background:var(--surface);color:var(--fg-muted);padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700;}
+  .sum-cal-day-body{padding:8px;flex:1;display:flex;flex-direction:column;gap:6px;}
+  .sum-cal-empty{font-size:11px;color:var(--fg-muted);font-style:italic;text-align:center;padding:16px 4px;}
+  .sum-cal-item{background:var(--bg-deep);border:1px solid var(--border);border-radius:6px;padding:8px 10px;cursor:pointer;transition:all .15s;}
+  .sum-cal-item:hover{border-color:var(--accent);background:var(--surface);transform:translateY(-1px);box-shadow:0 2px 8px rgba(26,122,60,0.1);}
+  .sum-cal-item-name{font-size:12px;font-weight:700;color:var(--fg);line-height:1.3;margin-bottom:2px;}
+  .sum-cal-item-addr{font-size:10px;color:var(--fg-muted);line-height:1.3;margin-bottom:4px;}
+  .sum-cal-item-svcs{display:flex;flex-wrap:wrap;gap:3px;}
+  .sum-cal-more{font-size:10px;color:var(--fg-muted);font-weight:600;padding:2px 4px;}
+  @media(max-width:1100px){.sum-cal-grid{grid-template-columns:repeat(2,1fr);}}
+
   /* Winter table layout */
   .win-table{width:100%;border-collapse:collapse;font-size:13px;}
   .win-th{text-align:left;padding:10px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--fg-muted);background:var(--bg-deep);border-bottom:2px solid var(--border);white-space:nowrap;}
@@ -2188,6 +2212,12 @@ input,select,textarea,
   .inv-td-notes{font-size:12px;color:var(--fg-muted);font-style:italic;max-width:180px;}
   .inv-row:hover{background:var(--bg-deep);}
   .inv-row .card-actions{flex-direction:row;justify-content:flex-end;}
+  .inv-thumb{width:52px;height:52px;border-radius:8px;background:var(--bg-deep);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .inv-thumb img{width:100%;height:100%;object-fit:cover;}
+  .inv-thumb-ph{font-size:22px;opacity:.5;}
+  .collapse-toggle{background:var(--bg-deep);border:1px solid var(--border);color:var(--fg);padding:10px 14px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;width:100%;text-align:left;display:flex;align-items:center;gap:8px;transition:all .15s;}
+  .collapse-toggle:hover{border-color:var(--accent);background:var(--bg-elevated);}
+  .collapse-hint{font-weight:400;font-size:11px;color:var(--fg-muted);margin-left:auto;}
 
   .status-badge{
     background:var(--accent-light);color:var(--accent);
@@ -2280,7 +2310,7 @@ input,select,textarea,
     /* Hide everything non-essential */
     #header,#mobile-nav,#fab,#scroll-top,#toast,#tooltip-el,#modal-overlay,
     .si-filter-bar,.si-actions,.card-actions,.loc-action-btn,.inv-action-btn,
-    .si-header,.si-empty-sub,.sum-th-actions,
+    .si-header,.si-empty-sub,.sum-th-actions,.sum-cal-wrap,
     nav,.emp-badge,.user-section{display:none !important;}
     body{background:white !important;padding:0;margin:0;font-size:11px;color:#000 !important;}
     *{box-shadow:none !important;text-shadow:none !important;}
@@ -4553,6 +4583,40 @@ function renderSummerPage(){
     h+=`</tbody></table>`;
   }
 
+  // Weekly calendar view
+  const DAYS_WEEK=["Monday","Tuesday","Wednesday","Thursday","Friday"];
+  h+=`<div class="sum-cal-wrap">
+    <div class="sum-cal-header">
+      <h3 class="sum-cal-title">Weekly Schedule</h3>
+      <span class="sum-cal-sub">Locations grouped by service day</span>
+    </div>
+    <div class="sum-cal-grid">`;
+  DAYS_WEEK.forEach(day=>{
+    const dayLocs=SUM.locations.filter(l=>l.service_day===day);
+    const dayClass=`sum-cal-col sum-day-${day.toLowerCase()}`;
+    h+=`<div class="${dayClass}">
+      <div class="sum-cal-day-header">${day}<span class="sum-cal-count">${dayLocs.length}</span></div>
+      <div class="sum-cal-day-body">`;
+    if(!dayLocs.length){
+      h+=`<div class="sum-cal-empty">No sites</div>`;
+    }else{
+      dayLocs.forEach(loc=>{
+        const services=SUM.locationServices.filter(ls=>ls.location_id===loc.id);
+        h+=`<div class="sum-cal-item" onclick="editSummerLocation('${loc.id}')">
+          <div class="sum-cal-item-name">${esc(loc.client_name)}</div>
+          <div class="sum-cal-item-addr">${esc(loc.address)}</div>
+          ${services.length?`<div class="sum-cal-item-svcs">${services.slice(0,3).map(s=>{
+            const type=SUM.serviceTypes.find(t=>t.id===s.service_type_id);
+            const ci=SUM.serviceTypes.findIndex(t=>t.id===s.service_type_id)%8;
+            return`<span class="service-badge svc-color-${ci}" style="padding:2px 6px;font-size:10px;">${type?esc(type.name):"?"}</span>`;
+          }).join("")}${services.length>3?`<span class="sum-cal-more">+${services.length-3}</span>`:""}</div>`:""}
+        </div>`;
+      });
+    }
+    h+=`</div></div>`;
+  });
+  h+=`</div></div>`;
+
   h+=`</div></div>`;
   root.innerHTML=h;
 }
@@ -4609,8 +4673,10 @@ function openAddSummerLocation(){
       <textarea class="si-form-textarea" id="sum-notes" placeholder="Optional notes…"></textarea>
     </div>
     ${SUM.serviceTypes.length?`<div class="si-form-group">
-      <label class="si-form-label">Services</label>
-      <div id="sum-svc-toggles-add">${svcToggles}</div>
+      <button type="button" class="collapse-toggle" onclick="const el=document.getElementById('sum-svc-toggles-add');const ic=document.getElementById('sum-svc-caret');const hidden=el.style.display==='none';el.style.display=hidden?'block':'none';ic.textContent=hidden?'▾':'▸';">
+        <span id="sum-svc-caret">▸</span> Services <span class="collapse-hint">(click to expand)</span>
+      </button>
+      <div id="sum-svc-toggles-add" style="display:none;margin-top:8px;">${svcToggles}</div>
     </div>`:""}
     <div class="si-modal-actions">
       <button class="modal-done" onclick="saveSummerLocation()">Save Location</button>
@@ -4951,30 +5017,55 @@ async function adjustWinterSalt(locId,delta){
 }
 
 function openAddWinterLocation(){
+  let svcToggles=WIN.serviceTypes.map(t=>{
+    return`<div style="background:var(--bg-deep);border-radius:8px;padding:10px 12px;margin-bottom:6px;">
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;cursor:pointer;">
+        <input type="checkbox" class="win-svc-toggle-add" data-type="${t.id}" style="accent-color:var(--accent);width:16px;height:16px;">
+        ${esc(t.name)}
+      </label>
+      <div class="svc-detail" style="margin-top:6px;display:none;gap:8px;">
+        <input type="text" class="si-form-input" data-wsnotes-add="${t.id}" placeholder="Notes for this service…" style="flex:1;padding:5px 8px;font-size:12px;">
+      </div>
+    </div>`;
+  }).join("");
   const html=`<div style="flex-direction:column;">
     <h3 style="margin-bottom:14px;">Add Winter Service Location</h3>
     <div class="si-form-group">
       <label class="si-form-label">Client Name</label>
-      <input type="text" class="si-form-input" id="win-name" placeholder="e.g., Acme Corp">
+      <input type="text" class="si-form-input" id="win-name" placeholder="Client name">
     </div>
     <div class="si-form-group">
       <label class="si-form-label">Address</label>
-      <input type="text" class="si-form-input" id="win-addr" placeholder="e.g., 123 Main St">
+      <input type="text" class="si-form-input" id="win-addr" placeholder="Street address">
     </div>
     <div class="si-form-group">
       <label class="si-form-label">City</label>
-      <input type="text" class="si-form-input" id="win-city" placeholder="e.g., Denver">
+      <input type="text" class="si-form-input" id="win-city" placeholder="City">
     </div>
     <div class="si-form-group">
       <label class="si-form-label">Notes</label>
       <textarea class="si-form-textarea" id="win-notes" placeholder="Optional notes…"></textarea>
     </div>
+    ${WIN.serviceTypes.length?`<div class="si-form-group">
+      <button type="button" class="collapse-toggle" onclick="const el=document.getElementById('win-svc-toggles-add');const ic=document.getElementById('win-svc-caret');const hidden=el.style.display==='none';el.style.display=hidden?'block':'none';ic.textContent=hidden?'▾':'▸';">
+        <span id="win-svc-caret">▸</span> Services <span class="collapse-hint">(click to expand)</span>
+      </button>
+      <div id="win-svc-toggles-add" style="display:none;margin-top:8px;">${svcToggles}</div>
+    </div>`:""}
     <div class="si-modal-actions">
       <button class="modal-done" onclick="saveWinterLocation()">Save Location</button>
       <button class="modal-cancel" onclick="closeModal()">Cancel</button>
     </div>
   </div>`;
-  openModal(html,"480px");
+  openModal(html,"520px");
+  setTimeout(()=>{
+    document.querySelectorAll('.win-svc-toggle-add').forEach(cb=>{
+      cb.addEventListener('change',()=>{
+        const detail=cb.closest('div').querySelector('.svc-detail');
+        if(detail)detail.style.display=cb.checked?'flex':'none';
+      });
+    });
+  },50);
 }
 
 async function saveWinterLocation(){
@@ -4987,6 +5078,15 @@ async function saveWinterLocation(){
     const result=await sbF("POST","service_locations",{client_name:name,address:addr,city,notes,has_winter_service:true,has_summer_service:false,is_archived:false});
     const locId=result[0].id;
     await sbF("POST","salt_bins",{location_id:locId,current_bags:0,min_threshold:10});
+    // Save service toggles
+    const checkboxes=document.querySelectorAll('.win-svc-toggle-add');
+    for(const cb of checkboxes){
+      if(!cb.checked)continue;
+      const typeId=cb.dataset.type;
+      const notesEl=document.querySelector(`[data-wsnotes-add="${typeId}"]`);
+      const svcNotes=notesEl?.value||'';
+      await sbF("POST","location_services",{location_id:locId,service_type_id:typeId,notes:svcNotes,is_active:true});
+    }
     toast("Location added");
     closeModal();
     await loadWinterData();
@@ -5214,6 +5314,7 @@ function renderInventoryPage(){
   }else{
     h+=`<table class="inv-table">
       <thead><tr>
+        <th class="inv-th" style="width:64px;">Image</th>
         <th class="inv-th">Item</th>
         <th class="inv-th">Category</th>
         <th class="inv-th">Stock</th>
@@ -5227,6 +5328,7 @@ function renderInventoryPage(){
       const cat=INV.categories.find(c=>c.id===item.category_id);
       const statusClass=`status-badge ${item.status}`;
       h+=`<tr class="inv-row">
+        <td class="inv-td"><div class="inv-thumb">${item.image_url?`<img src="${esc(item.image_url)}" alt="${esc(item.item_name)}">`:`<span class="inv-thumb-ph">📦</span>`}</div></td>
         <td class="inv-td inv-td-name">${esc(item.item_name)}</td>
         <td class="inv-td"><span class="service-badge svc-color-${INV.categories.findIndex(c=>c.id===item.category_id)%8}">${cat?esc(cat.name):"?"}</span></td>
         <td class="inv-td" style="font-weight:700;font-size:14px;">${item.current_stock} <span style="font-weight:400;font-size:11px;color:var(--fg-muted)">${esc(item.unit)}</span></td>
