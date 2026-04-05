@@ -349,11 +349,9 @@ td.name-col{
   display:flex;align-items:center;justify-content:center;
   font-weight:700;font-size:13px;flex-shrink:0;
   border:2px solid rgba(255,255,255,0.85);
-  box-shadow:0 2px 8px rgba(0,0,0,0.13);
   position:relative;
-  transition:transform .2s var(--ease-out),box-shadow .2s;
 }
-.emp-row:hover .avatar{transform:scale(1.08);box-shadow:0 4px 14px rgba(0,0,0,0.18);}
+.emp-row:hover .avatar{}
 /* Workload ring — wraps the avatar */
 .avatar-wrap{position:relative;flex-shrink:0;width:34px;height:34px;}
 .avatar-wrap .avatar{position:absolute;inset:0;width:100%;height:100%;}
@@ -2305,6 +2303,47 @@ function wkey(off){return localDateStr(getWS(off));}
 function fmtW(d){const e=new Date(d);e.setDate(e.getDate()+6);const o={month:"short",day:"numeric"};return`${d.toLocaleDateString("en-US",o)} – ${e.toLocaleDateString("en-US",{...o,year:"numeric"})}`;}
 function wlbl(o){return o===0?"This Week":o===1?"Next Week":o===-1?"Last Week":`Week ${o>0?"+":""}${o}`;}
 
+// ── SESSION KEEP-ALIVE: refresh token before it expires ──
+let _refreshTimer=null;
+async function refreshSession(){
+  try{
+    const stored=localStorage.getItem("ss_session");
+    if(!stored)return false;
+    const session=JSON.parse(stored);
+    if(!session.refresh_token)return false;
+    const ref=await sbAuth("token?grant_type=refresh_token",{refresh_token:session.refresh_token});
+    if(ref.access_token){
+      localStorage.setItem("ss_session",JSON.stringify(ref));
+      _currentUser=ref.user;
+      updateUserBadge(ref.user);
+      console.log("[session] Token refreshed successfully");
+      return true;
+    }
+  }catch(e){console.warn("[session] Refresh failed:",e);}
+  return false;
+}
+function startSessionKeepAlive(){
+  clearInterval(_refreshTimer);
+  // Refresh every 45 minutes (Supabase tokens expire after 1 hour)
+  _refreshTimer=setInterval(async()=>{
+    const ok=await refreshSession();
+    if(!ok){
+      toast("Your session expired — please sign in again","error");
+      doLogout();
+    }
+  },45*60*1000);
+  // Also refresh when the page regains focus (user returns after being away)
+  document.addEventListener("visibilitychange",async()=>{
+    if(document.visibilityState==="visible"){
+      const ok=await refreshSession();
+      if(!ok){
+        toast("Your session expired — please sign in again","error");
+        doLogout();
+      }
+    }
+  });
+}
+
 async function sbF(m,p,b){
   // Use the logged-in user's access token if available, else fall back to anon key
   let authHeader=SUPABASE_ANON_KEY;
@@ -2312,6 +2351,19 @@ async function sbF(m,p,b){
   const isUpsert=m==="POST"&&p.includes("on_conflict");
   const prefer=isUpsert?"return=representation,resolution=merge-duplicates":m==="POST"?"return=representation":"";
   const r=await fetch(`${SUPABASE_URL}/rest/v1/${p}`,{method:m,headers:{apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${authHeader}`,"Content-Type":"application/json",...(prefer?{Prefer:prefer}:{})},body:b?JSON.stringify(b):undefined});
+  // If 401/403, try refreshing the token and retry once
+  if((r.status===401||r.status===403)&&authHeader!==SUPABASE_ANON_KEY){
+    const refreshed=await refreshSession();
+    if(refreshed){
+      const sess2=JSON.parse(localStorage.getItem("ss_session")||"{}");
+      const r2=await fetch(`${SUPABASE_URL}/rest/v1/${p}`,{method:m,headers:{apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${sess2.access_token}`,"Content-Type":"application/json",...(prefer?{Prefer:prefer}:{})},body:b?JSON.stringify(b):undefined});
+      if(!r2.ok)throw new Error(await r2.text());
+      return r2.status===204?null:r2.json();
+    }
+    toast("Session expired — please sign in again","error");
+    doLogout();
+    throw new Error("Session expired");
+  }
   if(!r.ok)throw new Error(await r.text());
   return r.status===204?null:r.json();
 }
@@ -4224,6 +4276,7 @@ async function wtDelete(id){
 // On load — check session then boot app
 async function bootApp(){
   showSkeleton();
+  startSessionKeepAlive();
   try{
     await loadSettings();
     const[emps,scheds]=await Promise.all([loadEmps(),loadScheds()]);
