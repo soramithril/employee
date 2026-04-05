@@ -3104,7 +3104,7 @@ function buildGrid(){
     const maxH=Math.max(...Object.values(S.schedule).map(s=>countH(s)),1);
     const pct=Math.min(hrs/Math.max(maxH,1),1);
     const r=16,circ=2*Math.PI*r,dash=(pct*circ).toFixed(2),gap=(circ-pct*circ).toFixed(2);
-    const ringColor=pct>0.7?"#1a7a3c":pct>0.35?"#f59e0b":"#cbd5e1";
+    const ringColor=pct>0.7?"#1a7a3c":pct>0.35?"#f59e0b":"transparent";
     const hrsCls=pct>0.6?"hrs-high":pct>0.3?"hrs-mid":"hrs-low";
     const tipText=hrs>0?`${hrs}h scheduled this week`:"No hours this week";
     h+=`<tr class="emp-row" draggable="true" data-empid="${emp.id}" data-empidx="${empIdx}">
