@@ -2062,6 +2062,179 @@ input,select,textarea,
   .wt-action-btn{min-height:0;padding:7px 8px;}
   .wt-add-btn{min-height:0;}
   .wt-filter-btn{min-height:0;padding:5px 14px;display:inline-block;}
+
+  /* ─── SERVICES & INVENTORY MODULES ────────────────────────────────────────── */
+
+  /* Nav section labels */
+  .nav-section-label{
+    font-size:10px;font-weight:600;color:var(--fg-muted);
+    text-transform:uppercase;letter-spacing:.08em;
+    padding:0 16px;margin:12px 0 8px 0;
+    display:flex;align-items:center;gap:10px;
+  }
+  .nav-section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+  /* Service/Inventory page header */
+  .si-header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px 24px;gap:12px;flex-wrap:wrap;
+  }
+  .si-title{font-size:18px;font-weight:700;color:var(--fg);}
+  .si-actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .si-action-btn{
+    background:var(--accent);color:white;border:none;
+    border-radius:var(--radius-sm);padding:10px 16px;
+    font-size:13px;font-weight:600;cursor:pointer;
+    transition:all .2s var(--ease-out);
+  }
+  .si-action-btn:hover{background:var(--accent-b);transform:translateY(-1px);}
+  .si-action-btn.secondary{background:var(--surface);color:var(--fg);border:1px solid var(--border);}
+  .si-action-btn.secondary:hover{background:var(--surface-h);border-color:var(--border-h);}
+
+  /* Filter bar */
+  .si-filter-bar{
+    display:flex;align-items:center;gap:12px;padding:14px 24px;
+    flex-wrap:wrap;border-bottom:1px solid var(--border);background:var(--bg-deep);
+  }
+  .si-filter-input,
+  .si-filter-select{
+    background:var(--bg-elevated);border:1px solid var(--border);
+    border-radius:var(--radius-xs);padding:8px 12px;
+    font-size:13px;color:var(--fg);
+  }
+  .si-filter-input::placeholder{color:var(--fg-muted);}
+  .si-filter-input:focus,
+  .si-filter-select:focus{outline:none;border-color:var(--accent);}
+
+  /* Location/Item cards */
+  .loc-card,
+  .inv-card{
+    background:var(--bg-elevated);border:1px solid var(--border);
+    border-radius:var(--radius-sm);padding:16px;
+    margin-bottom:12px;display:flex;justify-content:space-between;align-items:flex-start;
+    gap:12px;transition:all .2s;
+  }
+  .loc-card:hover,
+  .inv-card:hover{border-color:var(--border-h);box-shadow:0 2px 12px rgba(26,122,60,0.06);}
+
+  .loc-info,
+  .inv-info{flex:1;}
+  .loc-name,
+  .inv-name{font-weight:600;font-size:14px;color:var(--fg);margin-bottom:4px;}
+  .loc-addr{font-size:12px;color:var(--fg-muted);margin-bottom:2px;}
+  .loc-city{font-size:11px;color:var(--fg-muted);opacity:.8;}
+  .inv-category{font-size:11px;color:var(--accent);font-weight:600;margin-bottom:4px;}
+  .inv-stock{font-size:12px;color:var(--fg-muted);margin-bottom:4px;}
+
+  .loc-services,
+  .inv-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+  .service-badge,
+  .status-badge{
+    background:var(--accent-light);color:var(--accent);
+    padding:4px 8px;border-radius:6px;font-size:10px;font-weight:600;
+  }
+  .status-badge.low{background:#fef3c7;color:#d97706;}
+  .status-badge.out{background:#fee2e2;color:#dc2626;}
+  .status-badge.ordered{background:#dbeafe;color:#2563eb;}
+
+  .loc-notes,
+  .inv-notes{font-size:12px;color:var(--fg-muted);margin-top:6px;line-height:1.4;}
+
+  .card-actions{display:flex;gap:6px;flex-direction:column;}
+  .loc-action-btn,
+  .inv-action-btn{
+    background:transparent;border:1px solid var(--border);
+    color:var(--fg-muted);padding:6px 10px;border-radius:6px;
+    font-size:11px;font-weight:600;cursor:pointer;
+    transition:all .15s;
+    min-height:0;white-space:nowrap;
+  }
+  .loc-action-btn:hover,
+  .inv-action-btn:hover{background:var(--accent-light);color:var(--accent);border-color:var(--border-acc);}
+  .loc-action-btn.delete,
+  .inv-action-btn.delete{color:#dc2626;border-color:#fee2e2;}
+  .loc-action-btn.delete:hover,
+  .inv-action-btn.delete:hover{background:#fee2e2;border-color:#fca5a5;}
+
+  /* Salt bin UI */
+  .salt-section{
+    background:var(--bg-deep);border:1.5px solid var(--border);
+    border-radius:var(--radius-xs);padding:12px;margin-top:8px;
+  }
+  .salt-label{font-size:11px;font-weight:700;color:var(--fg-muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;}
+  .salt-controls{display:flex;align-items:center;gap:8px;}
+  .salt-count{font-size:13px;font-weight:600;color:var(--fg);min-width:30px;}
+  .salt-threshold{font-size:11px;color:var(--fg-muted);opacity:.8;}
+  .salt-indicator{font-size:10px;font-weight:700;color:#dc2626;background:#fee2e2;padding:2px 6px;border-radius:4px;animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+  .stock-btn{
+    background:var(--accent-light);color:var(--accent);
+    border:1px solid var(--border-acc);padding:4px 8px;
+    border-radius:5px;font-size:11px;font-weight:600;
+    cursor:pointer;transition:all .15s;min-height:0;
+  }
+  .stock-btn:hover{background:var(--accent);color:white;}
+
+  /* Inventory image */
+  .inv-image{
+    width:60px;height:60px;border-radius:6px;
+    background:var(--bg-deep);border:1px solid var(--border);
+    flex-shrink:0;overflow:hidden;
+  }
+  .inv-image img{width:100%;height:100%;object-fit:cover;}
+
+  /* Empty state */
+  .si-empty{
+    text-align:center;padding:48px 24px;color:var(--fg-muted);
+  }
+  .si-empty-icon{font-size:48px;margin-bottom:12px;}
+  .si-empty-text{font-size:13px;color:var(--fg-muted);}
+
+  /* Modal form grid */
+  .si-form-group{margin-bottom:14px;}
+  .si-form-label{
+    display:block;font-size:12px;font-weight:600;
+    color:var(--fg);margin-bottom:6px;
+  }
+  .si-form-input,
+  .si-form-select,
+  .si-form-textarea{
+    width:100%;padding:8px 11px;border:1px solid var(--border);
+    border-radius:var(--radius-xs);font-size:13px;background:var(--bg-elevated);
+    color:var(--fg);font-family:inherit;
+  }
+  .si-form-textarea{resize:vertical;min-height:60px;}
+  .si-form-input:focus,
+  .si-form-select:focus,
+  .si-form-textarea:focus{outline:none;border-color:var(--accent);}
+
+  /* Modal actions */
+  .si-modal-actions{
+    display:flex;gap:10px;margin-top:20px;
+  }
+  .si-modal-actions button{flex:1;}
+
+  /* Print styles */
+  @media print{
+    #header,#mobile-nav,#fab,#scroll-top,#toast,#tooltip-el{display:none !important;}
+    .si-filter-bar,.si-actions,.card-actions,.loc-action-btn,.inv-action-btn{display:none !important;}
+    body{background:white;padding:0;}
+    .si-header{
+      padding:20px 0;border-bottom:2px solid #000;margin-bottom:20px;
+    }
+    .si-header::before{
+      content:'Jeff\'s Junk — Services';display:block;font-size:14px;font-weight:700;margin-bottom:4px;
+    }
+    .si-header::after{
+      content:'Printed: 'attr(data-date);display:block;font-size:10px;color:#666;margin-top:4px;
+    }
+    .loc-card,.inv-card{
+      page-break-inside:avoid;margin-bottom:20px;border:1px solid #999;
+      padding:12px;background:white;
+    }
+    .salt-section{background:white;border:1px solid #ccc;}
+    @page{margin:20mm;}
+  }
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -2143,11 +2316,23 @@ input,select,textarea,
     </div>
   </div>
   <nav>
-    <button class="tab-btn active" onclick="switchTab('schedule')">Schedule</button>
-    <button class="tab-btn" onclick="switchTab('history')">History</button>
-    <button class="tab-btn" onclick="switchTab('analytics')">Analytics</button>
-    <button class="tab-btn" onclick="switchTab('team')">Team</button>
-    <button class="tab-btn" onclick="switchTab('tasks')">Tasks</button>
+    <!-- SCHEDULING -->
+    <div style="display:flex;align-items:center;gap:2px;">
+      <button class="tab-btn active" onclick="switchTab('schedule')">Schedule</button>
+      <button class="tab-btn" onclick="switchTab('history')">History</button>
+      <button class="tab-btn" onclick="switchTab('analytics')">Analytics</button>
+      <button class="tab-btn" onclick="switchTab('team')">Team</button>
+      <button class="tab-btn" onclick="switchTab('tasks')">Tasks</button>
+    </div>
+    <!-- SERVICES -->
+    <div style="display:flex;align-items:center;gap:2px;margin-left:14px;padding-left:14px;border-left:1px solid var(--border);">
+      <button class="tab-btn" onclick="switchTab('summer')">Summer</button>
+      <button class="tab-btn" onclick="switchTab('winter')">Winter</button>
+    </div>
+    <!-- OPERATIONS -->
+    <div style="display:flex;align-items:center;gap:2px;margin-left:14px;padding-left:14px;border-left:1px solid var(--border);">
+      <button class="tab-btn" onclick="switchTab('inventory')">Inventory</button>
+    </div>
   </nav>
   <span class="emp-badge" id="empCount">0 employees</span>
   <div style="display:flex;align-items:center;gap:8px">
@@ -2179,7 +2364,6 @@ input,select,textarea,
 <!-- Mobile bottom nav -->
 <nav id="mobile-nav">
   <button class="mnav-btn active" id="mnav-schedule" onclick="switchTab('schedule')">
-    <!-- Calendar icon -->
     <svg class="mnav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <rect x="3" y="4" width="18" height="18" rx="2"/>
       <line x1="16" y1="2" x2="16" y2="6"/>
@@ -2189,27 +2373,30 @@ input,select,textarea,
     </svg>
     Schedule
   </button>
-  <button class="mnav-btn" id="mnav-history" onclick="switchTab('history')">
-    <!-- Clock / history icon -->
+  <button class="mnav-btn" id="mnav-summer" onclick="switchTab('summer')">
     <svg class="mnav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="1 4 1 10 7 10"/>
-      <path d="M3.51 15a9 9 0 1 0 .49-5.05"/>
-      <polyline points="12 7 12 12 15 15"/>
+      <circle cx="12" cy="12" r="5"/>
+      <line x1="12" y1="1" x2="12" y2="3"/>
+      <line x1="12" y1="21" x2="12" y2="23"/>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+      <line x1="1" y1="12" x2="3" y2="12"/>
+      <line x1="21" y1="12" x2="23" y2="12"/>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
     </svg>
-    History
+    Summer
   </button>
-  <button class="mnav-btn" id="mnav-analytics" onclick="switchTab('analytics')">
-    <!-- Bar chart icon -->
+  <button class="mnav-btn" id="mnav-winter" onclick="switchTab('winter')">
     <svg class="mnav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="18" y1="20" x2="18" y2="10"/>
-      <line x1="12" y1="20" x2="12" y2="4"/>
-      <line x1="6" y1="20" x2="6" y2="14"/>
-      <line x1="2" y1="20" x2="22" y2="20"/>
+      <path d="M20 17.58A5 5 0 0 0 18 8h-1.26A8 8 0 1 0 4 16.25"/>
+      <line x1="8" y1="16" x2="8" y2="20"/>
+      <line x1="8" y1="20" x2="12" y2="20"/>
+      <line x1="12" y1="20" x2="12" y2="16"/>
     </svg>
-    Analytics
+    Winter
   </button>
   <button class="mnav-btn" id="mnav-team" onclick="switchTab('team')">
-    <!-- Users / team icon -->
     <svg class="mnav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
       <circle cx="9" cy="7" r="4"/>
@@ -2218,13 +2405,16 @@ input,select,textarea,
     </svg>
     Team
   </button>
-  <button class="mnav-btn" id="mnav-tasks" onclick="switchTab('tasks')">
-    <!-- Check-square / tasks icon -->
+  <button class="mnav-btn" id="mnav-inventory" onclick="switchTab('inventory')">
     <svg class="mnav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="9 11 12 14 22 4"/>
-      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+      <line x1="8" y1="6" x2="21" y2="6"/>
+      <line x1="8" y1="12" x2="21" y2="12"/>
+      <line x1="8" y1="18" x2="21" y2="18"/>
+      <line x1="3" y1="6" x2="3.01" y2="6"/>
+      <line x1="3" y1="12" x2="3.01" y2="12"/>
+      <line x1="3" y1="18" x2="3.01" y2="18"/>
     </svg>
-    Tasks
+    Inventory
   </button>
 </nav>
 
@@ -3120,11 +3310,11 @@ function tmAdd(){const n=document.getElementById("nname"),c=document.getElementB
 // ── RENDER ──
 function render(){
   const app=document.getElementById("app");
-  const labelMap={schedule:"Schedule",history:"History",analytics:"Analytics",team:"Team","tasks":"Tasks"};
+  const labelMap={schedule:"Schedule",history:"History",analytics:"Analytics",team:"Team","tasks":"Tasks",summer:"Summer",winter:"Winter",inventory:"Inventory"};
   // Sync desktop nav
   document.querySelectorAll(".tab-btn").forEach(b=>{b.classList.toggle("active",b.textContent.trim()===labelMap[S.tab]);});
   // Sync mobile nav
-  ["schedule","history","analytics","team","tasks"].forEach(t=>{
+  ["schedule","summer","winter","team","inventory"].forEach(t=>{
     const el=document.getElementById("mnav-"+t);
     if(el)el.classList.toggle("active",S.tab===t);
   });
@@ -3133,6 +3323,9 @@ function render(){
   else if(S.tab==="history")app.innerHTML=buildHistory();
   else if(S.tab==="analytics"){app.innerHTML=buildAnalytics();requestAnimationFrame(()=>animateCounters());}
   else if(S.tab==="tasks"){app.innerHTML=buildTasksPage();initTasksPage();}
+  else if(S.tab==="summer"){app.innerHTML=buildSummerPage();initSummerPage();}
+  else if(S.tab==="winter"){app.innerHTML=buildWinterPage();initWinterPage();}
+  else if(S.tab==="inventory"){app.innerHTML=buildInventoryPage();initInventoryPage();}
   else{app.innerHTML=buildTeam();initTeamDrag();}
   updateFAB();
 }
@@ -4155,6 +4348,908 @@ function playSplitReveal(cb){
 // ── WORKSHOP TASKS ──────────────────────────────────────────────────────────────
 let WT={tasks:[],filter:"all"};
 
+// ─── SUMMER SERVICES ───────────────────────────────────────────────────────
+let SUM={locations:[],serviceTypes:[],locationServices:[],filter:"",sortBy:"name",serviceFilter:""};
+
+async function loadSummerData(){
+  try{
+    const[locs,types,ls]=await Promise.all([
+      sbF("GET","service_locations?has_summer_service=eq.true&is_archived=eq.false&order=client_name"),
+      sbF("GET","service_types?season=eq.summer&is_active=eq.true&order=sort_order"),
+      sbF("GET","location_services?select=*,service_types!inner(season)&service_types.season=eq.summer")
+    ]);
+    SUM.locations=locs||[];
+    SUM.serviceTypes=types||[];
+    SUM.locationServices=ls||[];
+  }catch(e){console.error("Load summer data failed:",e);toast("Failed to load summer services","error");}
+}
+
+function buildSummerPage(){
+  return`<div class="card"><div style="padding:20px;text-align:center;color:var(--fg-muted)">Loading…</div></div>`;
+}
+
+async function initSummerPage(){
+  await loadSummerData();
+  renderSummerPage();
+}
+
+function renderSummerPage(){
+  const root=document.querySelector(".card");
+  if(!root)return;
+  let h=`<div class="si-header">
+    <div><div class="si-title">Summer Services (Landscaping)</div></div>
+    <div class="si-actions">
+      <button class="si-action-btn" onclick="openAddSummerLocation()">+ Add Location</button>
+      <button class="si-action-btn secondary" onclick="openManageSummerServiceTypes()">⚙ Manage Types</button>
+      <button class="si-action-btn secondary" onclick="window.print()">🖨 Print</button>
+    </div>
+  </div>
+  <div class="si-filter-bar">
+    <input type="text" class="si-filter-input" placeholder="Search location…" id="sum-search" oninput="SUM.filter=this.value;filterAndSortSummer()">
+    <select class="si-filter-select" id="sum-sort" onchange="SUM.sortBy=this.value;filterAndSortSummer()">
+      <option value="name">Sort: A–Z</option>
+      <option value="city">Sort: by City</option>
+      <option value="services">Sort: by # Services</option>
+    </select>
+    <select class="si-filter-select" id="sum-svc" onchange="SUM.serviceFilter=this.value;filterAndSortSummer()">
+      <option value="">All Services</option>
+      ${SUM.serviceTypes.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join("")}
+    </select>
+  </div>
+  <div style="padding:14px 24px;">`;
+
+  let filtered=SUM.locations.filter(loc=>{
+    if(SUM.filter&&!loc.client_name.toLowerCase().includes(SUM.filter.toLowerCase())&&!loc.address.toLowerCase().includes(SUM.filter.toLowerCase()))return false;
+    if(SUM.serviceFilter){
+      const hasService=SUM.locationServices.some(ls=>ls.location_id===loc.id&&ls.service_type_id===SUM.serviceFilter);
+      if(!hasService)return false;
+    }
+    return true;
+  });
+
+  if(SUM.sortBy==="city")filtered.sort((a,b)=>a.city.localeCompare(b.city));
+  else if(SUM.sortBy==="services")filtered.sort((a,b)=>{
+    const countA=SUM.locationServices.filter(ls=>ls.location_id===a.id).length;
+    const countB=SUM.locationServices.filter(ls=>ls.location_id===b.id).length;
+    return countB-countA;
+  });
+
+  if(!filtered.length){
+    h+=`<div class="si-empty"><div class="si-empty-icon">🌱</div><div class="si-empty-text">No summer service locations</div></div>`;
+  }else{
+    filtered.forEach(loc=>{
+      const services=SUM.locationServices.filter(ls=>ls.location_id===loc.id);
+      h+=`<div class="loc-card">
+        <div class="loc-info">
+          <div class="loc-name">${esc(loc.client_name)}</div>
+          <div class="loc-addr">${esc(loc.address)}</div>
+          <div class="loc-city">${esc(loc.city)}</div>
+          ${loc.notes?`<div class="loc-notes">${esc(loc.notes)}</div>`:""}
+          <div class="loc-services">
+            ${services.map(s=>{
+              const type=SUM.serviceTypes.find(t=>t.id===s.service_type_id);
+              return`<span class="service-badge">${type?esc(type.name):"?"}</span>`;
+            }).join("")}
+          </div>
+        </div>
+        <div class="card-actions">
+          <button class="loc-action-btn" onclick="editSummerLocation('${loc.id}')">Edit</button>
+          <button class="loc-action-btn delete" onclick="if(confirm('Delete this location?'))deleteSummerLocation('${loc.id}')">Delete</button>
+        </div>
+      </div>`;
+    });
+  }
+
+  h+=`</div></div>`;
+  root.innerHTML=h;
+}
+
+function filterAndSortSummer(){renderSummerPage();}
+
+function openAddSummerLocation(){
+  const html=`<div class="si-modal-actions" style="flex-direction:column;margin-top:0;">
+    <h3 style="margin-bottom:14px;">Add Summer Service Location</h3>
+    <div class="si-form-group">
+      <label class="si-form-label">Client Name</label>
+      <input type="text" class="si-form-input" id="sum-name" placeholder="e.g., Acme Corp">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Address</label>
+      <input type="text" class="si-form-input" id="sum-addr" placeholder="e.g., 123 Main St">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">City</label>
+      <input type="text" class="si-form-input" id="sum-city" placeholder="e.g., Denver">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Notes</label>
+      <textarea class="si-form-textarea" id="sum-notes" placeholder="Optional notes…"></textarea>
+    </div>
+    <div class="si-modal-actions">
+      <button class="modal-done" onclick="saveSummerLocation()">Save Location</button>
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>`;
+  openModal(html,"480px");
+}
+
+async function saveSummerLocation(){
+  const name=(document.getElementById("sum-name")?.value||"").trim();
+  const addr=(document.getElementById("sum-addr")?.value||"").trim();
+  const city=(document.getElementById("sum-city")?.value||"").trim();
+  const notes=(document.getElementById("sum-notes")?.value||"").trim();
+  if(!name||!addr||!city){toast("Please fill in required fields","error");return;}
+  try{
+    const result=await sbF("POST","service_locations",{client_name:name,address:addr,city,notes,has_summer_service:true,has_winter_service:false,is_archived:false});
+    toast("Location added");
+    closeModal();
+    await loadSummerData();
+    renderSummerPage();
+  }catch(e){toast("Failed to save location","error");console.error(e);}
+}
+
+function editSummerLocation(locId){
+  const loc=SUM.locations.find(l=>l.id===locId);
+  if(!loc)return;
+  const locServices=SUM.locationServices.filter(ls=>ls.location_id===locId);
+  let svcToggles=SUM.serviceTypes.map(t=>{
+    const ls=locServices.find(s=>s.service_type_id===t.id);
+    const checked=!!ls;
+    const freq=ls?.frequency||'';
+    const sNotes=ls?.notes||'';
+    return`<div style="background:var(--bg-deep);border-radius:8px;padding:10px 12px;margin-bottom:6px;">
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;cursor:pointer;">
+        <input type="checkbox" class="sum-svc-toggle" data-type="${t.id}" ${checked?"checked":""} style="accent-color:var(--accent);width:16px;height:16px;">
+        ${esc(t.name)}
+      </label>
+      <div class="svc-detail" style="margin-top:6px;display:${checked?"flex":"none"};gap:8px;flex-wrap:wrap;">
+        <select class="si-form-input" data-freq="${t.id}" style="flex:1;min-width:120px;padding:5px 8px;font-size:12px;">
+          <option value=""${!freq?" selected":""}>Frequency…</option>
+          <option value="Weekly"${freq==="Weekly"?" selected":""}>Weekly</option>
+          <option value="Bi-weekly"${freq==="Bi-weekly"?" selected":""}>Bi-weekly</option>
+          <option value="Monthly"${freq==="Monthly"?" selected":""}>Monthly</option>
+          <option value="One-time"${freq==="One-time"?" selected":""}>One-time</option>
+          <option value="As needed"${freq==="As needed"?" selected":""}>As needed</option>
+        </select>
+        <input type="text" class="si-form-input" data-snotes="${t.id}" value="${esc(sNotes)}" placeholder="Notes for this service…" style="flex:2;min-width:140px;padding:5px 8px;font-size:12px;">
+      </div>
+    </div>`;
+  }).join("");
+  const html=`<div style="flex-direction:column;">
+    <h3 style="margin-bottom:14px;">Edit Summer Service Location</h3>
+    <div class="si-form-group">
+      <label class="si-form-label">Client Name</label>
+      <input type="text" class="si-form-input" id="sum-name" value="${esc(loc.client_name)}">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Address</label>
+      <input type="text" class="si-form-input" id="sum-addr" value="${esc(loc.address)}">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">City</label>
+      <input type="text" class="si-form-input" id="sum-city" value="${esc(loc.city)}">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Notes</label>
+      <textarea class="si-form-textarea" id="sum-notes">${esc(loc.notes||"")}</textarea>
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Services</label>
+      <div id="sum-svc-toggles">${svcToggles}</div>
+    </div>
+    <div class="si-modal-actions">
+      <button class="modal-done" onclick="updateSummerLocation('${locId}')">Update</button>
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>`;
+  openModal(html,"520px");
+  // Wire up checkbox show/hide for detail rows
+  setTimeout(()=>{
+    document.querySelectorAll('.sum-svc-toggle').forEach(cb=>{
+      cb.addEventListener('change',()=>{
+        const detail=cb.closest('div').querySelector('.svc-detail');
+        if(detail)detail.style.display=cb.checked?'flex':'none';
+      });
+    });
+  },50);
+}
+
+async function updateSummerLocation(locId){
+  const name=(document.getElementById("sum-name")?.value||"").trim();
+  const addr=(document.getElementById("sum-addr")?.value||"").trim();
+  const city=(document.getElementById("sum-city")?.value||"").trim();
+  const notes=(document.getElementById("sum-notes")?.value||"").trim();
+  if(!name||!addr||!city){toast("Please fill in required fields","error");return;}
+  try{
+    await sbF("PATCH",`service_locations?id=eq.${locId}`,{client_name:name,address:addr,city,notes,updated_at:new Date().toISOString()});
+    // Save service toggles
+    const checkboxes=document.querySelectorAll('.sum-svc-toggle');
+    const existing=SUM.locationServices.filter(ls=>ls.location_id===locId);
+    for(const cb of checkboxes){
+      const typeId=cb.dataset.type;
+      const wasActive=existing.some(ls=>ls.service_type_id===typeId);
+      const freqEl=document.querySelector(`[data-freq="${typeId}"]`);
+      const notesEl=document.querySelector(`[data-snotes="${typeId}"]`);
+      const freq=freqEl?.value||'';
+      const svcNotes=notesEl?.value||'';
+      if(cb.checked&&!wasActive){
+        await sbF("POST","location_services",{location_id:locId,service_type_id:typeId,frequency:freq,notes:svcNotes,is_active:true});
+      }else if(cb.checked&&wasActive){
+        await sbF("PATCH",`location_services?location_id=eq.${locId}&service_type_id=eq.${typeId}`,{frequency:freq,notes:svcNotes,updated_at:new Date().toISOString()});
+      }else if(!cb.checked&&wasActive){
+        await sbF("DELETE",`location_services?location_id=eq.${locId}&service_type_id=eq.${typeId}`);
+      }
+    }
+    toast("Location updated");
+    closeModal();
+    await loadSummerData();
+    renderSummerPage();
+  }catch(e){toast("Failed to update location","error");console.error(e);}
+}
+
+async function deleteSummerLocation(locId){
+  try{
+    await sbF("DELETE",`service_locations?id=eq.${locId}`);
+    toast("Location deleted");
+    await loadSummerData();
+    renderSummerPage();
+  }catch(e){toast("Failed to delete location","error");console.error(e);}
+}
+
+function openManageSummerServiceTypes(){
+  const html=`<div style="flex-direction:column;">
+    <h3 style="margin-bottom:14px;">Summer Service Types</h3>
+    <div id="sum-types-list" style="margin-bottom:14px;">
+      ${SUM.serviceTypes.map(t=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px;background:var(--bg-deep);border-radius:6px;margin-bottom:6px;">
+        <span>${esc(t.name)}</span>
+        <button class="loc-action-btn delete" onclick="deleteSummerServiceType('${t.id}')">Remove</button>
+      </div>`).join("")}
+    </div>
+    <div style="border-top:1px solid var(--border);padding-top:14px;">
+      <input type="text" class="si-form-input" id="new-sum-type" placeholder="New service type…" style="margin-bottom:8px;">
+      <button class="si-action-btn" onclick="addSummerServiceType()" style="width:100%;">Add Type</button>
+    </div>
+    <button class="modal-cancel" onclick="closeModal()" style="margin-top:14px;width:100%;">Done</button>
+  </div>`;
+  openModal(html,"480px");
+}
+
+async function addSummerServiceType(){
+  const input=document.getElementById("new-sum-type");
+  const name=(input?.value||"").trim();
+  if(!name){toast("Enter a service type name","error");return;}
+  try{
+    const maxSort=Math.max(...SUM.serviceTypes.map(t=>t.sort_order||0),0);
+    await sbF("POST","service_types",{season:"summer",name,sort_order:maxSort+1,is_active:true});
+    toast("Service type added");
+    await loadSummerData();
+    openManageSummerServiceTypes();
+  }catch(e){toast("Failed to add type","error");console.error(e);}
+}
+
+async function deleteSummerServiceType(typeId){
+  try{
+    await sbF("PATCH",`service_types?id=eq.${typeId}`,{is_active:false});
+    toast("Service type removed");
+    await loadSummerData();
+    openManageSummerServiceTypes();
+  }catch(e){toast("Failed to remove type","error");console.error(e);}
+}
+
+// ─── WINTER SERVICES ───────────────────────────────────────────────────────
+let WIN={locations:[],serviceTypes:[],locationServices:[],saltBins:[],filter:"",sortBy:"name",serviceFilter:""};
+
+async function loadWinterData(){
+  try{
+    const[locs,types,ls,salt]=await Promise.all([
+      sbF("GET","service_locations?has_winter_service=eq.true&is_archived=eq.false&order=client_name"),
+      sbF("GET","service_types?season=eq.winter&is_active=eq.true&order=sort_order"),
+      sbF("GET","location_services?select=*,service_types!inner(season)&service_types.season=eq.winter"),
+      sbF("GET","salt_bins?select=*")
+    ]);
+    WIN.locations=locs||[];
+    WIN.serviceTypes=types||[];
+    WIN.locationServices=ls||[];
+    WIN.saltBins=salt||[];
+  }catch(e){console.error("Load winter data failed:",e);toast("Failed to load winter services","error");}
+}
+
+function buildWinterPage(){
+  return`<div class="card"><div style="padding:20px;text-align:center;color:var(--fg-muted)">Loading…</div></div>`;
+}
+
+async function initWinterPage(){
+  await loadWinterData();
+  renderWinterPage();
+}
+
+function renderWinterPage(){
+  const root=document.querySelector(".card");
+  if(!root)return;
+  let h=`<div class="si-header">
+    <div><div class="si-title">Winter Services (De-icing & Snow Removal)</div></div>
+    <div class="si-actions">
+      <button class="si-action-btn" onclick="openAddWinterLocation()">+ Add Location</button>
+      <button class="si-action-btn secondary" onclick="openManageWinterServiceTypes()">⚙ Manage Types</button>
+      <button class="si-action-btn secondary" onclick="window.print()">🖨 Print</button>
+    </div>
+  </div>
+  <div class="si-filter-bar">
+    <input type="text" class="si-filter-input" placeholder="Search location…" id="win-search" oninput="WIN.filter=this.value;filterAndSortWinter()">
+    <select class="si-filter-select" id="win-sort" onchange="WIN.sortBy=this.value;filterAndSortWinter()">
+      <option value="name">Sort: A–Z</option>
+      <option value="city">Sort: by City</option>
+      <option value="salt-low">Needs Restock</option>
+    </select>
+  </div>
+  <div style="padding:14px 24px;">`;
+
+  let filtered=WIN.locations.filter(loc=>{
+    if(WIN.filter&&!loc.client_name.toLowerCase().includes(WIN.filter.toLowerCase())&&!loc.address.toLowerCase().includes(WIN.filter.toLowerCase()))return false;
+    if(WIN.sortBy==="salt-low"){
+      const salt=WIN.saltBins.find(s=>s.location_id===loc.id);
+      if(!salt||salt.current_bags>salt.min_threshold)return false;
+    }
+    return true;
+  });
+
+  if(WIN.sortBy==="city")filtered.sort((a,b)=>a.city.localeCompare(b.city));
+  else if(WIN.sortBy==="salt-low")filtered.sort((a,b)=>{
+    const sa=WIN.saltBins.find(s=>s.location_id===a.id);
+    const sb=WIN.saltBins.find(s=>s.location_id===b.id);
+    return(sa?.current_bags||0)-(sb?.current_bags||0);
+  });
+
+  if(!filtered.length){
+    h+=`<div class="si-empty"><div class="si-empty-icon">❄️</div><div class="si-empty-text">No winter service locations</div></div>`;
+  }else{
+    filtered.forEach(loc=>{
+      const salt=WIN.saltBins.find(s=>s.location_id===loc.id);
+      const isLow=salt&&salt.current_bags<=salt.min_threshold;
+      h+=`<div class="loc-card">
+        <div class="loc-info">
+          <div class="loc-name">${esc(loc.client_name)}</div>
+          <div class="loc-addr">${esc(loc.address)}</div>
+          <div class="loc-city">${esc(loc.city)}</div>
+          ${loc.notes?`<div class="loc-notes">${esc(loc.notes)}</div>`:""}
+          ${salt?`<div class="salt-section">
+            <div class="salt-label">Salt Bags</div>
+            <div class="salt-controls">
+              <button class="stock-btn" onclick="adjustWinterSalt('${loc.id}',-1)">−</button>
+              <span class="salt-count">${salt.current_bags}</span>
+              <span class="salt-threshold">/ Min: ${salt.min_threshold}</span>
+              <button class="stock-btn" onclick="adjustWinterSalt('${loc.id}',1)">+</button>
+              ${isLow?`<span class="salt-indicator">LOW</span>`:""}
+            </div>
+          </div>`:""}
+        </div>
+        <div class="card-actions">
+          <button class="loc-action-btn" onclick="editWinterLocation('${loc.id}')">Edit</button>
+          <button class="loc-action-btn delete" onclick="if(confirm('Delete this location?'))deleteWinterLocation('${loc.id}')">Delete</button>
+        </div>
+      </div>`;
+    });
+  }
+
+  h+=`</div></div>`;
+  root.innerHTML=h;
+}
+
+function filterAndSortWinter(){renderWinterPage();}
+
+async function adjustWinterSalt(locId,delta){
+  const salt=WIN.saltBins.find(s=>s.location_id===locId);
+  if(!salt)return;
+  const newCount=Math.max(0,salt.current_bags+delta);
+  try{
+    await sbF("PATCH",`salt_bins?id=eq.${salt.id}`,{current_bags:newCount,updated_at:new Date().toISOString()});
+    salt.current_bags=newCount;
+    renderWinterPage();
+  }catch(e){toast("Failed to update salt count","error");console.error(e);}
+}
+
+function openAddWinterLocation(){
+  const html=`<div style="flex-direction:column;">
+    <h3 style="margin-bottom:14px;">Add Winter Service Location</h3>
+    <div class="si-form-group">
+      <label class="si-form-label">Client Name</label>
+      <input type="text" class="si-form-input" id="win-name" placeholder="e.g., Acme Corp">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Address</label>
+      <input type="text" class="si-form-input" id="win-addr" placeholder="e.g., 123 Main St">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">City</label>
+      <input type="text" class="si-form-input" id="win-city" placeholder="e.g., Denver">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Notes</label>
+      <textarea class="si-form-textarea" id="win-notes" placeholder="Optional notes…"></textarea>
+    </div>
+    <div class="si-modal-actions">
+      <button class="modal-done" onclick="saveWinterLocation()">Save Location</button>
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>`;
+  openModal(html,"480px");
+}
+
+async function saveWinterLocation(){
+  const name=(document.getElementById("win-name")?.value||"").trim();
+  const addr=(document.getElementById("win-addr")?.value||"").trim();
+  const city=(document.getElementById("win-city")?.value||"").trim();
+  const notes=(document.getElementById("win-notes")?.value||"").trim();
+  if(!name||!addr||!city){toast("Please fill in required fields","error");return;}
+  try{
+    const result=await sbF("POST","service_locations",{client_name:name,address:addr,city,notes,has_winter_service:true,has_summer_service:false,is_archived:false});
+    const locId=result[0].id;
+    await sbF("POST","salt_bins",{location_id:locId,current_bags:0,min_threshold:10});
+    toast("Location added");
+    closeModal();
+    await loadWinterData();
+    renderWinterPage();
+  }catch(e){toast("Failed to save location","error");console.error(e);}
+}
+
+function editWinterLocation(locId){
+  const loc=WIN.locations.find(l=>l.id===locId);
+  if(!loc)return;
+  const locServices=WIN.locationServices.filter(ls=>ls.location_id===locId);
+  const salt=WIN.saltBins.find(s=>s.location_id===locId);
+  let svcToggles=WIN.serviceTypes.map(t=>{
+    const ls=locServices.find(s=>s.service_type_id===t.id);
+    const checked=!!ls;
+    const sNotes=ls?.notes||'';
+    return`<div style="background:var(--bg-deep);border-radius:8px;padding:10px 12px;margin-bottom:6px;">
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;cursor:pointer;">
+        <input type="checkbox" class="win-svc-toggle" data-type="${t.id}" ${checked?"checked":""} style="accent-color:var(--accent);width:16px;height:16px;">
+        ${esc(t.name)}
+      </label>
+      <div class="svc-detail" style="margin-top:6px;display:${checked?"flex":"none"};gap:8px;">
+        <input type="text" class="si-form-input" data-wsnotes="${t.id}" value="${esc(sNotes)}" placeholder="Notes for this service…" style="flex:1;padding:5px 8px;font-size:12px;">
+      </div>
+    </div>`;
+  }).join("");
+  const html=`<div style="flex-direction:column;">
+    <h3 style="margin-bottom:14px;">Edit Winter Service Location</h3>
+    <div class="si-form-group">
+      <label class="si-form-label">Client Name</label>
+      <input type="text" class="si-form-input" id="win-name" value="${esc(loc.client_name)}">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Address</label>
+      <input type="text" class="si-form-input" id="win-addr" value="${esc(loc.address)}">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">City</label>
+      <input type="text" class="si-form-input" id="win-city" value="${esc(loc.city)}">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Notes</label>
+      <textarea class="si-form-textarea" id="win-notes">${esc(loc.notes||"")}</textarea>
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Services</label>
+      <div id="win-svc-toggles">${svcToggles}</div>
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Salt Bin</label>
+      <div style="background:var(--bg-deep);border-radius:8px;padding:12px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <label style="font-size:13px;font-weight:600;">Min Threshold:</label>
+          <input type="number" class="si-form-input" id="win-salt-min" value="${salt?.min_threshold||10}" min="0" style="width:70px;padding:5px 8px;font-size:12px;">
+        </div>
+        <div style="font-size:11px;color:var(--fg-muted);">Current bags: ${salt?.current_bags||0} (use +/- buttons on the card to adjust)</div>
+      </div>
+    </div>
+    <div class="si-modal-actions">
+      <button class="modal-done" onclick="updateWinterLocation('${locId}')">Update</button>
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>`;
+  openModal(html,"520px");
+  setTimeout(()=>{
+    document.querySelectorAll('.win-svc-toggle').forEach(cb=>{
+      cb.addEventListener('change',()=>{
+        const detail=cb.closest('div').querySelector('.svc-detail');
+        if(detail)detail.style.display=cb.checked?'flex':'none';
+      });
+    });
+  },50);
+}
+
+async function updateWinterLocation(locId){
+  const name=(document.getElementById("win-name")?.value||"").trim();
+  const addr=(document.getElementById("win-addr")?.value||"").trim();
+  const city=(document.getElementById("win-city")?.value||"").trim();
+  const notes=(document.getElementById("win-notes")?.value||"").trim();
+  if(!name||!addr||!city){toast("Please fill in required fields","error");return;}
+  try{
+    await sbF("PATCH",`service_locations?id=eq.${locId}`,{client_name:name,address:addr,city,notes,updated_at:new Date().toISOString()});
+    // Save service toggles
+    const checkboxes=document.querySelectorAll('.win-svc-toggle');
+    const existing=WIN.locationServices.filter(ls=>ls.location_id===locId);
+    for(const cb of checkboxes){
+      const typeId=cb.dataset.type;
+      const wasActive=existing.some(ls=>ls.service_type_id===typeId);
+      const notesEl=document.querySelector(`[data-wsnotes="${typeId}"]`);
+      const svcNotes=notesEl?.value||'';
+      if(cb.checked&&!wasActive){
+        await sbF("POST","location_services",{location_id:locId,service_type_id:typeId,notes:svcNotes,is_active:true});
+      }else if(cb.checked&&wasActive){
+        await sbF("PATCH",`location_services?location_id=eq.${locId}&service_type_id=eq.${typeId}`,{notes:svcNotes,updated_at:new Date().toISOString()});
+      }else if(!cb.checked&&wasActive){
+        await sbF("DELETE",`location_services?location_id=eq.${locId}&service_type_id=eq.${typeId}`);
+      }
+    }
+    // Update salt bin threshold
+    const minEl=document.getElementById("win-salt-min");
+    if(minEl){
+      const newMin=parseInt(minEl.value)||5;
+      const salt=WIN.saltBins.find(s=>s.location_id===locId);
+      if(salt)await sbF("PATCH",`salt_bins?id=eq.${salt.id}`,{min_threshold:newMin,updated_at:new Date().toISOString()});
+    }
+    toast("Location updated");
+    closeModal();
+    await loadWinterData();
+    renderWinterPage();
+  }catch(e){toast("Failed to update location","error");console.error(e);}
+}
+
+async function deleteWinterLocation(locId){
+  try{
+    await sbF("DELETE",`service_locations?id=eq.${locId}`);
+    toast("Location deleted");
+    await loadWinterData();
+    renderWinterPage();
+  }catch(e){toast("Failed to delete location","error");console.error(e);}
+}
+
+function openManageWinterServiceTypes(){
+  const html=`<div style="flex-direction:column;">
+    <h3 style="margin-bottom:14px;">Winter Service Types</h3>
+    <div id="win-types-list" style="margin-bottom:14px;">
+      ${WIN.serviceTypes.map(t=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px;background:var(--bg-deep);border-radius:6px;margin-bottom:6px;">
+        <span>${esc(t.name)}</span>
+        <button class="loc-action-btn delete" onclick="deleteWinterServiceType('${t.id}')">Remove</button>
+      </div>`).join("")}
+    </div>
+    <div style="border-top:1px solid var(--border);padding-top:14px;">
+      <input type="text" class="si-form-input" id="new-win-type" placeholder="New service type…" style="margin-bottom:8px;">
+      <button class="si-action-btn" onclick="addWinterServiceType()" style="width:100%;">Add Type</button>
+    </div>
+    <button class="modal-cancel" onclick="closeModal()" style="margin-top:14px;width:100%;">Done</button>
+  </div>`;
+  openModal(html,"480px");
+}
+
+async function addWinterServiceType(){
+  const input=document.getElementById("new-win-type");
+  const name=(input?.value||"").trim();
+  if(!name){toast("Enter a service type name","error");return;}
+  try{
+    const maxSort=Math.max(...WIN.serviceTypes.map(t=>t.sort_order||0),0);
+    await sbF("POST","service_types",{season:"winter",name,sort_order:maxSort+1,is_active:true});
+    toast("Service type added");
+    await loadWinterData();
+    openManageWinterServiceTypes();
+  }catch(e){toast("Failed to add type","error");console.error(e);}
+}
+
+async function deleteWinterServiceType(typeId){
+  try{
+    await sbF("PATCH",`service_types?id=eq.${typeId}`,{is_active:false});
+    toast("Service type removed");
+    await loadWinterData();
+    openManageWinterServiceTypes();
+  }catch(e){toast("Failed to remove type","error");console.error(e);}
+}
+
+// ─── INVENTORY ───────────────────────────────────────────────────────────────
+let INV={items:[],categories:[],filter:"all",statusFilter:"all",search:""};
+
+async function loadInventoryData(){
+  try{
+    const[items,cats]=await Promise.all([
+      sbF("GET","inventory_items?order=item_name"),
+      sbF("GET","inventory_categories?is_active=eq.true&order=sort_order")
+    ]);
+    INV.items=items||[];
+    INV.categories=cats||[];
+  }catch(e){console.error("Load inventory failed:",e);toast("Failed to load inventory","error");}
+}
+
+function buildInventoryPage(){
+  return`<div class="card"><div style="padding:20px;text-align:center;color:var(--fg-muted)">Loading…</div></div>`;
+}
+
+async function initInventoryPage(){
+  await loadInventoryData();
+  renderInventoryPage();
+}
+
+function renderInventoryPage(){
+  const root=document.querySelector(".card");
+  if(!root)return;
+  let h=`<div class="si-header">
+    <div><div class="si-title">Back Shop Inventory</div></div>
+    <div class="si-actions">
+      <button class="si-action-btn" onclick="openAddInventoryItem()">+ Add Item</button>
+      <button class="si-action-btn secondary" onclick="openManageCategories()">⚙ Categories</button>
+    </div>
+  </div>
+  <div class="si-filter-bar">
+    <input type="text" class="si-filter-input" placeholder="Search item…" id="inv-search" oninput="INV.search=this.value;filterInventory()">
+    <select class="si-filter-select" onchange="INV.filter=this.value;filterInventory()">
+      <option value="all">All Categories</option>
+      ${INV.categories.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("")}
+    </select>
+    <select class="si-filter-select" onchange="INV.statusFilter=this.value;filterInventory()">
+      <option value="all">All Status</option>
+      <option value="in_stock">In Stock</option>
+      <option value="low">Low Stock</option>
+      <option value="out_of_stock">Out of Stock</option>
+      <option value="ordered">Ordered</option>
+      <option value="needs_reorder">Needs Reorder</option>
+    </select>
+  </div>
+  <div style="padding:14px 24px;">`;
+
+  let filtered=INV.items.filter(item=>{
+    if(INV.search&&!item.item_name.toLowerCase().includes(INV.search.toLowerCase()))return false;
+    if(INV.filter!=="all"&&item.category_id!==INV.filter)return false;
+    if(INV.statusFilter!=="all"){
+      if(INV.statusFilter==="needs_reorder"){if(item.current_stock>item.min_threshold)return false;}
+      else if(INV.statusFilter!==item.status)return false;
+    }
+    return true;
+  });
+
+  if(!filtered.length){
+    h+=`<div class="si-empty"><div class="si-empty-icon">📦</div><div class="si-empty-text">No items found</div></div>`;
+  }else{
+    filtered.forEach(item=>{
+      const cat=INV.categories.find(c=>c.id===item.category_id);
+      const statusClass=`status-badge ${item.status}`;
+      h+=`<div class="inv-card">
+        <div class="inv-image">
+          ${item.image_url?`<img src="${item.image_url}" alt="${esc(item.item_name)}">`:`<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--fg-muted);font-size:24px;">📦</div>`}
+        </div>
+        <div class="inv-info">
+          <div class="inv-category">${cat?esc(cat.name):"?"}</div>
+          <div class="inv-name">${esc(item.item_name)}</div>
+          <div class="inv-stock">Stock: ${item.current_stock} ${item.unit}</div>
+          <div class="inv-meta">
+            <span class="${statusClass}">${item.status.replace(/_/g," ").toUpperCase()}</span>
+          </div>
+          ${item.notes?`<div class="inv-notes">${esc(item.notes)}</div>`:""}
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <button class="stock-btn" onclick="adjustInventory('${item.id}',-1)">−</button>
+            <button class="stock-btn" onclick="adjustInventory('${item.id}',1)">+</button>
+            ${item.status==="ordered"?`<button class="stock-btn" onclick="restockItem('${item.id}')">Restocked</button>`:`<button class="stock-btn" onclick="markOrdered('${item.id}')">Mark Ordered</button>`}
+          </div>
+        </div>
+        <div class="card-actions">
+          <button class="loc-action-btn" onclick="editInventoryItem('${item.id}')">Edit</button>
+          <button class="loc-action-btn delete" onclick="if(confirm('Delete this item?'))deleteInventoryItem('${item.id}')">Delete</button>
+        </div>
+      </div>`;
+    });
+  }
+
+  h+=`</div></div>`;
+  root.innerHTML=h;
+}
+
+function filterInventory(){renderInventoryPage();}
+
+async function adjustInventory(itemId,delta){
+  const item=INV.items.find(i=>i.id===itemId);
+  if(!item)return;
+  const newCount=Math.max(0,item.current_stock+delta);
+  let newStatus=item.status;
+  if(newCount===0)newStatus="out_of_stock";
+  else if(newCount<=item.min_threshold)newStatus="low";
+  else if(newStatus==="low"||newStatus==="out_of_stock")newStatus="in_stock";
+  try{
+    await sbF("PATCH",`inventory_items?id=eq.${itemId}`,{current_stock:newCount,status:newStatus});
+    item.current_stock=newCount;
+    item.status=newStatus;
+    renderInventoryPage();
+  }catch(e){toast("Failed to update stock","error");console.error(e);}
+}
+
+async function markOrdered(itemId){
+  try{
+    await sbF("PATCH",`inventory_items?id=eq.${itemId}`,{status:"ordered"});
+    const item=INV.items.find(i=>i.id===itemId);
+    if(item)item.status="ordered";
+    renderInventoryPage();
+  }catch(e){toast("Failed to mark as ordered","error");console.error(e);}
+}
+
+async function restockItem(itemId){
+  try{
+    await sbF("PATCH",`inventory_items?id=eq.${itemId}`,{status:"in_stock"});
+    const item=INV.items.find(i=>i.id===itemId);
+    if(item)item.status="in_stock";
+    renderInventoryPage();
+  }catch(e){toast("Failed to mark as restocked","error");console.error(e);}
+}
+
+function openAddInventoryItem(){
+  const html=`<div style="flex-direction:column;">
+    <h3 style="margin-bottom:14px;">Add Inventory Item</h3>
+    <div class="si-form-group">
+      <label class="si-form-label">Item Name</label>
+      <input type="text" class="si-form-input" id="inv-name" placeholder="e.g., Hydraulic Oil">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Category</label>
+      <select class="si-form-select" id="inv-cat">
+        <option value="">Select category</option>
+        ${INV.categories.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("")}
+      </select>
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Current Stock</label>
+      <input type="number" class="si-form-input" id="inv-stock" placeholder="0" value="0">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Min Threshold</label>
+      <input type="number" class="si-form-input" id="inv-min" placeholder="5" value="5">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Unit</label>
+      <input type="text" class="si-form-input" id="inv-unit" placeholder="e.g., gallon, box" value="unit">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Image URL (optional)</label>
+      <input type="text" class="si-form-input" id="inv-img" placeholder="https://…">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Notes</label>
+      <textarea class="si-form-textarea" id="inv-notes" placeholder="Optional notes…"></textarea>
+    </div>
+    <div class="si-modal-actions">
+      <button class="modal-done" onclick="saveInventoryItem()">Save Item</button>
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>`;
+  openModal(html,"480px");
+}
+
+async function saveInventoryItem(){
+  const name=(document.getElementById("inv-name")?.value||"").trim();
+  const catId=document.getElementById("inv-cat")?.value||null;
+  const stock=parseInt(document.getElementById("inv-stock")?.value||0);
+  const min=parseInt(document.getElementById("inv-min")?.value||5);
+  const unit=(document.getElementById("inv-unit")?.value||"unit").trim();
+  const img=(document.getElementById("inv-img")?.value||"").trim();
+  const notes=(document.getElementById("inv-notes")?.value||"").trim();
+  if(!name||!catId){toast("Please fill in required fields","error");return;}
+  try{
+    const status=stock===0?"out_of_stock":stock<=min?"low":"in_stock";
+    await sbF("POST","inventory_items",{item_name:name,category_id:catId,current_stock:stock,min_threshold:min,unit,image_url:img||null,status,notes});
+    toast("Item added");
+    closeModal();
+    await loadInventoryData();
+    renderInventoryPage();
+  }catch(e){toast("Failed to save item","error");console.error(e);}
+}
+
+function editInventoryItem(itemId){
+  const item=INV.items.find(i=>i.id===itemId);
+  if(!item)return;
+  const html=`<div style="flex-direction:column;">
+    <h3 style="margin-bottom:14px;">Edit Inventory Item</h3>
+    <div class="si-form-group">
+      <label class="si-form-label">Item Name</label>
+      <input type="text" class="si-form-input" id="inv-name" value="${esc(item.item_name)}">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Category</label>
+      <select class="si-form-select" id="inv-cat">
+        <option value="">Select category</option>
+        ${INV.categories.map(c=>`<option value="${c.id}" ${c.id===item.category_id?"selected":""}>${esc(c.name)}</option>`).join("")}
+      </select>
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Current Stock</label>
+      <input type="number" class="si-form-input" id="inv-stock" value="${item.current_stock}">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Min Threshold</label>
+      <input type="number" class="si-form-input" id="inv-min" value="${item.min_threshold}">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Unit</label>
+      <input type="text" class="si-form-input" id="inv-unit" value="${esc(item.unit)}">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Image URL</label>
+      <input type="text" class="si-form-input" id="inv-img" value="${item.image_url?esc(item.image_url):""}">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Notes</label>
+      <textarea class="si-form-textarea" id="inv-notes">${esc(item.notes||"")}</textarea>
+    </div>
+    <div class="si-modal-actions">
+      <button class="modal-done" onclick="updateInventoryItem('${itemId}')">Update</button>
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>`;
+  openModal(html,"480px");
+}
+
+async function updateInventoryItem(itemId){
+  const name=(document.getElementById("inv-name")?.value||"").trim();
+  const catId=document.getElementById("inv-cat")?.value||null;
+  const stock=parseInt(document.getElementById("inv-stock")?.value||0);
+  const min=parseInt(document.getElementById("inv-min")?.value||5);
+  const unit=(document.getElementById("inv-unit")?.value||"unit").trim();
+  const img=(document.getElementById("inv-img")?.value||"").trim();
+  const notes=(document.getElementById("inv-notes")?.value||"").trim();
+  if(!name||!catId){toast("Please fill in required fields","error");return;}
+  try{
+    await sbF("PATCH",`inventory_items?id=eq.${itemId}`,{item_name:name,category_id:catId,current_stock:stock,min_threshold:min,unit,image_url:img||null,notes});
+    toast("Item updated");
+    closeModal();
+    await loadInventoryData();
+    renderInventoryPage();
+  }catch(e){toast("Failed to update item","error");console.error(e);}
+}
+
+async function deleteInventoryItem(itemId){
+  try{
+    await sbF("DELETE",`inventory_items?id=eq.${itemId}`);
+    toast("Item deleted");
+    await loadInventoryData();
+    renderInventoryPage();
+  }catch(e){toast("Failed to delete item","error");console.error(e);}
+}
+
+function openManageCategories(){
+  const html=`<div style="flex-direction:column;">
+    <h3 style="margin-bottom:14px;">Inventory Categories</h3>
+    <div id="cat-list" style="margin-bottom:14px;">
+      ${INV.categories.map(c=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px;background:var(--bg-deep);border-radius:6px;margin-bottom:6px;">
+        <span>${esc(c.name)}</span>
+        <button class="loc-action-btn delete" onclick="deleteCategory('${c.id}')">Remove</button>
+      </div>`).join("")}
+    </div>
+    <div style="border-top:1px solid var(--border);padding-top:14px;">
+      <input type="text" class="si-form-input" id="new-cat" placeholder="New category…" style="margin-bottom:8px;">
+      <button class="si-action-btn" onclick="addCategory()" style="width:100%;">Add Category</button>
+    </div>
+    <button class="modal-cancel" onclick="closeModal()" style="margin-top:14px;width:100%;">Done</button>
+  </div>`;
+  openModal(html,"480px");
+}
+
+async function addCategory(){
+  const input=document.getElementById("new-cat");
+  const name=(input?.value||"").trim();
+  if(!name){toast("Enter a category name","error");return;}
+  try{
+    const maxSort=Math.max(...INV.categories.map(c=>c.sort_order||0),0);
+    await sbF("POST","inventory_categories",{name,sort_order:maxSort+1,is_active:true});
+    toast("Category added");
+    await loadInventoryData();
+    openManageCategories();
+  }catch(e){toast("Failed to add category","error");console.error(e);}
+}
+
+async function deleteCategory(catId){
+  try{
+    await sbF("PATCH",`inventory_categories?id=eq.${catId}`,{is_active:false});
+    toast("Category removed");
+    await loadInventoryData();
+    openManageCategories();
+  }catch(e){toast("Failed to remove category","error");console.error(e);}
+}
+
 const PRIO_ORDER={high:0,medium:1,low:2};
 const PRIO_LABEL={high:"High",medium:"Medium",low:"Low"};
 const PRIO_CLASS={high:"ph",medium:"pm",low:"pl"};
@@ -4507,6 +5602,79 @@ function initRealtime(){
         localStorage.setItem("ss_emp_order",JSON.stringify(row.value));
         applyStoredOrder();
         if(!isModalOpen())render();
+      }
+    })
+
+    // ── Service Locations ──
+    .on("postgres_changes",{event:"*",schema:"public",table:"service_locations"},payload=>{
+      const row=payload.eventType==="DELETE"?payload.old:payload.new;
+      if(!row)return;
+      if((S.tab==="summer"||S.tab==="winter")&&!isModalOpen()){
+        if(S.tab==="summer")loadSummerData().then(()=>renderSummerPage());
+        else if(S.tab==="winter")loadWinterData().then(()=>renderWinterPage());
+      }
+    })
+
+    // ── Service Types ──
+    .on("postgres_changes",{event:"*",schema:"public",table:"service_types"},payload=>{
+      const row=payload.eventType==="DELETE"?payload.old:payload.new;
+      if(!row)return;
+      if((S.tab==="summer"||S.tab==="winter")&&!isModalOpen()){
+        if(S.tab==="summer")loadSummerData().then(()=>renderSummerPage());
+        else if(S.tab==="winter")loadWinterData().then(()=>renderWinterPage());
+      }
+    })
+
+    // ── Location Services ──
+    .on("postgres_changes",{event:"*",schema:"public",table:"location_services"},payload=>{
+      const row=payload.eventType==="DELETE"?payload.old:payload.new;
+      if(!row)return;
+      if((S.tab==="summer"||S.tab==="winter")&&!isModalOpen()){
+        if(S.tab==="summer")loadSummerData().then(()=>renderSummerPage());
+        else if(S.tab==="winter")loadWinterData().then(()=>renderWinterPage());
+      }
+    })
+
+    // ── Salt Bins ──
+    .on("postgres_changes",{event:"*",schema:"public",table:"salt_bins"},payload=>{
+      const row=payload.eventType==="DELETE"?payload.old:payload.new;
+      if(!row)return;
+      if(S.tab==="winter"&&!isModalOpen()){
+        const idx=WIN.saltBins.findIndex(s=>s.id===row.id);
+        if(payload.eventType==="DELETE")WIN.saltBins.splice(idx,1);
+        else if(idx>=0)WIN.saltBins[idx]={...WIN.saltBins[idx],...row};
+        else WIN.saltBins.push(row);
+        renderWinterPage();
+      }
+    })
+
+    // ── Inventory Items ──
+    .on("postgres_changes",{event:"*",schema:"public",table:"inventory_items"},payload=>{
+      const row=payload.eventType==="DELETE"?payload.old:payload.new;
+      if(!row)return;
+      if(S.tab==="inventory"&&!isModalOpen()){
+        if(payload.eventType==="DELETE")INV.items=INV.items.filter(i=>i.id!==row.id);
+        else{
+          const idx=INV.items.findIndex(i=>i.id===row.id);
+          if(idx>=0)INV.items[idx]={...INV.items[idx],...row};
+          else INV.items.push(row);
+        }
+        renderInventoryPage();
+      }
+    })
+
+    // ── Inventory Categories ──
+    .on("postgres_changes",{event:"*",schema:"public",table:"inventory_categories"},payload=>{
+      const row=payload.eventType==="DELETE"?payload.old:payload.new;
+      if(!row)return;
+      if(S.tab==="inventory"&&!isModalOpen()){
+        if(payload.eventType==="DELETE")INV.categories=INV.categories.filter(c=>c.id!==row.id);
+        else{
+          const idx=INV.categories.findIndex(c=>c.id===row.id);
+          if(idx>=0)INV.categories[idx]={...INV.categories[idx],...row};
+          else INV.categories.push(row);
+        }
+        renderInventoryPage();
       }
     })
 
