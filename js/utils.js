@@ -63,7 +63,7 @@ function updateModal(html,width){
 }
 function openModal(html,width){
   closeModal();
-  const ov=document.createElement("div");ov.className="moverlay";ov.id="moverlay";
+  const ov=document.createElement("div");ov.className="moverlay open";ov.id="moverlay";
   ov.onmousedown=e=>{if(e.target===ov)closeModal();};
   const m=document.createElement("div");m.className="modal";
   if(width)m.style.width=width;
