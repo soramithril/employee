@@ -1606,6 +1606,14 @@ input,select,textarea,.sf-select,.wh-field select,.login-input,.addinput,.tname,
 }
 .cl-filter-btn:hover{border-color:var(--border-h);color:var(--fg);}
 .cl-filter-btn.active{background:#0a5c2b;color:#fff;border-color:#0a5c2b;box-shadow:0 2px 6px rgba(10,92,43,0.3);}
+.cl-filter-btn.active[data-type="T-Shirt"]{background:#2563eb;border-color:#2563eb;box-shadow:0 2px 6px rgba(37,99,235,0.3);}
+.cl-filter-btn.active[data-type="Long Sleeve"]{background:#7c3aed;border-color:#7c3aed;box-shadow:0 2px 6px rgba(124,58,237,0.3);}
+.cl-filter-btn.active[data-type="Crewneck Sweater"]{background:#0d9488;border-color:#0d9488;box-shadow:0 2px 6px rgba(13,148,136,0.3);}
+.cl-filter-btn.active[data-type="Hoodie"]{background:#ea580c;border-color:#ea580c;box-shadow:0 2px 6px rgba(234,88,12,0.3);}
+.cl-filter-btn.active[data-type="Coat"]{background:#475569;border-color:#475569;box-shadow:0 2px 6px rgba(71,85,105,0.3);}
+.cl-filter-btn.active[data-type="Toque"]{background:#e11d48;border-color:#e11d48;box-shadow:0 2px 6px rgba(225,29,72,0.3);}
+.cl-filter-btn.active[data-type="Cap"]{background:#d97706;border-color:#d97706;box-shadow:0 2px 6px rgba(217,119,6,0.3);}
+.cl-filter-btn.active[data-type="Windbreaker"]{background:#4f46e5;border-color:#4f46e5;box-shadow:0 2px 6px rgba(79,70,229,0.3);}
 .cl-table-wrap{overflow-x:auto;border-radius:var(--radius-sm);border:1px solid var(--border);}
 .cl-table{width:100%;border-collapse:collapse;font-size:13px;}
 .cl-table th{
@@ -1619,17 +1627,25 @@ input,select,textarea,.sf-select,.wh-field select,.login-input,.addinput,.tname,
 .cl-emp-name{font-weight:700;color:var(--fg);}
 .cl-item-badge{
   display:inline-block;padding:4px 12px;border-radius:14px;font-size:11px;font-weight:700;
-  background:#0a5c2b;color:#fff;white-space:nowrap;
+  color:#fff;white-space:nowrap;background:#0a5c2b;
 }
+.cl-badge-tshirt{background:#2563eb !important;}
+.cl-badge-longsleeve{background:#7c3aed !important;}
+.cl-badge-crewneck{background:#0d9488 !important;}
+.cl-badge-hoodie{background:#ea580c !important;}
+.cl-badge-coat{background:#475569 !important;}
+.cl-badge-toque{background:#e11d48 !important;}
+.cl-badge-cap{background:#d97706 !important;}
+.cl-badge-windbreaker{background:#4f46e5 !important;}
 .cl-size{
   display:inline-block;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;
-  background:#1a2e23;color:#fff;
+  background:#334155;color:#fff;
 }
 .cl-price{font-weight:700;color:#0a5c2b;white-space:nowrap;font-size:13px;}
 .cl-group-a td{background:#ffffff;}
-.cl-group-b td{background:#f0f7f2;}
-.cl-table tr.cl-group-a:hover td{background:#e2f2e8;}
-.cl-table tr.cl-group-b:hover td{background:#d6eddc;}
+.cl-group-b td{background:#f7f8fa;}
+.cl-table tr.cl-group-a:hover td{background:#eef6f0;}
+.cl-table tr.cl-group-b:hover td{background:#e8f0eb;}
 .cl-emp-header{border-top:2px solid #0a5c2b;}
 .cl-emp-header td{padding:14px 14px 10px !important;border-bottom:1px solid rgba(10,92,43,0.15);background:#e8f5ee !important;}
 .cl-emp-header .cl-emp-name{font-size:15px;font-weight:800;color:#0a5c2b;}
