@@ -191,7 +191,7 @@ async function clSaveForm(id){
   };
   try{
     if(id){
-      const[updated]=await updateClothingItem(id,data);
+      await updateClothingItem(id,data);
       const idx=CL.items.findIndex(x=>x.id===id);
       if(idx>=0){
         const empObj=S.employees.find(e=>e.id===data.employee_id);
