@@ -3,7 +3,7 @@
 
 const CLOTHING_TYPES=["T-Shirt","Long Sleeve","Crewneck Sweater","Hoodie","Coat","Toque","Cap","Windbreaker"];
 const CLOTHING_SIZES=["XS","S","M","L","XL","2XL","3XL","One Size"];
-let CL={items:[],filter:"all",sort:"date_given",sortDir:"desc"};
+let CL={items:[],filter:"all",sort:"employee",sortDir:"asc"};
 
 async function loadClothingItems(){
   return sbF("GET","employee_clothing?select=*,employees(name)&order=date_given.desc");
@@ -66,12 +66,15 @@ function renderClothingBoard(){
   const types=["all",...CLOTHING_TYPES];
   const filterBtns=types.map(t=>`<button class="cl-filter-btn${CL.filter===t?" active":""}" onclick="clSetFilter('${esc(t)}')">${t==="all"?"All":t}</button>`).join("");
 
-  // Table rows
+  // Table rows — group by employee with alternating color bands
   let rows="";
+  const empColorMap={};let colorIdx=0;
   items.forEach(i=>{
     const empName=i.employees?.name||"Unknown";
+    if(!(i.employee_id in empColorMap)){empColorMap[i.employee_id]=colorIdx++;}
+    const grpClass=empColorMap[i.employee_id]%2===0?"cl-group-a":"cl-group-b";
     const d=i.date_given?new Date(i.date_given+"T00:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"—";
-    rows+=`<tr>
+    rows+=`<tr class="${grpClass}">
       <td><span class="cl-emp-name">${esc(empName)}</span></td>
       <td><span class="cl-item-badge">${esc(i.item_type)}</span></td>
       <td><span class="cl-size">${esc(i.size||"—")}</span></td>
