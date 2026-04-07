@@ -1346,6 +1346,40 @@ input,select,textarea,.sf-select,.wh-field select,.login-input,.addinput,.tname,
   .si-modal-actions{display:flex;gap:10px;margin-top:20px;}
   .si-modal-actions button{flex:1;}
 
+  /* ── Price Lookup ── */
+  .price-lookup-btn{
+    background:rgba(57,255,20,0.08);border:1px solid rgba(57,255,20,0.2);
+    color:var(--fg);font-size:11px;font-weight:600;padding:5px 10px;
+    border-radius:var(--radius-xs);cursor:pointer;white-space:nowrap;
+    transition:all var(--duration) var(--ease-out);font-family:inherit;
+  }
+  .price-lookup-btn:hover{background:rgba(57,255,20,0.18);border-color:var(--accent);transform:translateY(-1px);}
+  .price-lookup-btn.has-price{background:rgba(57,255,20,0.12);border-color:rgba(57,255,20,0.35);color:var(--accent-text);}
+  .price-lookup-icon{font-size:12px;}
+  .price-spinner{
+    width:28px;height:28px;border:3px solid rgba(57,255,20,0.15);
+    border-top-color:var(--accent);border-radius:50%;
+    animation:spin .7s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .price-list{display:flex;flex-direction:column;gap:6px;max-height:420px;overflow-y:auto;padding-right:4px;}
+  .price-card{
+    display:flex;align-items:center;gap:12px;padding:10px 12px;
+    background:var(--bg-deep);border:1px solid var(--border);border-radius:var(--radius);
+    text-decoration:none;color:var(--fg);
+    transition:all var(--duration) var(--ease-out);cursor:pointer;
+  }
+  .price-card:hover{border-color:rgba(57,255,20,0.3);background:rgba(57,255,20,0.04);transform:translateX(2px);}
+  .price-card-img{width:48px;height:48px;border-radius:var(--radius-xs);overflow:hidden;background:var(--bg-elevated);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .price-card-img img{width:100%;height:100%;object-fit:contain;}
+  .price-card-info{flex:1;min-width:0;}
+  .price-card-title{font-size:12px;font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .price-card-store{font-size:11px;color:var(--fg-muted);margin-top:2px;font-weight:500;}
+  .price-card-delivery{font-size:10px;color:var(--fg-subtle);margin-top:1px;}
+  .price-card-price{font-size:15px;font-weight:800;color:var(--accent-text);white-space:nowrap;flex-shrink:0;letter-spacing:-0.02em;}
+  .price-more-link{font-size:12px;color:var(--accent);text-decoration:none;font-weight:600;}
+  .price-more-link:hover{text-decoration:underline;}
+
   @media print{
     #header,#mobile-nav,#fab,#scroll-top,#toast,#tooltip-el,#modal-overlay,.si-filter-bar,.si-actions,.card-actions,.loc-action-btn,.inv-action-btn,.si-header,.si-empty-sub,.sum-th-actions,.sum-cal-wrap,nav,.emp-badge,.user-section{display:none !important;}
     body{background:white !important;padding:0;margin:0;font-size:11px;color:#000 !important;}
@@ -1362,7 +1396,7 @@ input,select,textarea,.sf-select,.wh-field select,.login-input,.addinput,.tname,
     .svc-color-0,.svc-color-1,.svc-color-2,.svc-color-3,.svc-color-4,.svc-color-5,.svc-color-6,.svc-color-7,.sum-day-monday,.sum-day-tuesday,.sum-day-wednesday,.sum-day-thursday,.sum-day-friday,.sum-day-none{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
     .loc-services,.inv-meta{margin-top:0;gap:3px;}
     .salt-section{background:white !important;border:none !important;padding:0;font-size:10px;}
-    .stock-btn{display:none !important;}
+    .stock-btn,.price-lookup-btn{display:none !important;}
     .salt-indicator{font-size:8px;padding:1px 3px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
     .status-badge{font-size:8px;padding:1px 4px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
     @page{margin:10mm 8mm;}

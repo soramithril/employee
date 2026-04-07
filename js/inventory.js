@@ -1,7 +1,88 @@
 // ── INVENTORY.JS ──────────────────────────────────────────
 // Part of JWG Staff Scheduler
 
-let INV={items:[],categories:[],filter:"all",statusFilter:"all",search:""};
+let INV={items:[],categories:[],filter:"all",statusFilter:"all",search:"",priceCache:{}};
+
+// ── PRICE LOOKUP ──
+async function lookupPrices(itemId){
+  const item=INV.items.find(i=>i.id===itemId);
+  if(!item)return;
+  const query=[item.product_number,item.item_name,item.unit].filter(Boolean).join(" ").trim();
+  if(!query){toast("Add a product name or number first","error");return;}
+
+  // Show loading modal
+  openModal(`<div style="flex-direction:column;min-height:200px;">
+    <h3 style="margin-bottom:6px;">Price Lookup</h3>
+    <div style="font-size:13px;color:var(--fg-muted);margin-bottom:18px;">${esc(query)}</div>
+    <div id="price-results" style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;">
+      <div class="price-spinner"></div>
+      <div style="margin-top:12px;font-size:13px;color:var(--fg-muted)">Searching stores…</div>
+    </div>
+  </div>`,"640px");
+
+  // Try edge function first
+  try{
+    const resp=await fetch(`${SUPABASE_URL}/functions/v1/price-lookup`,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":`Bearer ${SUPABASE_ANON_KEY}`,
+        "apikey":SUPABASE_ANON_KEY,
+      },
+      body:JSON.stringify({query})
+    });
+    const data=await resp.json();
+
+    if(data.error==="no_api_key"||data.error==="api_error"){
+      // No API key or API error — show fallback with Google Shopping link
+      renderPriceFallback(query,data.fallback_url,data.error==="no_api_key");
+      return;
+    }
+    if(data.success&&data.results&&data.results.length>0){
+      INV.priceCache[itemId]=data.results;
+      renderPriceResults(query,data.results);
+    }else{
+      renderPriceFallback(query,`https://www.google.com/search?tbm=shop&q=${encodeURIComponent(query)}`,false);
+    }
+  }catch(e){
+    console.error("Price lookup failed:",e);
+    renderPriceFallback(query,`https://www.google.com/search?tbm=shop&q=${encodeURIComponent(query)}`,false);
+  }
+}
+
+function renderPriceResults(query,results){
+  const el=document.getElementById("price-results");
+  if(!el)return;
+  let h=`<div class="price-list">`;
+  results.forEach(r=>{
+    h+=`<a href="${esc(r.link)}" target="_blank" rel="noopener" class="price-card">
+      <div class="price-card-img">${r.thumbnail?`<img src="${esc(r.thumbnail)}" alt="">`:`<span style="font-size:24px">📦</span>`}</div>
+      <div class="price-card-info">
+        <div class="price-card-title">${esc(r.title.length>60?r.title.substring(0,57)+"…":r.title)}</div>
+        <div class="price-card-store">${esc(r.source)}</div>
+        ${r.delivery?`<div class="price-card-delivery">${esc(r.delivery)}</div>`:""}
+      </div>
+      <div class="price-card-price">${esc(r.price_str||"See site")}</div>
+    </a>`;
+  });
+  h+=`</div>
+  <div style="margin-top:12px;text-align:center;">
+    <a href="https://www.google.com/search?tbm=shop&q=${encodeURIComponent(query)}" target="_blank" rel="noopener" class="price-more-link">View all on Google Shopping →</a>
+  </div>`;
+  el.innerHTML=h;
+}
+
+function renderPriceFallback(query,url,needsKey){
+  const el=document.getElementById("price-results");
+  if(!el)return;
+  el.innerHTML=`<div style="text-align:center;padding:20px 0;">
+    ${needsKey?`<div style="font-size:13px;color:var(--fg-muted);margin-bottom:14px;line-height:1.6;">
+      To show live prices in-app, add a free <a href="https://serpapi.com" target="_blank" rel="noopener" style="color:var(--accent)">SerpAPI</a> key<br>
+      as <code style="background:var(--bg-deep);padding:2px 6px;border-radius:4px;font-size:12px;">SERPAPI_KEY</code> in your Supabase project secrets.
+    </div>`:`<div style="font-size:13px;color:var(--fg-muted);margin-bottom:14px;">No results found in-app.</div>`}
+    <a href="${esc(url)}" target="_blank" rel="noopener" class="si-action-btn" style="display:inline-flex;text-decoration:none;padding:10px 20px;">🔍 Search Google Shopping</a>
+  </div>`;
+}
 
 async function loadInventoryData(){
   try{
@@ -68,10 +149,12 @@ function renderInventoryPage(){
       <thead><tr>
         <th class="inv-th" style="width:64px;">Image</th>
         <th class="inv-th">Item</th>
+        <th class="inv-th">Product #</th>
         <th class="inv-th">Category</th>
         <th class="inv-th">Stock</th>
         <th class="inv-th">Min</th>
         <th class="inv-th">Status</th>
+        <th class="inv-th" style="text-align:center;">Prices</th>
         <th class="inv-th">Notes</th>
         <th class="inv-th" style="text-align:center;">Adjust</th>
         <th class="inv-th inv-th-actions">Actions</th>
@@ -79,13 +162,22 @@ function renderInventoryPage(){
     filtered.forEach(item=>{
       const cat=INV.categories.find(c=>c.id===item.category_id);
       const statusClass=`status-badge ${item.status}`;
+      const cached=INV.priceCache[item.id];
+      const lowestPrice=cached&&cached.length?cached.reduce((min,r)=>r.price&&r.price<min?r.price:min,Infinity):null;
+      const priceLabel=lowestPrice&&lowestPrice<Infinity?`From $${lowestPrice.toFixed(2)}`:"Find Prices";
       h+=`<tr class="inv-row">
         <td class="inv-td"><div class="inv-thumb">${item.image_url?`<img src="${esc(item.image_url)}" alt="${esc(item.item_name)}">`:`<span class="inv-thumb-ph">📦</span>`}</div></td>
         <td class="inv-td inv-td-name">${esc(item.item_name)}</td>
+        <td class="inv-td" data-label="Product #" style="font-family:monospace;font-size:12px;color:var(--fg-muted);">${esc(item.product_number||"—")}</td>
         <td class="inv-td" data-label="Category"><span class="service-badge svc-color-${INV.categories.findIndex(c=>c.id===item.category_id)%8}">${cat?esc(cat.name):"?"}</span></td>
         <td class="inv-td" data-label="Stock" style="font-weight:700;font-size:14px;">${item.current_stock} <span style="font-weight:400;font-size:11px;color:var(--fg-muted)">${esc(item.unit)}</span></td>
         <td class="inv-td" data-label="Min" style="color:var(--fg-muted);">${item.min_threshold}</td>
         <td class="inv-td" data-label="Status"><span class="${statusClass}">${item.status.replace(/_/g," ").toUpperCase()}</span></td>
+        <td class="inv-td" data-label="Prices" style="text-align:center;">
+          <button class="price-lookup-btn${cached?' has-price':''}" onclick="lookupPrices('${item.id}')">
+            <span class="price-lookup-icon">🔍</span> ${priceLabel}
+          </button>
+        </td>
         <td class="inv-td inv-td-notes" data-label="Notes">${esc(item.notes||"")}</td>
         <td class="inv-td" data-label="Adjust" style="text-align:center;"><div style="display:flex;gap:4px;justify-content:center;align-items:center;">
           <button class="stock-btn" onclick="adjustInventory('${item.id}',-1)">−</button>
@@ -146,7 +238,11 @@ function openAddInventoryItem(){
     <h3 style="margin-bottom:14px;">Add Inventory Item</h3>
     <div class="si-form-group">
       <label class="si-form-label">Item Name</label>
-      <input type="text" class="si-form-input" id="inv-name" placeholder="e.g., Hydraulic Oil">
+      <input type="text" class="si-form-input" id="inv-name" placeholder="e.g., Mothers Protectant">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Product # <span style="font-weight:400;color:var(--fg-muted)">(manufacturer part number)</span></label>
+      <input type="text" class="si-form-input" id="inv-prodnum" placeholder="e.g., 05302">
     </div>
     <div class="si-form-group">
       <label class="si-form-label">Category</label>
@@ -185,6 +281,7 @@ function openAddInventoryItem(){
 
 async function saveInventoryItem(){
   const name=(document.getElementById("inv-name")?.value||"").trim();
+  const prodNum=(document.getElementById("inv-prodnum")?.value||"").trim();
   const catId=document.getElementById("inv-cat")?.value||null;
   const stock=parseInt(document.getElementById("inv-stock")?.value||0);
   const min=parseInt(document.getElementById("inv-min")?.value||5);
@@ -194,7 +291,7 @@ async function saveInventoryItem(){
   if(!name||!catId){toast("Please fill in required fields","error");return;}
   try{
     const status=stock===0?"out_of_stock":stock<=min?"low":"in_stock";
-    await sbF("POST","inventory_items",{item_name:name,category_id:catId,current_stock:stock,min_threshold:min,unit,image_url:img||null,status,notes});
+    await sbF("POST","inventory_items",{item_name:name,product_number:prodNum,category_id:catId,current_stock:stock,min_threshold:min,unit,image_url:img||null,status,notes});
     toast("Item added");
     closeModal();
     await loadInventoryData();
@@ -210,6 +307,10 @@ function editInventoryItem(itemId){
     <div class="si-form-group">
       <label class="si-form-label">Item Name</label>
       <input type="text" class="si-form-input" id="inv-name" value="${esc(item.item_name)}">
+    </div>
+    <div class="si-form-group">
+      <label class="si-form-label">Product # <span style="font-weight:400;color:var(--fg-muted)">(manufacturer part number)</span></label>
+      <input type="text" class="si-form-input" id="inv-prodnum" value="${esc(item.product_number||"")}">
     </div>
     <div class="si-form-group">
       <label class="si-form-label">Category</label>
@@ -248,6 +349,7 @@ function editInventoryItem(itemId){
 
 async function updateInventoryItem(itemId){
   const name=(document.getElementById("inv-name")?.value||"").trim();
+  const prodNum=(document.getElementById("inv-prodnum")?.value||"").trim();
   const catId=document.getElementById("inv-cat")?.value||null;
   const stock=parseInt(document.getElementById("inv-stock")?.value||0);
   const min=parseInt(document.getElementById("inv-min")?.value||5);
@@ -257,7 +359,7 @@ async function updateInventoryItem(itemId){
   if(!name||!catId){toast("Please fill in required fields","error");return;}
   try{
     const status=stock===0?"out_of_stock":stock<=min?"low":"in_stock";
-    await sbF("PATCH",`inventory_items?id=eq.${itemId}`,{item_name:name,category_id:catId,current_stock:stock,min_threshold:min,unit,image_url:img||null,notes,status});
+    await sbF("PATCH",`inventory_items?id=eq.${itemId}`,{item_name:name,product_number:prodNum,category_id:catId,current_stock:stock,min_threshold:min,unit,image_url:img||null,notes,status});
     toast("Item updated");
     closeModal();
     await loadInventoryData();
