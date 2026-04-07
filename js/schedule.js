@@ -135,19 +135,16 @@ function buildGrid(){
       } else if(status==="sick"){
         cellContent=`<div class="status-label sick-label">🤒 Sick</div>`;
       } else if(shifts.length>0){
-        // Multiple shift bars stacked — always full width so label is never clipped
-        const totalSlots=shifts.length;
-        const barH=Math.max(28, Math.floor(46/totalSlots)-2);
-        cellContent=`<div class="multi-shift-wrap">`;
+        cellContent=`<div class="shift-stack">`;
         shifts.forEach((sh,i)=>{
           const taskIds=getShiftTasks(sh);
           const firstT=tm[taskIds[0]]||{bg:"#dcfce7",text:"#15803d",dot:"#22c55e",label:taskIds[0]||"?"};
           const allLabels=taskIds.map(id=>tm[id]?.label||id).join(" + ");
           const timeStr=sh.start&&sh.end?fmtRange(sh.start,sh.end):"";
-          cellContent+=`<div class="shift-bar" style="left:2%;width:96%;background:${firstT.bg};color:${firstT.text};border:1.5px solid ${firstT.dot}40;top:${4+(i*(barH+2))}px;bottom:auto;height:${barH}px;flex-direction:column;align-items:flex-start;justify-content:center;gap:0;padding:2px 7px;"
+          cellContent+=`<div class="shift-bar shift-bar-flow" style="background:${firstT.bg};color:${firstT.text};border:1.5px solid ${firstT.dot}40;"
             onclick="event.stopPropagation();openShiftModal('${emp.id}','${d}')">
-            <span class="shift-label" style="line-height:1.2;">${esc(allLabels)}</span>
-            ${timeStr?`<span class="shift-times" style="margin-left:0;line-height:1.2;">${timeStr}</span>`:""}
+            <span class="shift-label">${esc(allLabels)}</span>
+            ${timeStr?`<span class="shift-times">${timeStr}</span>`:""}
           </div>`;
         });
         cellContent+=`</div>`;
