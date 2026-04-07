@@ -1627,11 +1627,15 @@ input,select,textarea,.sf-select,.wh-field select,.login-input,.addinput,.tname,
 .cl-table tr:hover td{background:var(--accent-light);}
 .cl-emp-name{font-weight:600;color:var(--fg);}
 .cl-item-badge{
-  display:inline-block;padding:3px 10px;border-radius:14px;font-size:11px;font-weight:600;
-  background:var(--accent-light);color:var(--accent);white-space:nowrap;
+  display:inline-block;padding:3px 10px;border-radius:14px;font-size:11px;font-weight:700;
+  background:#0a5c2b;color:#fff;white-space:nowrap;
 }
-.cl-size{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;background:var(--surface);color:var(--fg-muted);}
-.cl-price{font-weight:600;color:var(--accent);white-space:nowrap;}
+.cl-size{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;background:var(--surface-h);color:var(--fg);}
+.cl-price{font-weight:700;color:var(--fg);white-space:nowrap;}
+.cl-group-a td{background:var(--bg-elevated);}
+.cl-group-b td{background:var(--bg-deep);}
+.cl-table tr.cl-group-a:hover td{background:#ddf0e3;}
+.cl-table tr.cl-group-b:hover td{background:#d0e8d6;}
 .cl-actions{display:flex;gap:4px;}
 .cl-act-btn{
   background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xs);
