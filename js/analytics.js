@@ -31,7 +31,7 @@ function buildAnalytics(){
         if(!day)return;
         if(day.status==="sick")daysSick++;
         else if(day.status==="dayoff")daysOff++;  // only explicit day-off
-        else if(day.status==="work"&&day.shifts)day.shifts.forEach(sh=>{if(sh.task)tally[sh.task]=(tally[sh.task]||0)+1;});
+        else if(day.status==="work"&&day.shifts)day.shifts.forEach(sh=>{getShiftTasks(sh).forEach(tid=>{tally[tid]=(tally[tid]||0)+1;});});
       });
     });
     return{...emp,totalH:Math.round(totalH*10)/10,tally,daysOff,daysSick};

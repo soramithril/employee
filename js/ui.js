@@ -1,12 +1,31 @@
 // ── UI.JS ──────────────────────────────────────────
 // Part of JWG Staff Scheduler
 
+// ── GLOBAL ERROR HANDLER ──
+window.onerror=function(msg,src,line,col,err){
+  console.error("Unhandled error:",msg,src,line,col,err);
+  toast("Something went wrong — check console for details","error");
+};
+window.addEventListener("unhandledrejection",function(e){
+  console.error("Unhandled promise rejection:",e.reason);
+  toast("A background operation failed","error");
+});
+
+// ── BROWSER HISTORY FOR TAB NAVIGATION ──
+window.addEventListener("popstate",function(e){
+  if(e.state&&e.state.tab){
+    S.tab=e.state.tab;
+    render();
+  }
+});
+
 function switchTab(t){
   const app=document.getElementById("app");
   if(S.tab===t){render();return;}
   app.classList.add("tab-out");
   setTimeout(()=>{
     S.tab=t;
+    history.pushState({tab:t},"","#"+t);
     // Show skeleton for async tabs while data loads
     if(["summer","winter","inventory","tasks"].includes(t)){
       showSkeleton();

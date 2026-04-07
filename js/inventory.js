@@ -256,7 +256,8 @@ async function updateInventoryItem(itemId){
   const notes=(document.getElementById("inv-notes")?.value||"").trim();
   if(!name||!catId){toast("Please fill in required fields","error");return;}
   try{
-    await sbF("PATCH",`inventory_items?id=eq.${itemId}`,{item_name:name,category_id:catId,current_stock:stock,min_threshold:min,unit,image_url:img||null,notes});
+    const status=stock===0?"out_of_stock":stock<=min?"low":"in_stock";
+    await sbF("PATCH",`inventory_items?id=eq.${itemId}`,{item_name:name,category_id:catId,current_stock:stock,min_threshold:min,unit,image_url:img||null,notes,status});
     toast("Item updated");
     closeModal();
     await loadInventoryData();

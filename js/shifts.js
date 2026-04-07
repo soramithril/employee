@@ -12,7 +12,7 @@ function hasOverlap(shifts,newShift,skipIdx){
   return shifts.some((sh,i)=>i!==skipIdx&&shiftsOverlap(newShift,sh));
 }
 // Returns an array of task IDs for a shift (handles both new {tasks:[]} and legacy {task:""} format)
-function getShiftTasks(sh){return sh.tasks&&sh.tasks.length?sh.tasks:(sh.task?[sh.task]:[]);}
+function getShiftTasks(sh){if(!sh)return[];return sh.tasks&&sh.tasks.length?sh.tasks:(sh.task?[sh.task]:[]);}
 // Returns display label for shift tasks, joining with " + "
 function shiftTaskLabel(sh,tm){return getShiftTasks(sh).map(id=>(tm[id]?.label||id)).join(" + ")||"(no task)";}
 

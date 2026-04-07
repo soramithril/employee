@@ -142,7 +142,7 @@ function initRealtime(){
       if(!row)return;
       if(S.tab==="winter"&&!isModalOpen()){
         const idx=WIN.saltBins.findIndex(s=>s.id===row.id);
-        if(payload.eventType==="DELETE")WIN.saltBins.splice(idx,1);
+        if(payload.eventType==="DELETE"){if(idx>=0)WIN.saltBins.splice(idx,1);}
         else if(idx>=0)WIN.saltBins[idx]={...WIN.saltBins[idx],...row};
         else WIN.saltBins.push(row);
         renderWinterPage();
