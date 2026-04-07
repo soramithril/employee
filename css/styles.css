@@ -1594,3 +1594,69 @@ input,select,textarea,.sf-select,.wh-field select,.login-input,.addinput,.tname,
   .sum-th,.win-th,.inv-th,.sum-td,.win-td,.inv-td{padding:9px 10px !important;font-size:12px !important;}
   .sum-td-client,.win-td-client,.inv-td-name{font-size:13px !important;}
 }
+
+/* ─── CLOTHING PAGE ─────────────────────────────────────────────────────────── */
+.cl-wrap{padding:24px 28px;}
+.cl-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+.cl-title{font-size:20px;font-weight:700;color:var(--fg);letter-spacing:-.02em;}
+.cl-title span{font-size:13px;font-weight:500;color:var(--fg-muted);margin-left:8px;}
+.cl-add-btn{
+  background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);
+  padding:9px 18px;font-size:13px;font-weight:600;letter-spacing:-.01em;
+  box-shadow:var(--shadow-btn);transition:all .2s var(--ease-out);cursor:pointer;
+}
+.cl-add-btn:hover{opacity:.88;transform:translateY(-1px);}
+.cl-filters{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap;}
+.cl-filter-btn{
+  background:var(--surface);border:1px solid var(--border);border-radius:20px;
+  padding:6px 14px;font-size:12px;font-weight:500;color:var(--fg-muted);
+  cursor:pointer;transition:all .15s var(--ease-out);
+}
+.cl-filter-btn:hover{border-color:var(--border-h);color:var(--fg);}
+.cl-filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.cl-table-wrap{overflow-x:auto;border-radius:var(--radius-sm);border:1px solid var(--border);}
+.cl-table{width:100%;border-collapse:collapse;font-size:13px;}
+.cl-table th{
+  background:var(--bg-deep);color:var(--fg-muted);font-size:10px;font-weight:700;
+  letter-spacing:.09em;text-transform:uppercase;padding:10px 14px;text-align:left;
+  border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none;
+}
+.cl-table th:hover{color:var(--fg);}
+.cl-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--fg);vertical-align:middle;}
+.cl-table tr:last-child td{border-bottom:none;}
+.cl-table tr:hover td{background:var(--accent-light);}
+.cl-emp-name{font-weight:600;color:var(--fg);}
+.cl-item-badge{
+  display:inline-block;padding:3px 10px;border-radius:14px;font-size:11px;font-weight:600;
+  background:var(--accent-light);color:var(--accent);white-space:nowrap;
+}
+.cl-size{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;background:var(--surface);color:var(--fg-muted);}
+.cl-price{font-weight:600;color:var(--accent);white-space:nowrap;}
+.cl-actions{display:flex;gap:4px;}
+.cl-act-btn{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xs);
+  padding:4px 10px;font-size:11px;cursor:pointer;transition:all .15s;color:var(--fg-muted);
+}
+.cl-act-btn:hover{border-color:var(--border-h);color:var(--fg);background:var(--surface-h);}
+.cl-act-btn.del:hover{color:#dc2626;border-color:rgba(220,38,38,.3);background:rgba(220,38,38,.06);}
+.cl-empty{text-align:center;padding:48px 20px;color:var(--fg-subtle);font-size:14px;}
+.cl-empty-icon{font-size:32px;margin-bottom:10px;}
+.cl-summary{display:flex;gap:14px;margin-bottom:20px;flex-wrap:wrap;}
+.cl-stat{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 18px;flex:1;min-width:120px;}
+.cl-stat-val{font-size:22px;font-weight:700;color:var(--accent);letter-spacing:-.02em;}
+.cl-stat-lbl{font-size:10px;font-weight:600;color:var(--fg-muted);text-transform:uppercase;letter-spacing:.08em;margin-top:2px;}
+.cl-form-row{margin-bottom:14px;}
+.cl-form-label{font-size:10px;font-weight:700;color:var(--fg-muted);letter-spacing:.09em;text-transform:uppercase;margin-bottom:5px;}
+.cl-input,.cl-select{
+  width:100%;background:var(--bg-deep);color:var(--fg);border:1px solid var(--border);
+  border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;outline:none;transition:border-color .15s;
+}
+.cl-input:focus,.cl-select:focus{border-color:var(--accent);}
+.cl-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:600px){
+  .cl-wrap{padding:16px 14px;}
+  .cl-form-grid{grid-template-columns:1fr;}
+  .cl-summary{flex-direction:column;}
+  .cl-table th,.cl-table td{padding:8px 10px;font-size:12px;}
+  .cl-title{font-size:17px;}
+}
