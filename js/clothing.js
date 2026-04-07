@@ -66,26 +66,41 @@ function renderClothingBoard(){
   const types=["all",...CLOTHING_TYPES];
   const filterBtns=types.map(t=>`<button class="cl-filter-btn${CL.filter===t?" active":""}" onclick="clSetFilter('${esc(t)}')">${t==="all"?"All":t}</button>`).join("");
 
-  // Table rows — group by employee with alternating color bands
-  let rows="";
-  const empColorMap={};let colorIdx=0;
+  // Group items by employee
+  const grouped={};
   items.forEach(i=>{
-    const empName=i.employees?.name||"Unknown";
-    if(!(i.employee_id in empColorMap)){empColorMap[i.employee_id]=colorIdx++;}
-    const grpClass=empColorMap[i.employee_id]%2===0?"cl-group-a":"cl-group-b";
-    const d=i.date_given?new Date(i.date_given+"T00:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"—";
-    rows+=`<tr class="${grpClass}">
-      <td><span class="cl-emp-name">${esc(empName)}</span></td>
-      <td><span class="cl-item-badge">${esc(i.item_type)}</span></td>
-      <td><span class="cl-size">${esc(i.size||"—")}</span></td>
-      <td><span class="cl-price">$${(+i.price||0).toFixed(2)}</span></td>
-      <td>${d}</td>
-      <td style="font-size:12px;color:var(--fg-muted)">${esc(i.notes||"")}</td>
-      <td><div class="cl-actions">
-        <button class="cl-act-btn" onclick="clOpenEdit('${i.id}')">Edit</button>
-        <button class="cl-act-btn del" onclick="clDelete('${i.id}')">Remove</button>
-      </div></td>
-    </tr>`;
+    const eid=i.employee_id;
+    if(!grouped[eid])grouped[eid]={name:i.employees?.name||"Unknown",items:[]};
+    grouped[eid].items.push(i);
+  });
+  const empList=Object.entries(grouped).sort((a,b)=>a[1].name.localeCompare(b[1].name));
+
+  // Build employee cards
+  let cards="";
+  empList.forEach(([eid,emp],idx)=>{
+    const grpClass=idx%2===0?"cl-group-a":"cl-group-b";
+    const empTotal=emp.items.reduce((s,i)=>s+(+i.price||0),0);
+    let itemRows="";
+    emp.items.forEach(i=>{
+      const d=i.date_given?new Date(i.date_given+"T00:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"—";
+      itemRows+=`<tr class="${grpClass}">
+        <td><span class="cl-item-badge">${esc(i.item_type)}</span></td>
+        <td><span class="cl-size">${esc(i.size||"—")}</span></td>
+        <td><span class="cl-price">$${(+i.price||0).toFixed(2)}</span></td>
+        <td>${d}</td>
+        <td style="font-size:12px;color:var(--fg-muted)">${esc(i.notes||"")}</td>
+        <td><div class="cl-actions">
+          <button class="cl-act-btn" onclick="clOpenEdit('${i.id}')">Edit</button>
+          <button class="cl-act-btn del" onclick="clDelete('${i.id}')">Remove</button>
+        </div></td>
+      </tr>`;
+    });
+    cards+=`<tr class="cl-emp-header ${grpClass}">
+      <td colspan="6">
+        <span class="cl-emp-name">${esc(emp.name)}</span>
+        <span class="cl-emp-count">${emp.items.length} item${emp.items.length!==1?"s":""} · $${empTotal.toFixed(2)}</span>
+      </td>
+    </tr>${itemRows}`;
   });
 
   root.innerHTML=`
@@ -99,17 +114,16 @@ function renderClothingBoard(){
       <div class="cl-stat"><div class="cl-stat-val">${uniqueEmps}</div><div class="cl-stat-lbl">Employees</div></div>
     </div>
     <div class="cl-filters">${filterBtns}</div>
-    ${items.length?`<div class="cl-table-wrap"><table class="cl-table">
+    ${empList.length?`<div class="cl-table-wrap"><table class="cl-table">
       <thead><tr>
-        <th onclick="clSort('employee')">Employee${arrow("employee")}</th>
-        <th onclick="clSort('item_type')">Item${arrow("item_type")}</th>
-        <th onclick="clSort('size')">Size${arrow("size")}</th>
-        <th onclick="clSort('price')">Price${arrow("price")}</th>
-        <th onclick="clSort('date_given')">Date Given${arrow("date_given")}</th>
+        <th>Item</th>
+        <th>Size</th>
+        <th>Price</th>
+        <th>Date Given</th>
         <th>Notes</th>
         <th>Actions</th>
       </tr></thead>
-      <tbody>${rows}</tbody>
+      <tbody>${cards}</tbody>
     </table></div>`:`<div class="cl-empty"><div class="cl-empty-icon">👕</div>No clothing records yet${CL.filter!=="all"?" for this type":""}. Click "+ Add Item" to get started.</div>`}`;
 }
 
