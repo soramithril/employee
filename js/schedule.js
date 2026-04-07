@@ -3,11 +3,11 @@
 
 function render(){
   const app=document.getElementById("app");
-  const labelMap={schedule:"Schedule",history:"History",analytics:"Analytics",team:"Team","tasks":"Tasks",summer:"Summer",winter:"Winter",inventory:"Inventory"};
+  const labelMap={schedule:"Schedule",history:"History",analytics:"Analytics",team:"Team","tasks":"Tasks",summer:"Summer",winter:"Winter",inventory:"Inventory",clothing:"Clothing"};
   // Sync desktop nav
   document.querySelectorAll(".tab-btn").forEach(b=>{b.classList.toggle("active",b.textContent.trim()===labelMap[S.tab]);});
   // Sync mobile nav
-  ["schedule","summer","winter","team","inventory"].forEach(t=>{
+  ["schedule","summer","winter","team","inventory","clothing"].forEach(t=>{
     const el=document.getElementById("mnav-"+t);
     if(el)el.classList.toggle("active",S.tab===t);
   });
@@ -19,6 +19,7 @@ function render(){
   else if(S.tab==="summer"){app.innerHTML=buildSummerPage();initSummerPage();}
   else if(S.tab==="winter"){app.innerHTML=buildWinterPage();initWinterPage();}
   else if(S.tab==="inventory"){app.innerHTML=buildInventoryPage();initInventoryPage();}
+  else if(S.tab==="clothing"){app.innerHTML=buildClothingPage();initClothingPage();}
   else{app.innerHTML=buildTeam();initTeamDrag();}
   updateFAB();
 }

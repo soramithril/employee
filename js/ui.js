@@ -27,7 +27,7 @@ function switchTab(t){
     S.tab=t;
     history.pushState({tab:t},"","#"+t);
     // Show skeleton for async tabs while data loads
-    if(["summer","winter","inventory","tasks"].includes(t)){
+    if(["summer","winter","inventory","tasks","clothing"].includes(t)){
       showSkeleton();
     }
     render();
