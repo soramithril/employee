@@ -3,6 +3,7 @@
 
 const CLOTHING_TYPES=["T-Shirt","Long Sleeve","Crewneck Sweater","Hoodie","Coat","Toque","Cap","Windbreaker"];
 const CLOTHING_SIZES=["XS","S","M","L","XL","2XL","3XL","One Size"];
+const BADGE_CLASS={"T-Shirt":"cl-badge-tshirt","Long Sleeve":"cl-badge-longsleeve","Crewneck Sweater":"cl-badge-crewneck","Hoodie":"cl-badge-hoodie","Coat":"cl-badge-coat","Toque":"cl-badge-toque","Cap":"cl-badge-cap","Windbreaker":"cl-badge-windbreaker"};
 let CL={items:[],filter:"all",sort:"employee",sortDir:"asc"};
 
 async function loadClothingItems(){
@@ -64,7 +65,7 @@ function renderClothingBoard(){
 
   // Filter buttons
   const types=["all",...CLOTHING_TYPES];
-  const filterBtns=types.map(t=>`<button class="cl-filter-btn${CL.filter===t?" active":""}" onclick="clSetFilter('${esc(t)}')">${t==="all"?"All":t}</button>`).join("");
+  const filterBtns=types.map(t=>`<button class="cl-filter-btn${CL.filter===t?" active":""}" data-type="${esc(t)}" onclick="clSetFilter('${esc(t)}')">${t==="all"?"All":t}</button>`).join("");
 
   // Group items by employee
   const grouped={};
@@ -84,7 +85,7 @@ function renderClothingBoard(){
     emp.items.forEach(i=>{
       const d=i.date_given?new Date(i.date_given+"T00:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"—";
       itemRows+=`<tr class="${grpClass}">
-        <td><span class="cl-item-badge">${esc(i.item_type)}</span></td>
+        <td><span class="cl-item-badge ${BADGE_CLASS[i.item_type]||''}">${esc(i.item_type)}</span></td>
         <td><span class="cl-size">${esc(i.size||"—")}</span></td>
         <td><span class="cl-price">$${(+i.price||0).toFixed(2)}</span></td>
         <td>${d}</td>
