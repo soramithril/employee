@@ -165,20 +165,36 @@ function updateUserBadge(user){
 }
 
 async function doLogin(){
-  const email=(document.getElementById("li-user")?.value||"").trim();
+  let email=(document.getElementById("li-user")?.value||"").trim();
   const password=(document.getElementById("li-pass")?.value||"");
   const err=document.getElementById("li-err");
   const btn=document.getElementById("li-btn");
   err.classList.remove("show");
 
   if(!email||!password){
-    err.textContent="Please enter your email and password.";
+    err.textContent="Please enter your username and password.";
     err.classList.add("show");return;
   }
 
   btn.textContent="Signing in…";btn.disabled=true;
 
   try{
+    // If input doesn't look like an email, resolve username to email
+    if(!email.includes("@")){
+      const rpcRes=await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_email_by_username`,{
+        method:"POST",
+        headers:{"Content-Type":"application/json","apikey":SUPABASE_ANON_KEY,"Authorization":`Bearer ${SUPABASE_ANON_KEY}`},
+        body:JSON.stringify({login_username:email})
+      });
+      const rpcData=await rpcRes.json();
+      if(rpcData){email=rpcData;}
+      else{
+        err.textContent="Username not found.";
+        err.classList.add("show");
+        btn.textContent="Sign In";btn.disabled=false;return;
+      }
+    }
+
     const url=`${SUPABASE_URL}/auth/v1/token?grant_type=password`;
     const res=await fetch(url,{
       method:"POST",
