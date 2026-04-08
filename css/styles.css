@@ -1594,3 +1594,8 @@ input,select,textarea,.sf-select,.wh-field select,.login-input,.addinput,.tname,
   .sum-th,.win-th,.inv-th,.sum-td,.win-td,.inv-td{padding:9px 10px !important;font-size:12px !important;}
   .sum-td-client,.win-td-client,.inv-td-name{font-size:13px !important;}
 }
+
+/* ── Company badges for clothing ── */
+.cl-co-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.3px;text-transform:uppercase}
+.cl-co-badge.jj{background:#fef3c7;color:#92400e}
+.cl-co-badge.jwg{background:#dbeafe;color:#1e40af}
