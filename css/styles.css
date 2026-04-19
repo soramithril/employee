@@ -992,7 +992,7 @@ td.day-cell.is-today{background:rgba(5,115,52,0.04);box-shadow:inset 0 2px 0 var
 .inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;padding:16px;}
 .inv-card-v2{background:var(--bg-elevated);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:border-color .2s,box-shadow .2s;}
 .inv-card-v2:hover{border-color:var(--border-h);box-shadow:var(--shadow-ch);}
-.inv-card-img{width:100%;aspect-ratio:4/3;background:var(--bg-deep);display:flex;align-items:center;justify-content:center;overflow:hidden;border-bottom:1px solid var(--border);}
+.inv-card-img{width:100%;aspect-ratio:1/1;background:var(--bg-deep);display:flex;align-items:center;justify-content:center;overflow:hidden;border-bottom:1px solid var(--border);}
 .inv-card-img img{width:100%;height:100%;object-fit:cover;}
 .inv-card-img-ph{font-size:48px;opacity:.35;}
 .inv-card-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;flex:1;}
