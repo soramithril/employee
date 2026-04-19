@@ -31,7 +31,7 @@ function countH(s){
 }
 
 // Default: weekdays only
-let S={tab:"schedule",weekOffset:0,employees:[],allSchedules:[],schedule:{},activeDays:[...WEEKDAYS],saving:false,aPeriod:"4w",hFilter:"all",hPeriod:"4w",hOpen:{},mobileDayIdx:0};
+let S={tab:"schedule",weekOffset:0,employees:[],allSchedules:[],schedule:{},activeDays:[...WEEKDAYS],saving:false,aPeriod:"4w",hFilter:"all",hPeriod:"4w",hOpen:{},mobileDayIdx:0,sortAlpha:false};
 
 function getWS(off=0){const n=new Date(),d=n.getDay(),r=new Date(n);r.setDate(n.getDate()-d+(d===0?-6:1)+off*7);r.setHours(0,0,0,0);return r;}
 // Use local date (Eastern) not UTC – avoids midnight-UTC rollover mismatching week keys

@@ -157,7 +157,7 @@ function applyMultiAssign(){
       const dayData=S.schedule[empId][day];
       if(hasOverlap(dayData.shifts||[],newShift,-1)){skipped++;return;}
       dayData.status="work";
-      dayData.shifts=[...(dayData.shifts||[]),{...newShift}];
+      dayData.shifts=[...(dayData.shifts||[]),{tasks:[...newShift.tasks],start:newShift.start,end:newShift.end}];
     });
     updBadge(empId);
   });

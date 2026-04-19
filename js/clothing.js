@@ -125,6 +125,10 @@ function renderClothingBoard(){
     const grpClass=idx%2===0?"cl-group-a":"cl-group-b";
     const empTotal=emp.items.reduce((s,i)=>s+(+i.price||0),0);
     const empPurchase=emp.items.reduce((s,i)=>s+(+i.purchase_price||0),0);
+    const empJJ=emp.items.filter(i=>(i.company||"Jeffs Junk")==="Jeffs Junk");
+    const empJWG=emp.items.filter(i=>(i.company||"Jeffs Junk")==="Jeff White Group");
+    const empJJCost=empJJ.reduce((s,i)=>s+(+i.purchase_price||0),0);
+    const empJWGCost=empJWG.reduce((s,i)=>s+(+i.purchase_price||0),0);
     let itemRows="";
     emp.items.forEach(i=>{
       const d=i.date_given?new Date(i.date_given+"T00:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"—";
@@ -144,10 +148,13 @@ function renderClothingBoard(){
         </div></td>
       </tr>`;
     });
+    const coParts=[];
+    if(empJJ.length)coParts.push(`<span class="cl-co-badge jj" style="font-size:10px;padding:1px 5px;vertical-align:middle">JJ</span> $${empJJCost.toFixed(2)}`);
+    if(empJWG.length)coParts.push(`<span class="cl-co-badge jwg" style="font-size:10px;padding:1px 5px;vertical-align:middle">JWG</span> $${empJWGCost.toFixed(2)}`);
     cards+=`<tr class="cl-emp-header ${grpClass}">
       <td colspan="8">
         <span class="cl-emp-name">${esc(emp.name)}</span>
-        <span class="cl-emp-count">${emp.items.length} item${emp.items.length!==1?"s":""} · Employee: $${empTotal.toFixed(2)} · Cost: $${empPurchase.toFixed(2)}</span>
+        <span class="cl-emp-count">${emp.items.length} item${emp.items.length!==1?"s":""} · Employee: $${empTotal.toFixed(2)} · Cost: $${empPurchase.toFixed(2)}${coParts.length?" · "+coParts.join(" · "):""}</span>
       </td>
     </tr>${itemRows}`;
   });

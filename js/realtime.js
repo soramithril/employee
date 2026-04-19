@@ -3,6 +3,8 @@
 
 let _sbClient=null;
 let _realtimeChannel=null;
+// Cooldown: skip realtime overwrites for employees we just saved locally (prevents stale echo)
+let _schedSaveCooldown={};
 
 function isModalOpen(){return !!document.getElementById("moverlay");}
 
@@ -52,16 +54,17 @@ function initRealtime(){
       if(row.week_start===currentWeek){
         const emp=S.employees.find(e=>e.id===row.employee_id);
         if(emp){
+          // Skip overwrite if modal is open (user mid-edit) or employee was recently saved locally
+          if(isModalOpen()||_schedSaveCooldown[row.employee_id]){
+            return;
+          }
           if(payload.eventType==="DELETE"){
             S.schedule[row.employee_id]=defSched();
           }else{
             S.schedule[row.employee_id]=migrateSched(JSON.parse(JSON.stringify(row.schedule_data)));
           }
-          // Only refresh the grid if not mid-edit (modal open)
-          if(!isModalOpen()){
-            if(S.tab==="schedule")refreshGrid();
-            else if(S.tab==="history"||S.tab==="analytics")render();
-          }
+          if(S.tab==="schedule")refreshGrid();
+          else if(S.tab==="history"||S.tab==="analytics")render();
         }
       }
     })

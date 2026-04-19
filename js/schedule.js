@@ -87,7 +87,7 @@ function buildGrid(){
     ticksHtml+=`<div class="time-tick">${fmtHour(hr,0)}</div>`;
   }
 
-  let h=`<table class="sched-grid"><thead><tr><th class="name-col">EMPLOYEE</th>`;
+  let h=`<table class="sched-grid"><thead><tr><th class="name-col"><div style="display:flex;align-items:center;justify-content:space-between;gap:4px">EMPLOYEE<button onclick="event.stopPropagation();toggleAlphaSort()" title="${S.sortAlpha?"Sorted A–Z (click for custom order)":"Sort A–Z"}" style="background:${S.sortAlpha?"var(--accent)":"rgba(0,0,0,0.06)"};color:${S.sortAlpha?"white":"var(--fg-muted)"};border:none;border-radius:4px;padding:2px 6px;font-size:10px;font-weight:700;cursor:pointer;letter-spacing:.3px;white-space:nowrap">A–Z</button></div></th>`;
   S.activeDays.forEach(d=>{
     const dt=new Date(ws);dt.setDate(dt.getDate()+DAYS.indexOf(d));
     const isWknd=WEEKEND.includes(d);
@@ -103,7 +103,8 @@ function buildGrid(){
   });
   h+=`</tr></thead><tbody>`;
 
-  S.employees.forEach((emp,empIdx)=>{
+  const sortedEmps=S.sortAlpha?[...S.employees].sort((a,b)=>a.name.localeCompare(b.name)):S.employees;
+  sortedEmps.forEach((emp,empIdx)=>{
     const sc=S.schedule[emp.id]||defSched();
     const hrs=countH(sc);
     const[abg,afg]=ac(emp.name);
@@ -196,7 +197,8 @@ function buildMobileDayView(){
   if(!S.employees.length){
     h+=`<div class="empty" style="padding:32px 16px;text-align:center;color:var(--fg-muted);font-size:13px;">No employees yet — go to Team tab to add staff</div>`;
   } else {
-    S.employees.forEach(emp=>{
+    const sortedMobileEmps=S.sortAlpha?[...S.employees].sort((a,b)=>a.name.localeCompare(b.name)):S.employees;
+    sortedMobileEmps.forEach(emp=>{
       const sc=S.schedule[emp.id]||defSched();
       const dayData=sc[selDay]||{status:"off",shifts:[]};
       const status=dayData.status||"off";
@@ -240,6 +242,7 @@ function toggleDay(d){
   if(S.mobileDayIdx>=S.activeDays.length)S.mobileDayIdx=0;
   render();
 }
+function toggleAlphaSort(){S.sortAlpha=!S.sortAlpha;render();}
 function loadWeekSched(){const w=wkey(S.weekOffset);S.employees.forEach(e=>{const f=S.allSchedules.find(s=>s.employee_id===e.id&&s.week_start===w);S.schedule[e.id]=f?migrateSched(JSON.parse(JSON.stringify(f.schedule_data))):defSched();});}
 
 // ── AUTO-SAVE (debounced) ──
@@ -249,6 +252,13 @@ let _pendingSave=null;
 function autoSave(empId){
   const ws=getWS(S.weekOffset);
   const w=localDateStr(ws);
+  // Set cooldown so realtime doesn't overwrite our local edits with stale echo
+  const cooldownIds=empId?[empId]:S.employees.map(e=>e.id);
+  cooldownIds.forEach(id=>{
+    _schedSaveCooldown[id]=true;
+    clearTimeout(_schedSaveCooldown["_t_"+id]);
+    _schedSaveCooldown["_t_"+id]=setTimeout(()=>{delete _schedSaveCooldown[id];delete _schedSaveCooldown["_t_"+id];},3000);
+  });
   // Snapshot the changed employee(s) RIGHT NOW
   const toSave=empId?S.employees.filter(e=>e.id===empId):S.employees;
   const newEntries=toSave.map(e=>({emp:e,data:JSON.parse(JSON.stringify(S.schedule[e.id]||defSched()))}));
